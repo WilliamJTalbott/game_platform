@@ -1,6 +1,7 @@
 doctype html
 html
   head = render 'head'
-  body.app-body
-    .app__content
-      = yield
+  = stylesheet_link_tag "https://cdn.jsdelivr.net/npm/@rolemodel/optics@2.3.1/dist/css/optics+phosphor_icons.min.css"
+  = stylesheet_link_tag :app, "data-turbo-track": "reload"
+  body.op-page
+    = yield
