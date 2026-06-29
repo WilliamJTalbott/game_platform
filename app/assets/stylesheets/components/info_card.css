@@ -1,0 +1,20 @@
+.info-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: var(--op-space-x-small);
+    
+    border: var(--op-border-width) solid var(--op-color-border);
+    border-radius: var(--op-radius-large);
+
+    .info-card__label {
+        color: var(--op-color-primary-minus-four);
+    }
+
+    .info-card__value {
+        font-weight: bold;
+        color: var(--op-color-on-background);
+    }
+}

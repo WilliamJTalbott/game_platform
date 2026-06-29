@@ -1,0 +1,30 @@
+.banner {
+    position: relative;
+    background-color: var(--op-color-primary-plus-two);
+    height: 150px;
+
+    img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        transform: scale(0.9);
+
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--op-color-primary-minus-five);
+        border-radius: var(--op-radius-x-large);
+        padding-block: var(--op-space-x-small);
+        padding-inline: var(--op-space-small);
+        font-weight: var(--op-font-weight-semi-bold);
+    }
+}
