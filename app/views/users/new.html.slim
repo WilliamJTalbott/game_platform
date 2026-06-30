@@ -1,0 +1,13 @@
+.modal-wrapper.modal-wrapper--active
+  .modal-wrapper__backdrop
+  .modal
+    = form_with url: users_path do |f|
+      .modal__header Create an Account
+
+      .modal__body
+        = f.email_field :email_address, required: true, placeholder: "email"
+        br
+        = f.password_field :password, required: true, placeholder: "password"
+
+      .modal__footer
+        = f.submit "Sign up"

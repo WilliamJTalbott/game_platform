@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resource :session
+  resources :passwords, param: :token
 
   root 'games#index'
   get 'games/history', to: 'games#history'
@@ -9,5 +11,6 @@ Rails.application.routes.draw do
   resources :games, only: [:index]
   resources :stats, only: [:index]
 
+  resources :users, only: [:new, :create]
   
 end
