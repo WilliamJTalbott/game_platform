@@ -1,5 +1,5 @@
 require 'rails_helper'
-RSpec.describe 'Sessions', type: :system do
+RSpec.describe 'Session', type: :system do
   let(:user) { create(:user) }
   before { visit root_path }
 
@@ -15,19 +15,17 @@ RSpec.describe 'Sessions', type: :system do
   end
 
   context "When user clicks 'forgot password' " do
-    it "directs them to the password new page" do
+    it "directs them to the password_new page" do
       click_on "Forgot password?"
       expect(page).to have_current_path new_password_path
     end
   end 
 
-  context "When user clicks 'forgot password' " do
-    it "directs them to the password new page" do
-      visit root_path
-      click_on "Forgot password?"
-      expect(page).to have_current_path new_password_path
+  context "When user clicks 'Sign up' " do
+    it "directs them to the user_new page" do
+      click_on "Sign up"
+      expect(page).to have_current_path new_user_path
     end
   end 
-
   
 end

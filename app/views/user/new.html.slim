@@ -1,15 +1,12 @@
-= tag.div(flash[:alert], style: "color:red") if flash[:alert]
-= tag.div(flash[:notice], style: "color:green") if flash[:notice]
-
 .modal-wrapper.modal-wrapper--active
   .modal-wrapper__backdrop
   .modal.modal--login
-    = form_with url: session_path do |f|
+    = form_with url: user_index_path do |f|
       .modal__header
-        | Log in
+        | Create an Account
         .header__action
-          p Don't have an account? &nbsp;
-          = link_to "Sign up", new_user_path
+          p Already have an account? &nbsp;
+          = link_to "Log in", new_session_path
 
       .modal__body
         .field
@@ -18,7 +15,9 @@
         .field
           p Password
           = f.password_field :password, required: true, class: "form-control"
-        = link_to "Forgot password?", new_password_path
+        .field
+          p Confirm Password
+          = f.password_field :password_confirmation, required: true, class: "form-control"
 
       .modal__footer
-        = f.submit "Log in", class: "btn btn--primary"
+        = f.submit "Sign up", class: "btn btn--primary"

@@ -11,6 +11,5 @@ Rails.application.routes.draw do
   resources :games, only: [:index]
   resources :stats, only: [:index]
 
-  resources :user, only: [:new, :create]
-  
+  resources :user
 end
