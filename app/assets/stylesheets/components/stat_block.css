@@ -1,0 +1,5 @@
+.stat-block {
+    background-color: var(--op-color-primary-base);
+    grid-area: span 1;
+    border-radius: var(--op-radius-2x-large);
+}
