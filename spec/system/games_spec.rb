@@ -5,6 +5,7 @@ RSpec.describe 'Games', type: :system do
   
   it 'shows the games index' do
     login_user(user)
+    visit games_path
     expect(page).to be_on_games_page
   end
 
