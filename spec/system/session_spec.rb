@@ -1,25 +1,33 @@
 require 'rails_helper'
 RSpec.describe 'Sessions', type: :system do
-  let(:be_on_login_page) { have_current_path new_session_path }
-  let(:be_on_game_page) { have_current_path games_path }
-  let!(:user) {create(:user)}
-
-  before {log_in(user)}
+  let(:user) { create(:user) }
+  before { visit root_path }
 
   it "shows the login page" do
-    expect(page).to be_on_login_page
+    expect(page).to have_current_path new_session_path
   end
 
-  it "allows user to login" do
-    have_current_path('/user')
-    expect(page).to be_on_game_page
+  context "When user logs in" do
+    before {login_user(user)}
+    it "directs them to the root page" do
+      expect(page).to have_current_path root_path
+    end
   end
+
+  context "When user clicks 'forgot password' " do
+    it "directs them to the password new page" do
+      click_on "Forgot password?"
+      expect(page).to have_current_path new_password_path
+    end
+  end 
+
+  context "When user clicks 'forgot password' " do
+    it "directs them to the password new page" do
+      visit root_path
+      click_on "Forgot password?"
+      expect(page).to have_current_path new_password_path
+    end
+  end 
+
   
-end
-
-def log_in(user)
-  visit new_session_path
-  fill_in :email_address, with: user.email_address
-  fill_in :password, with: user.password_digest
-  click_button 'Sign in'
 end
