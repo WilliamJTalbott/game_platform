@@ -1,7 +1,9 @@
+= tag.div(flash[:alert], style: "color:red") if flash[:alert]
+
 .modal-wrapper.modal-wrapper--active
   .modal-wrapper__backdrop
   .modal.modal--login
-    = form_with url: user_index_path do |f|
+    = form_with model: @user do |f|
       .modal__header
         | Create an Account
         .header__action
@@ -10,13 +12,13 @@
 
       .modal__body
         .field
-          p Email
+          = f.label :email_address, "Email"
           = f.email_field :email_address, required: true, placeholder: "user@example.com", class: "form-control"
         .field
-          p Password
+          = f.label :password, "Password"
           = f.password_field :password, required: true, class: "form-control"
         .field
-          p Confirm Password
+          = f.label :password_confirmation, "Confirm Password"
           = f.password_field :password_confirmation, required: true, class: "form-control"
 
       .modal__footer

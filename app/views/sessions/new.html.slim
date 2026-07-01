@@ -13,10 +13,10 @@
 
       .modal__body
         .field
-          p Email
+          label Email
           = f.email_field :email_address, required: true, placeholder: "user@example.com", class: "form-control"
         .field
-          p Password
+          label Password
           = f.password_field :password, required: true, class: "form-control"
         = link_to "Forgot password?", new_password_path
 
