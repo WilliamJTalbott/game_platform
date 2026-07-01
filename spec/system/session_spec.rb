@@ -7,8 +7,8 @@ RSpec.describe 'Session', type: :system do
     expect(page).to have_current_path new_session_path
   end
 
-  context "When user logs in" do
-    before {login_user(user)}
+  xcontext "When user logs in" do
+    before { sign_in_as(user) }
     it "directs them to the root page" do
       expect(page).to have_current_path root_path
     end

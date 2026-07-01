@@ -3,7 +3,6 @@ RSpec.describe 'User', type: :system do
   let(:user) { create(:user) }
 
   before { visit new_user_path }
-
   it "shows the Sign Up page" do
     expect(page).to have_current_path new_user_path
   end
@@ -26,8 +25,8 @@ RSpec.describe 'User', type: :system do
 
   context "When user submits invalid inputs" do
     it "displays flash message" do
-      sign_up("1", "2", "3")
-      expect(page).to have_content("Invalid signup")
+      sign_up("test@example.com", "2")
+      expect(page).to have_content("is too short (minimum is 8 characters)")
     end
   end
 

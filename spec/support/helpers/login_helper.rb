@@ -9,10 +9,10 @@ module LoginHelper
 
   def sign_up(email, password, confirm_password = password)
     visit new_user_path
-    fill_in "Email", with: email
+    fill_in "Email address", with: email
     fill_in "Password", with: password
-    fill_in "Confirm Password", with: confirm_password
-    click_button 'Sign up'
+    fill_in "Password confirmation", with: confirm_password
+    click_button 'Create User'
   end
 
 end

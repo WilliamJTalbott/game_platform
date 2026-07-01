@@ -3,7 +3,7 @@
 .modal-wrapper.modal-wrapper--active
   .modal-wrapper__backdrop
   .modal.modal--login
-    = form_with model: @user do |f|
+    = simple_form_for @user do |f|
       .modal__header
         | Create an Account
         .header__action
@@ -11,19 +11,8 @@
           = link_to "Log in", new_session_path
 
       .modal__body
-        .field
-          = f.label :email_address, "Email"
-          = f.email_field :email_address, required: true, placeholder: "user@example.com", class: "form-control"
-          - if @user.errors[:email_address].any?
-            span = @user.errors[:email_address].to_sentence
-        .field
-          = f.label :password, "Password"
-          = f.password_field :password, required: true, class: "form-control"
-          - if @user.errors[:password].any?
-            span = @user.errors[:password].to_sentence
-        .field
-          = f.label :password_confirmation, "Confirm Password"
-          = f.password_field :password_confirmation, required: true, class: "form-control"
-
+          = f.input :email_address
+          = f.input :password
+          = f.input :password_confirmation
       .modal__footer
-        = f.submit "Sign up", class: "btn btn--primary"
+        = f.button :submit
