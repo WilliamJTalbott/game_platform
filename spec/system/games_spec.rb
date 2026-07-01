@@ -2,11 +2,28 @@ require 'rails_helper'
 RSpec.describe 'Games', type: :system do
   let(:be_on_games_page) { have_content 'All Games' }
   let(:user) { create(:user) }
+
+  before { login_user(user) }
   
   it 'shows the games index' do
-    login_user(user)
     visit games_path
     expect(page).to be_on_games_page
+  end
+
+  it 'lets user go to game/new' do
+    visit games_path
+    click_on "New Game"
+    expect(page).to have_content "Setup Game"
+  end
+
+  context "When a user creates a game" do
+    let!(:game) { create(:game) }
+    it "adds to Database and reroutes to root" do 
+      expect do
+        setup_game(game.name, game.type)
+        expect(page).to have_current_path game_path(game)
+      end.to change(Game, :count).by 1
+    end
   end
 
 end

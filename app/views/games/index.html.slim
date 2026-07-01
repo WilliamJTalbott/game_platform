@@ -4,7 +4,7 @@
     .collection
       .game-bar.game-bar--header
         h1 Your Games
-        button.btn.btn--primary
+        = link_to new_game_path, class: "btn btn--primary" do
           i.ph.ph-settings.icon.icon--weight-semi-bold plus
           | New Game
 
@@ -19,9 +19,6 @@
     .collection
       .game-bar.game-bar--header
         h1 All Games
-        button.btn.btn--primary
-          i.ph.ph-settings.icon.icon--weight-semi-bold plus
-          | New Game
 
       .collection
         .game-bar.card
