@@ -14,9 +14,13 @@
         .field
           = f.label :email_address, "Email"
           = f.email_field :email_address, required: true, placeholder: "user@example.com", class: "form-control"
+          - if @user.errors[:email_address].any?
+            span = @user.errors[:email_address].to_sentence
         .field
           = f.label :password, "Password"
           = f.password_field :password, required: true, class: "form-control"
+          - if @user.errors[:password].any?
+            span = @user.errors[:password].to_sentence
         .field
           = f.label :password_confirmation, "Confirm Password"
           = f.password_field :password_confirmation, required: true, class: "form-control"

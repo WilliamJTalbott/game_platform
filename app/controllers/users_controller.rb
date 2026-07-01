@@ -12,7 +12,6 @@ class UsersController < ApplicationController
       start_new_session_for(@user)
       redirect_to root_path
     else
-      flash.now[:alert] = 'Invalid signup'
       render :new
     end
   end

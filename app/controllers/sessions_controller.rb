@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
     end
   end
 
-  def destroy
+  def destroy 
     terminate_session
     redirect_to new_session_path, status: :see_other
   end
