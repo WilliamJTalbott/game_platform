@@ -27,5 +27,14 @@ RSpec.describe 'Session', type: :system do
       expect(page).to have_current_path new_user_path
     end
   end 
+
+  context "When logged in and clicks logout" do
+    before {login_user(user)}
+    it "sends them to the login page" do
+      click_on "Logout"
+      expect(page).to have_current_path new_session_path
+    end
+  end
+
   
 end
