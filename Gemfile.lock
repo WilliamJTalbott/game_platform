@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/RoleModel/rolemodel_rails.git
-  revision: e37813efe204abd58b1fa92bff2da7f7ee30a7f1
+  revision: 30fcda033fe76fa4e34782d32272827147e6c216
   specs:
-    rolemodel-rails (1.2.0)
+    rolemodel-rails (1.3.0)
       rails (> 7.1)
 
 GEM
@@ -175,7 +175,7 @@ GEM
     loofah (2.25.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    mail (2.9.0)
+    mail (2.9.1)
       logger
       mini_mime (>= 0.1.1)
       net-imap
@@ -192,7 +192,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2026.0414)
+    mime-types-data (3.2026.0701)
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
@@ -337,7 +337,7 @@ GEM
     rspec-support (3.13.7)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.88.0)
+    rubocop (1.88.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -370,6 +370,9 @@ GEM
       ffi (~> 1.12)
       logger
     securerandom (0.4.1)
+    simple_form (5.4.1)
+      actionpack (>= 7.0)
+      activemodel (>= 7.0)
     slim (5.2.1)
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
@@ -456,6 +459,7 @@ DEPENDENCIES
   rspec-rails
   rspec_junit_formatter
   rubocop-rails-omakase
+  simple_form (~> 5.4)
   slim (~> 5.2)
   slim-rails (~> 4.0)
   stimulus-rails
