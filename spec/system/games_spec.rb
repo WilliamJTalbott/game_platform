@@ -20,7 +20,7 @@ RSpec.describe 'Games', type: :system do
     let!(:game) { create(:game) }
     it "adds to Database and reroutes to root" do 
       expect do
-        setup_game(game.name, game.type)
+        setup_game(game.name, game.game_type)
         expect(page).to have_current_path game_path(game)
       end.to change(Game, :count).by 1
     end
