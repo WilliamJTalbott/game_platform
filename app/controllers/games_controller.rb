@@ -8,10 +8,14 @@ class GamesController < ApplicationController
     @game = Game.new
   end
 
+  def show
+    @game = Game.find(params[:id])
+  end
+
   def create
     @game = Game.new(game_params)
     if @game.save
-      redirect_to game_path(@game)
+      redirect_to @game
     else
       render :new
     end

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :game do
     name { "My Game" }
-    game_type { "go_fish" }
+    game_type { "Go Fish" }
   end
 end
