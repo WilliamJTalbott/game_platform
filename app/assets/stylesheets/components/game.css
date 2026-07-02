@@ -1,0 +1,23 @@
+
+.game {
+  display: flex;
+  flex-direction: column;
+
+  padding: var(--op-space-2x-large);
+  gap: var(--op-space-large);
+
+  .game__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 { font-weight: var(--op-font-weight-semi-bold) }
+  }
+
+  .game__body {
+    flex: 1;
+
+    border-radius: var(--op-radius-2x-large);
+    background-color: var(--op-color-neutral-plus-five);
+  }
+}

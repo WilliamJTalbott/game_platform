@@ -1,6 +1,6 @@
 require 'rails_helper'
 RSpec.describe 'Games', type: :system do
-  let(:be_on_games_page) { have_content 'All Games' }
+  let(:be_on_games_page) { have_content 'Games' }
   let(:user) { create(:user) }
 
   before { login_user(user) }
@@ -23,6 +23,28 @@ RSpec.describe 'Games', type: :system do
         setup_game(game.name, game.game_type)
         expect(page).to have_content game.name
       end.to change(Game, :count).by 1
+    end
+  end
+
+  context "When a game has been created" do
+    let!(:game) { create(:game) }
+    it "lets other users join" do
+      expect do
+        visit games_path
+        click_on "Join"
+        expect(page).to have_current_path(game_path(game))
+      end.to change(game.players, :count).by 1
+    end
+  end
+
+  context "When a game has been created" do
+    let!(:game) { create(:game) }
+    it "lets other users join" do
+      expect do
+        visit games_path
+        click_on "Join"
+        expect(page).to have_current_path(game_path(game))
+      end.to change(game.players, :count).by 1
     end
   end
 

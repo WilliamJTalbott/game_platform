@@ -9,25 +9,11 @@
           | New Game
 
       .collection
-        .game-bar.card
-          p Game 1
-          button.btn.btn--primary Play now
-        .game-bar.card
-          p Game 2
-          button.btn.btn--primary Play now
+        = render partial: 'game', collection: @user_games, locals: { is_user_game: true, }
 
     .collection
       .game-bar.game-bar--header
         h1 All Games
 
       .collection
-        .game-bar.card
-          p Game 0
-          button.btn.btn--primary Join
-        .game-bar.card
-          p Game 1
-          button.btn.btn--primary Join
-        .game-bar.card
-          p Game 2
-          button.btn.btn--primary Join
-
+        = render partial: 'game', collection: @other_games, locals: { is_user_game: false, }

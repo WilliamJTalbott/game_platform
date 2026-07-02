@@ -10,6 +10,10 @@ Rails.application.routes.draw do
   resources :pages, only: [:index]
   resources :stats, only: [:index]
 
-  resources :games
+  resources :games do
+    resources :players, only: [:create, :show]
+  end
+
   resources :users
+
 end
