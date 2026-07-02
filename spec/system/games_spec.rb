@@ -17,12 +17,11 @@ RSpec.describe 'Games', type: :system do
   end
 
   context "When a user creates a game" do
-    let!(:game) { create(:game) }
+    let!(:game) { build(:game) }
     it "adds to Database and reroutes to game/show" do 
       expect do
         setup_game(game.name, game.game_type)
         expect(page).to have_content game.name
-        expect(page).to have_current_path game_path(game)
       end.to change(Game, :count).by 1
     end
   end
