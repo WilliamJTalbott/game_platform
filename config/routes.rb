@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     resources :players, only: [:create, :show]
   end
 
+  resources :history, only: [:index]
   resources :users
 
 end

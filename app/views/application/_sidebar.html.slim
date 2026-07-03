@@ -16,7 +16,7 @@
       a.btn.btn--no-border href="/pages/rules"
         i.ph.ph-settings.icon.icon--weight-semi-bold book-bookmark
         | Rules
-      a.btn.btn--no-border href="/games/history"
+      = button_to history_index_path, method: :get, class: "btn btn--no-border" do 
         i.ph.ph-settings.icon.icon--weight-semi-bold books
         | History
 

@@ -7,11 +7,7 @@
         th Winner
         
     tbody
-      tr
-        td Da Boyz
-        td 15:08
-        td Drewski
-
+      = render partial: "history/game", collection: @games
     tfoot
       tr
         td colspan="2" Total movies
