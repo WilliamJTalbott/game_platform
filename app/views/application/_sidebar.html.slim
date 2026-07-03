@@ -10,12 +10,11 @@
       a.btn.btn--no-border href="/stats"
         i.ph.ph-settings.icon.icon--weight-semi-bold chart-line
         | Stats
-      / button.btn.btn--no-border
-      /   i.ph.ph-settings.icon.icon--weight-semi-bold trophy
-      /   | Leaderboard
-      a.btn.btn--no-border href="/pages/rules"
+
+      = button_to rules_path, method: :get, class: "btn btn--no-border" do 
         i.ph.ph-settings.icon.icon--weight-semi-bold book-bookmark
         | Rules
+
       = button_to history_index_path, method: :get, class: "btn btn--no-border" do 
         i.ph.ph-settings.icon.icon--weight-semi-bold books
         | History
