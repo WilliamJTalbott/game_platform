@@ -4,7 +4,7 @@ RSpec.describe 'Rules', type: :system do
   
   it 'shows the games index' do
     login_user(user)
-    visit pages_rules_path
+    visit rules_path
     expect(page).to have_content 'Go Fish Rules'
   end
 

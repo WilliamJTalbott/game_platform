@@ -8,9 +8,8 @@ class User < ApplicationRecord
   validates :email_address, presence: true, uniqueness: { case_insensitive: true }, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 8 }
 
-  def games_played = self.games.count
-
-  def games_won = self.players.find_by(winner: true)
+  def games_played = self.games.where.not(finished_at: nil).size
+  def games_won = self.players.where(winner: true).size
     
   def win_percentage = (games_won.to_f / games_played) * 100
 

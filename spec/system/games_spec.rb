@@ -51,11 +51,9 @@ RSpec.describe 'Games', type: :system do
   context "When a game has finished" do
     let(:game_name) { "This game" }
     let!(:finished_game) { create(:game, :go_fish, :finished, name: game_name) }
-
     it "shown in participant history" do
       visit history_index_path
       expect(page).to have_content( game_name )
     end
-
   end
 end

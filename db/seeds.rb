@@ -6,5 +6,4 @@ Game.destroy_all
 
 puts "Seeding database with FactoryBot..."
 
-create(:user)
-create(:game, :go_fish, :finished, name: "Seed Game")
+create(:game, :go_fish, :has_winner, name: "Seed Game")

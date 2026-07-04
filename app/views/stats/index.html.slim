@@ -16,7 +16,15 @@
       i.ph.ph-settings.icon timer
       | Play time
 
-    p user.
+    p Number of Games Played
+
+    p = @user.games_played
+
+    p Number of Games Won
+    p = @user.games_won
+
+    p Win Percentage
+    p = @user.win_percentage
 
   / .stats-page__body
   /   .stat-block
