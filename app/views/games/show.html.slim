@@ -1,6 +1,47 @@
-.game
-  .game__header
-    h1 = @game.name
-    .badge = @game.status
+div.game
+  / Board
+  div.panel.panel--board
 
-  .game__body
+    div.panel__header.header--top
+      h2 = @game.name
+    div.panel__body
+
+      div.op-stack.items-stretch.gap-xs
+      p Players
+
+  / Feed
+  div.panel.panel--feed.panel--side
+
+    div.panel__header.header--top
+      p Game Feed
+
+    div.panel__body
+      div.feed__messages
+
+      form.request-form action="/game" method="post"
+        div.request-form__details
+
+          div.form-group
+            label.form-label Player
+            select.form-control.form-control--small name='player'
+
+          div.form-group
+            label.form-label Rank
+            select.form-control.form-control--small name='rank'
+
+        button.btn.btn--primary name='ask_button' Ask for card
+
+  / Hand
+  div.panel.panel--hand.panel--base
+
+    div.panel__header
+      p Your Hand
+
+    div.panel__body
+
+  / Books
+  div.panel.panel--books.panel--side.panel--base
+    div.panel__header
+      p Books
+
+    div.panel__body

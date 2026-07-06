@@ -1,0 +1,32 @@
+.playing-card {
+
+  min-height: 0;
+
+  flex-shrink: 1;
+
+  overflow-y: auto;
+
+  --gf-reverse-spacing: -50px;
+  --gf-card-height-large: 250px;
+  --gf-card-border-width: 3px;
+  --_gf-playing-card-shadow: 0 0 2px 1px var(--op-color-black);
+
+  border: var(--gf-card-border-width) solid var(--op-color-neutral-plus-two);
+  border-radius: var(--op-radius-x-large);
+
+  box-shadow: var(--_gf-playing-card-shadow);
+
+  margin: var(--gf-card-border-width);
+  margin-left: var(--gf-reverse-spacing);
+  transition: transform 0.2s ease-in-out;
+
+  &.playing-card--playable:hover{
+    transform: translateY(var(--gf-reverse-spacing));
+    border: var(--gf-card-border-width) solid var(--op-color-primary-minus-two);
+  }
+
+  &:first-child {
+    margin-left: 0;
+  }
+
+}
