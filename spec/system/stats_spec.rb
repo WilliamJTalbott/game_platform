@@ -12,8 +12,6 @@ RSpec.describe 'Stats', type: :system do
     let(:games_lost) { 8 }
     let(:games_won) { 5 }
     
-
-
     let!(:users) { create_list(:user, 5) }
 
     before do

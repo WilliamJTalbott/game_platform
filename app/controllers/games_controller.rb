@@ -5,8 +5,8 @@ class GamesController < ApplicationController
   end
 
   def index
-    @user_games = Current.games
-    @other_games = Game.all - @user_games
+    @user_games = Current.games.where(finished_at: nil)
+    @other_games = Game.where(started_at: nil) - @user_games
   end
 
   def new

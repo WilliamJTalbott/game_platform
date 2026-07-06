@@ -17,6 +17,8 @@ class Game < ApplicationRecord
 
   def duration
 
+    return unless self.started_at && self.finished_at
+
     total_seconds = (self.started_at - self.finished_at).to_i
     return unless total_seconds
 

@@ -38,6 +38,7 @@ FactoryBot.define do
 
       after(:build) do |game|
         game.players.first.update(winner: true)
+        game.start
         game.end
       end
     end
@@ -47,6 +48,7 @@ FactoryBot.define do
 
       after(:build) do |game|
         game.players.second.update(winner: true)
+        game.start
         game.end
       end
     end
