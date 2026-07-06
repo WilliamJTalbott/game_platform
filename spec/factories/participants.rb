@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :player do
+  factory :participant do
     association :user
     association :game
   end

@@ -19,9 +19,9 @@ class GamesController < ApplicationController
 
   def create
     @game = Game.new(game_params)
-    @player = @game.players.new(user: Current.session.user)
+    @participant = @game.participants.new(user: Current.session.user)
 
-    if @game.save && @player.save
+    if @game.save && @participant.save
       redirect_to @game
     else
       render :new

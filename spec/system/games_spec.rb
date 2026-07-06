@@ -33,7 +33,7 @@ RSpec.describe 'Games', type: :system do
         visit games_path
         click_on "Join"
         expect(page).to have_current_path(game_path(game))
-      end.to change(game.players, :count).by 1
+      end.to change(game.participants, :count).by 1
     end
   end
 
@@ -44,7 +44,7 @@ RSpec.describe 'Games', type: :system do
         visit games_path
         click_on "Join"
         expect(page).to have_current_path(game_path(game))
-      end.to change(game.players, :count).by 1
+      end.to change(game.participants, :count).by 1
     end
   end
 

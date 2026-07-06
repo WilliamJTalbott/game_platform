@@ -1,22 +1,22 @@
 require 'rails_helper'
 
-RSpec.describe Player, type: :model do
+RSpec.describe "Participant", type: :model do
   let!(:user) { create(:user) }
   let!(:game) { create(:game) }
 
   context "When it is possible for user to join game" do
-    let!(:player) { create(:player, game: game, user: user) }
+    let!(:participant) { create(:participant, game: game, user: user) }
     it "is valid" do
-      expect(player).to be_valid
+      expect(participant).to be_valid
     end
 
   end
   
-  context "When player is already in game" do
-    let!(:player) { create(:player, game: game, user: user) }
-    let!(:player2) { build(:player, game: game, user: user) }
+  context "When participant is already in game" do
+    let!(:participant) { create(:participant, game: game, user: user) }
+    let!(:participant2) { build(:participant, game: game, user: user) }
     it "is invalid" do
-      expect(player2).to be_invalid
+      expect(participant2).to be_invalid
     end
   end
 
@@ -24,8 +24,8 @@ RSpec.describe Player, type: :model do
     before { game.start }
 
     it "is invalid" do
-      player = build(:player, game: game, user: user)
-      expect(player).not_to be_valid
+      participant = build(:participant, game: game, user: user)
+      expect(participant).not_to be_valid
     end
   end
 

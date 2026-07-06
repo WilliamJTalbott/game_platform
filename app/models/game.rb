@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-  has_many :players
+  has_many :participants
   enum :game_type, { "Go Fish": 0, "Secret Hitler": 1 }
 
   def start

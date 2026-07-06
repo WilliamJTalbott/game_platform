@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_03_181052) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_06_142840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,14 +23,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_03_181052) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "players", force: :cascade do |t|
+  create_table "participants", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "game_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.boolean "winner", default: false, null: false
-    t.index ["game_id"], name: "index_players_on_game_id"
-    t.index ["user_id"], name: "index_players_on_user_id"
+    t.index ["game_id"], name: "index_participants_on_game_id"
+    t.index ["user_id"], name: "index_participants_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -50,7 +50,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_03_181052) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  add_foreign_key "players", "games"
-  add_foreign_key "players", "users"
+  add_foreign_key "participants", "games"
+  add_foreign_key "participants", "users"
   add_foreign_key "sessions", "users"
 end
