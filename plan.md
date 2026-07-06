@@ -1,7 +1,3 @@
 # Stats
 
-Games played
-
-Games Won
-
-Win percentage
+Write a failing test that expects the deck to actually deal on 'deal!'
