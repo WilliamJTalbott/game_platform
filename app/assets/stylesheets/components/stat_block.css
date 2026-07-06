@@ -1,5 +1,16 @@
 .stat-block {
-    background-color: var(--op-color-primary-base);
-    grid-area: span 1;
-    border-radius: var(--op-radius-2x-large);
+  background-color: var(--op-color-primary-base);
+  grid-area: span 1;
+  border-radius: var(--op-radius-2x-large);
+
+  .stat-block__header {
+    text-align: center;
+    font-size: var(--op-font-4x-large);
+    font-weight: var(--op-font-weight-semi-bold);
+    color: var(--op-color-primary-on-base);
+  }
+
+  .stat-block__body {
+    
+  }
 }
