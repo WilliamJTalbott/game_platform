@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/RoleModel/rolemodel_rails.git
-  revision: 30fcda033fe76fa4e34782d32272827147e6c216
+  revision: 8bd60a5bde864cab37e0355d9d78b82cd761fe82
   specs:
-    rolemodel-rails (1.3.0)
+    rolemodel-rails (2.0.1)
+      benchmark
       rails (> 7.1)
 
 GEM
@@ -88,6 +89,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.22)
     bcrypt_pbkdf (1.1.2)
+    benchmark (0.5.0)
     bigdecimal (4.1.2)
     bindex (0.8.1)
     bootsnap (1.24.6)
