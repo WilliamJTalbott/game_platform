@@ -1,7 +1,6 @@
 class PlayersController < ApplicationController
   
   def create
-    #TODO ASK JOSH
     @game = Game.find(params[:game_id])
     @player = @game.players.new(user: Current.session.user)
     

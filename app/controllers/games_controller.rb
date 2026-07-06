@@ -17,13 +17,11 @@ class GamesController < ApplicationController
     @game = Game.find(params[:id])
   end
 
-  # TODO ASK JOSH
   def create
     @game = Game.new(game_params)
     @player = @game.players.new(user: Current.session.user)
-    @player.save
 
-    if @game.save
+    if @game.save && @player.save
       redirect_to @game
     else
       render :new
