@@ -22,6 +22,10 @@ module GoFish
       from_json(json)
     end
 
+    def self.dump(obj)
+      return obj.as_json
+    end
+
     def as_json
       {
         "players" => players.map(&:as_json)

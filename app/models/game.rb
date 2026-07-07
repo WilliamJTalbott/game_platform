@@ -1,29 +1,16 @@
 class Game < ApplicationRecord
   has_many :participants
-
+  has_many :users, through: :participants
   enum :game_type, { "Go Fish": 0, "Secret Hitler": 1 }
 
-  def build_game
-    GoFish::Game.load(state) || GoFish::Game.new(game_players)
-  end
-
-  def save_game(game)
-    self.state = game.as_json
-  end
-
-  def initialize_game
-    game = GoFish::Game.new(game_players)
-    save_game(game)
-  end
+  serialize :go_fish, coder: GoFish::Game
 
   def start
     self.started_at = Time.current
 
-    game = build_game
-    game.players = game_players
-    game.start
-
-    save_game(game)
+    self.go_fish = GoFish::Game.new(game_players)
+    go_fish.start
+    save!
   end
 
   def can_start?
@@ -40,7 +27,6 @@ class Game < ApplicationRecord
   end
 
   def duration
-
     return unless self.started_at && self.finished_at
 
     total_seconds = (self.started_at - self.finished_at).to_i
@@ -51,21 +37,18 @@ class Game < ApplicationRecord
     seconds = total_seconds % 60
 
     [hours, minutes, seconds].map { |t| t.to_s.rjust(2, '0') }.join(':')
+  end
 
+  def game_players
+    users.map { |user| GoFish::Player.new(user.id, user.email_address) }
   end
 
   def player_from_user(user)
-    build_game.players.find do |player|
-      player.user_id.to_i == user.id
-    end
+    go_fish.players.find { |player| player.user_id == user.id }
   end
 
-  private
-
-  def game_players
-    participants.map do |participant|
-      GoFish::Player.new(user_id: participant.user_id)
-    end
+  def opponents(user)
+    game_players.reject { |player| player.user_id == user.id }
   end
 
 end

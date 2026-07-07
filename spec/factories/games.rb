@@ -3,19 +3,6 @@ FactoryBot.define do
     name { "My Game" }
     game_type { "Go Fish" }
 
-    trait :started do
-      started_at { 3.hours.ago }
-      many_participants
-
-      after(:build) do |game|
-        game.start
-      end
-    end
-
-    trait :go_fish do
-      game_type { "Go Fish" }
-    end
-
     trait :secret_hitler do
       game_type { "Secret Hitler" }
     end
@@ -28,13 +15,21 @@ FactoryBot.define do
     trait :many_participants do
 
       transient do
-        users { [] } 
+        users { [] }
       end
 
       after(:build) do |game, evaluator|
         evaluator.users.each do |user|
           game.participants << build(:participant, game: game, user: user)
         end
+      end
+    end
+
+    trait :started do
+      many_participants
+
+      after(:build) do |game|
+        game.started_at = 1.hour.ago
       end
     end
 

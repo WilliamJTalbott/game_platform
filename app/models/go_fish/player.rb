@@ -1,15 +1,20 @@
 module GoFish
   class Player
-    attr_accessor :user_id, :cards, :books
+    attr_accessor :user_id, :cards, :books, :name
 
-    def initialize(user_id: nil)
-      @user_id = user_id
+    def initialize(id = nil, name = "unset")
+      @name = name
+      @user_id = id
       @cards = []
       @books = []
     end
 
+    def book_count
+      self.books.size
+    end
+
     def self.load(hash)
-      player = new(user_id: hash["user_id"])
+      player = new(hash["user_id"])
 
       player.cards = hash.fetch("cards", []).map { |card| Card.load(card) }
       player.books = hash.fetch("books", []).map { |book| Book.load(book) }

@@ -16,15 +16,15 @@ class GamesController < ApplicationController
 def show
   @game = Game.find(params[:id])
   @started = @game.started_at.present?
-  @current_player = @game.player_from_user(Current.user)
-  @cards = @current_player&.cards || []
+  return unless @started
+    @current_player = @game.player_from_user(Current.user)
+    @opponents = @game.opponents(Current.user)
+    @cards = @current_player&.cards || []
 end
 
 def create
   @game = Game.new(game_params)
   @participant = @game.participants.new(user: Current.session.user)
-
-  @game.initialize_game
 
   if @game.save
     redirect_to @game
