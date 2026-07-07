@@ -53,11 +53,18 @@ RSpec.describe 'Games', type: :system do
   end
 
   context "[ Turn ]" do
-    
+    let!(:game) { create(:started_game, :users_turn, :many_participants, user: user) }
+
+    it "does stuff" do
+      visit game_path(game)
+      click_on "Ask for card"
+      expect(page).to have_css(".message", text: "asked")
+    end
+
   end
 
   context "[ End ]" do
     
   end
-  
+
 end

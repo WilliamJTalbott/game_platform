@@ -1,11 +1,12 @@
 module GoFish
   class Game
 
-    attr_accessor :players, :deck
+    attr_accessor :players, :deck, :turn_index
 
     def initialize(players)
       @players = players
       @deck = Deck.new
+      @turn_index = 0
     end
 
     SMALL_HAND = 5
