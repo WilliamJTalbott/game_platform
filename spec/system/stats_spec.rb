@@ -15,7 +15,7 @@ RSpec.describe 'Stats', type: :system do
     let!(:users) { create_list(:user, 5) }
 
     before do
-      create(:game, :many_participants, users: users)
+      create(:game, :has_participants, users: users)
       games_lost.times { create(:game, :lost, users: users) }
       games_won.times { create(:game, :won, users: users) }
       login_user(users.first)

@@ -12,7 +12,7 @@ FactoryBot.define do
       finished_at { 1.hour.ago }
     end
 
-    trait :many_participants do
+    trait :has_participants do
 
       transient do
         users { [] }
@@ -25,8 +25,20 @@ FactoryBot.define do
       end
     end
 
+    trait :many_participants do
+
+      transient do
+        users_count { 4 }
+      end
+
+      participants do
+        Array.new(users_count) { association(:participant) }
+      end
+
+    end
+
     trait :started do
-      many_participants
+      has_participants
 
       after(:build) do |game|
         game.started_at = 1.hour.ago
@@ -34,7 +46,7 @@ FactoryBot.define do
     end
 
     trait :won do
-      many_participants
+      has_participants
 
       after(:build) do |game|
         game.participants.first.update(winner: true)
@@ -44,12 +56,22 @@ FactoryBot.define do
     end
 
     trait :lost do
-      many_participants
+      has_participants
 
       after(:build) do |game|
         game.participants.second.update(winner: true)
         game.start
         game.end
+      end
+    end
+
+    trait :has_user do
+      transient do
+        user { nil }
+      end
+
+      after(:build) do |game, evaluator|
+        game.participants << build(:participant, game: game, user: evaluator.user)
       end
     end
     
