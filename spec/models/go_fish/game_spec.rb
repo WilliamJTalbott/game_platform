@@ -8,15 +8,15 @@ RSpec.describe GoFish::Game do
   let!(:game) { described_class.new(players) }
   let(:player) { players.first }
 
-  describe "#dump" do
-    let(:json) { described_class.dump(game) }
+  describe "#as_json" do
+    let(:json) { game.as_json }
     it "transforms it into json" do
-      expect(json[:players].count).to eq num_players
+      expect(json["players"].count).to eq num_players
     end
   end
 
   describe "#load" do
-    let(:json) { described_class.dump(game) }
+    let(:json) { game.as_json }
     let(:restored) { described_class.load(json) }
     it "preserves round-trip state" do
       expect(restored.players).to all be_a Player

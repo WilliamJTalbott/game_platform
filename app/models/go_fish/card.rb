@@ -23,6 +23,17 @@ module GoFish
       @suit = suit
     end
 
+    def self.load(hash)
+      new(hash["rank"], hash["suit"])
+    end
+
+    def as_json
+      {
+        "rank" => rank,
+        "suit" => suit
+      }
+    end
+
     def ==(other)
       rank == other.rank && suit == other.suit
     end

@@ -5,6 +5,11 @@ FactoryBot.define do
 
     trait :started do
       started_at { 3.hours.ago }
+      many_participants
+
+      after(:build) do |game|
+        game.start
+      end
     end
 
     trait :go_fish do
@@ -52,7 +57,6 @@ FactoryBot.define do
         game.end
       end
     end
-
-    factory :in_progress, traits: [:started]
+    
   end
 end

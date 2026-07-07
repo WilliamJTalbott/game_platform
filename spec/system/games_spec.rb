@@ -56,4 +56,32 @@ RSpec.describe 'Games', type: :system do
       expect(page).to have_content( game_name )
     end
   end
+
+  context "When game hasn't started" do
+    let!(:game) { create(:game, :go_fish, :many_participants) }
+    it "shows waiting modal" do
+      visit game_path(game)
+      expect(page).to have_content( "Waiting for players..." )
+    end
+  end
+
+  context "When game hasn't started" do
+    let!(:game) { create(:game, :go_fish, :many_participants) }
+    it "User can click 'start' to start game" do
+      visit game_path(game)
+      click_on 'Start Game'
+      
+      within('.hand') do
+        expect(page).to have_css('.playing-card', count: 5)
+      end
+      expect(page).not_to have_content( "Waiting for players..." )
+    end
+  end
+
+  context "When game has started" do
+    let!(:game) { create(:game, :go_fish, :started) }
+    it "populates users hand with cards" do
+    end
+  end
+
 end

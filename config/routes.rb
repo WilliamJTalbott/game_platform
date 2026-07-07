@@ -8,6 +8,9 @@ Rails.application.routes.draw do
 
   resources :games do
     resources :participants, only: [:create, :show]
+    member do
+      post :start
+    end
   end
 
   resources :stats, only: [:index]

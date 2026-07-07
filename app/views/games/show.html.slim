@@ -37,7 +37,8 @@ div.game
     div.panel__header
       p Your Hand
 
-    div.panel__body
+    div.panel__body.hand
+      = render partial: "games/go_fish/card", collection: @cards, as: :card
 
   / Books
   div.panel.panel--books.panel--side.panel--base
@@ -45,3 +46,8 @@ div.game
       p Books
 
     div.panel__body
+
+  - unless @started
+    div.overlay.card
+      h1 Waiting for players...
+      = button_to "Start Game", start_game_path(@game), method: :post, class: "btn btn--primary"
