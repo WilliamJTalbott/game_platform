@@ -28,7 +28,7 @@ RSpec.describe Game, type: :model do
 
     it "returns 'finished' if game has ended" do
       game.start
-      game.end
+      game.finish
       expect(game.status).to eq 'finished'
     end
   end

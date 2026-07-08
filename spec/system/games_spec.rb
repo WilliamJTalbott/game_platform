@@ -55,16 +55,33 @@ RSpec.describe 'Games', type: :system do
   context "[ Turn ]" do
     let!(:game) { create(:started_game, :users_turn, :many_participants, user: user) }
 
-    it "does stuff" do
+    it "allows user to take a turn" do
       visit game_path(game)
       click_on "Ask for card"
       expect(page).to have_css(".message", text: "asked")
     end
 
+    context "When not users turn" do
+      before do
+        game.go_fish.turn_index = 1
+        game.save
+      end
+      it "does not allow user to take a turn" do
+        visit game_path(game)
+        click_on "Ask for card"
+        expect(page).to_not have_css(".message", text: "asked")
+      end
+    end
+
   end
 
   context "[ End ]" do
+    let!(:game) { create(:finished_game, :user_won, :many_participants, user: user) }
     
+    it "does stuff" do
+      visit game_path(game)
+      expect(page).to have_content("#{user.email_address} wins!")
+    end
   end
 
 end

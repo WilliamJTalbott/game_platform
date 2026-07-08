@@ -21,6 +21,7 @@ def show
     @messages = @current_player.messages.reverse || []
     @opponents = @game.opponents(Current.user) || []
     @cards = @current_player&.cards || []
+    @winner = @game.get_winner
 end
 
 def create

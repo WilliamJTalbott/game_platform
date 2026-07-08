@@ -44,6 +44,10 @@ class Game < ApplicationRecord
     [hours, minutes, seconds].map { |t| t.to_s.rjust(2, '0') }.join(':')
   end
 
+  def get_winner
+    self.participants.find_by(winner: true)&.user
+  end
+
   def game_players
     users.map { |user| GoFish::Player.new(user.id, user.email_address) }
   end

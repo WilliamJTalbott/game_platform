@@ -40,12 +40,24 @@ FactoryBot.define do
         has_user
 
         after(:create) do |game, evaluator|
-          turn_index_from_user(game.go_fish, evaluator.user)
+          turn_index_from_user(game, evaluator.user)
         end
       end
 
       after(:create) do |game|
         game.start
+      end
+
+      factory :finished_game do
+        trait :user_won do
+          after(:build) do |game, evaluator|
+            game.participants << build(:participant, :winner, game: game, user: evaluator.user,)
+          end
+        end
+
+        after(:create) do |game|
+          game.finish
+        end
       end
     end
 
@@ -53,33 +65,7 @@ FactoryBot.define do
 end
 
 def turn_index_from_user(game, user)
-  player = game.players.find { |player| player.user_id == user.id }
-  game.turn_index = game.players.index(player) 
+  state = game.go_fish
+  player = state.players.find { |player| player.user_id == user.id }
+  state.turn_index = state.players.index(player) 
 end
-
-  # get user's player, 
-  # get index of that player, 
-  # set turn index on game to that index
-
-# let!(:game) { create(:started_game, :users_turn, user: user) }
-
-
-    # trait :won do
-    #   has_participants
-
-    #   after(:build) do |game|
-    #     game.participants.first.update(winner: true)
-    #     game.start
-    #     game.end
-    #   end
-    # end
-
-    # trait :lost do
-    #   has_participants
-
-    #   after(:build) do |game|
-    #     game.participants.second.update(winner: true)
-    #     game.start
-    #     game.end
-    #   end
-    # end

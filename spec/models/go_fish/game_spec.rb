@@ -32,11 +32,11 @@ RSpec.describe GoFish::Game do
     end
   end
 
-    describe "#start" do
+    describe "#deal" do
       context "when players are passed in" do
 
         it "shuffles and deals the deck" do
-          game.start
+          game.deal
           expect(active_player.cards).to_not eq(unshuffled_cards)
           expect(active_player.cards.size).to eq(5)
         end
@@ -128,10 +128,11 @@ RSpec.describe GoFish::Game do
           player1.books = [GoFish::Book.new("2"),GoFish::Book.new("10")]
           player2.books = [GoFish::Book.new("A")]
         end
-        it "return true and adds message with winner" do
-          game.play_turn(player2, "A")
+        it "returns winner and adds message with winner" do
+          winner = game.play_turn(player2, "A")
           message = player2.messages[2]
           expect(message.text).to include("Bobert wins")
+          expect(winner).to be player1
         end
       end
 
