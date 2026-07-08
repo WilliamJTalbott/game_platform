@@ -18,10 +18,12 @@ def show
   @started = @game.started_at.present?
   return unless @started
     @current_player = @game.player_from_user(Current.user)
-    @messages = @current_player.messages.reverse || []
-    @opponents = @game.opponents(Current.user) || []
-    @cards = @current_player&.cards || []
+    @messages = @current_player.messages.reverse
+    @opponents = @game.opponents(Current.user)
+    @opponent_names = @game.opponents(Current.user).map(&:name)
+    @cards = @current_player&.cards
     @winner = @game.winner
+    @ranks = @current_player.unique_cards.map(&:rank)
 end
 
 def create

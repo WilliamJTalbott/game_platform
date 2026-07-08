@@ -13,7 +13,7 @@ class Game < ApplicationRecord
   end
 
   def play_turn(player_name, rank)
-    player = go_fish.players.find { |player| player.name == player_name }
+    player = go_fish.players.find { |player| player.name == player_name}
     go_fish.play_turn(player, rank)
   end
 

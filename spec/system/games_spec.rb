@@ -72,7 +72,6 @@ RSpec.describe 'Games', type: :system do
         expect(page).to_not have_css(".message", text: "asked")
       end
     end
-
   end
 
   context "[ End ]" do

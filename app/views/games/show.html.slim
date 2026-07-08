@@ -21,24 +21,11 @@ div.game
       div.feed__messages
         = render partial: "games/go_fish/message", collection: @messages, as: :message
 
-      = form_with url: game_turns_path(@game), class: "request-form", method: :post do |f|
-
-        div.request-form__details
-
-          div.form-group
-            = f.label :player, "Player"
-            = f.select :player
-              - @opponents.each do |opponent|
-                option = opponent.name
-
-          div.form-group
-            = f.label :rank, "Rank"
-            = f.select :rank
-              - @current_player.unique_cards.each do |card|
-                option = card.rank
-
-        = f.submit "Ask for card", class: "btn btn--primary"
-
+        = simple_form_for :turn, url: game_turns_path(@game), html: {class: "request-form"} do |f|
+          = f.input :player_name, as: :select, collection: @opponent_names, selected: @opponent_names.first
+          = f.input :rank, as: :select, collection: @ranks, selected: @ranks.first
+          = f.button :submit, "Ask for card", class: "btn btn--primary"
+          
   / Hand
   div.panel.panel--hand.panel--base
 
