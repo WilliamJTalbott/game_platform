@@ -7,14 +7,13 @@ class Game < ApplicationRecord
 
   def start
     self.started_at = Time.current
-    self.go_fish = GoFish::Game.new(game_players)
+    self.go_fish = GoFish::Game.new(create_players)
     go_fish.deal
     save!
   end
 
-  def action(player_name, rank)
+  def play_turn(player_name, rank)
     player = go_fish.players.find { |player| player.name == player_name }
-    raise ArgumentError, "Invalid player" unless player
     go_fish.play_turn(player, rank)
   end
 
@@ -44,12 +43,8 @@ class Game < ApplicationRecord
     [hours, minutes, seconds].map { |t| t.to_s.rjust(2, '0') }.join(':')
   end
 
-  def get_winner
+  def winner
     self.participants.find_by(winner: true)&.user
-  end
-
-  def game_players
-    users.map { |user| GoFish::Player.new(user.id, user.email_address) }
   end
 
   def player_from_user(user)
@@ -57,7 +52,13 @@ class Game < ApplicationRecord
   end
 
   def opponents(user)
-    game_players.reject { |player| player.user_id == user.id }
+    go_fish.players - [ player_from_user(user) ]
+  end
+
+  private
+
+  def create_players
+    users.map { |user| GoFish::Player.new(user.id, user.email_address) }
   end
 
 end

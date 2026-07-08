@@ -2,7 +2,7 @@ class TurnsController < ApplicationController
   before_action :check_user_turn
 
   def create
-    @game.action(params[:player], params[:rank])
+    @game.play_turn(params[:player], params[:rank])
     @game.save
     
     redirect_to @game
@@ -12,7 +12,7 @@ class TurnsController < ApplicationController
     @game = Game.find(params[:game_id])
 
     unless @game.go_fish.active_player == @game.player_from_user(Current.user)
-      redirect_to @game
+      render json: { errors: @game.errors.full_messages }, status: :unprocessable_entity
     end
   end
   
