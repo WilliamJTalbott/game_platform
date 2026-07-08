@@ -13,6 +13,13 @@ class Game < ApplicationRecord
     save!
   end
 
+  def action(player_name, rank)
+    player = go_fish.players.find { |player| player.name == player_name }
+
+    raise ArgumentError, "Invalid player" unless player
+    go_fish.play_turn(player, rank)
+  end
+
   def can_start?
     participants.count >= 2 && started_at.nil?
   end

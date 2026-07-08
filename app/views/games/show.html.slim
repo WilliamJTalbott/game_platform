@@ -19,18 +19,25 @@ div.game
     div.panel__body
       div.feed__messages
 
-      form.request-form action="/game" method="post"
-        div.request-form__details
+      - if @started
 
-          div.form-group
-            label.form-label Player
-            select.form-control.form-control--small name='player'
+        = form_with url: game_turns_path(@game), method: :post do |f|
 
-          div.form-group
-            label.form-label Rank
-            select.form-control.form-control--small name='rank'
+          div.request-form__details
 
-        button.btn.btn--primary name='ask_button' Ask for card
+            div.form-group
+              = f.label :player, "Player"
+              = f.select :player
+                - @opponents.each do |opponent|
+                  option = opponent.name
+
+            div.form-group
+              = f.label :rank, "Rank"
+              = f.select :rank
+                - @current_player.unique_cards.each do |card|
+                  option = card.rank
+
+          = f.submit "Ask for card", class: "btn btn--primary"
 
   / Hand
   div.panel.panel--hand.panel--base

@@ -52,7 +52,7 @@ div.game
       p Your Hand
 
     div.panel__body
-      - player.hand.each do |card|
+      - player.cards.each do |card|
         == slim :card, locals: { card: card }
   / Books
   div.panel.panel--books.panel--side.panel--base

@@ -57,7 +57,6 @@ def turn_index_from_user(game, user)
   game.turn_index = game.players.index(player) 
 end
 
-
   # get user's player, 
   # get index of that player, 
   # set turn index on game to that index

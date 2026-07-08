@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
   resources :games do
     resources :participants, only: [:create, :show]
+    resources :turns, only: [:create]
+
     member do
       post :start
     end
