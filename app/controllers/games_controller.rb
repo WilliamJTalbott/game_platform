@@ -24,6 +24,7 @@ def show
     @cards = @current_player&.cards
     @winner = @game.winner
     @ranks = @current_player.unique_cards.map(&:rank)
+    @is_user_turn = @game.is_user_turn(Current.user)
 end
 
 def create

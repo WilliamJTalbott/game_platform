@@ -55,6 +55,10 @@ class Game < ApplicationRecord
     go_fish.players - [ player_from_user(user) ]
   end
 
+  def is_user_turn(user)
+    self.go_fish.active_player == self.player_from_user(user)
+  end
+
   private
 
   def create_players
