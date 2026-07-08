@@ -7,15 +7,13 @@ class Game < ApplicationRecord
 
   def start
     self.started_at = Time.current
-
     self.go_fish = GoFish::Game.new(game_players)
-    go_fish.start
+    go_fish.deal
     save!
   end
 
   def action(player_name, rank)
     player = go_fish.players.find { |player| player.name == player_name }
-
     raise ArgumentError, "Invalid player" unless player
     go_fish.play_turn(player, rank)
   end
@@ -24,7 +22,7 @@ class Game < ApplicationRecord
     participants.count >= 2 && started_at.nil?
   end
 
-  def end
+  def finish
     self.finished_at = Time.current
   end
 

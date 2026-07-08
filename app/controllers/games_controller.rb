@@ -18,7 +18,8 @@ def show
   @started = @game.started_at.present?
   return unless @started
     @current_player = @game.player_from_user(Current.user)
-    @opponents = @game.opponents(Current.user)
+    @messages = @current_player.messages.reverse || []
+    @opponents = @game.opponents(Current.user) || []
     @cards = @current_player&.cards || []
 end
 

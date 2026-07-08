@@ -10,14 +10,12 @@ module GoFish
       @messages = []
     end
 
-    Message = Struct.new(:type, :text)
-
     def remove_cards(cards)
       self.cards -= Array(cards)
     end
 
     def unique_cards
-      cards.uniq { |card| card.rank }
+      cards.uniq { |card| card.rank } || []
     end
 
     def book_count
@@ -60,6 +58,7 @@ module GoFish
 
       player.cards = hash.fetch("cards", []).map { |card| Card.load(card) }
       player.books = hash.fetch("books", []).map { |book| Book.load(book) }
+      player.messages = hash.fetch("messages", []).map { |message| Message.load(message) }
 
       player
     end
@@ -69,7 +68,8 @@ module GoFish
         "user_id" => user_id,
         "name" => name,
         "cards" => cards.map(&:as_json),
-        "books" => books.map(&:as_json)
+        "books" => books.map(&:as_json),
+        "messages" => messages.map(&:as_json)
       }
     end
 

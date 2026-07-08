@@ -14,6 +14,18 @@ module GoFish
       end
     end
 
+    def as_json
+      {
+        "cards" => cards.map(&:as_json),
+      }
+    end
+
+    def self.load(hash)
+      deck = new
+      deck.cards = hash.fetch("cards", []).map { |card| Card.load(card) }
+      deck
+    end
+
     def draw(player)
       card = cards.pop
       player.receive(card)

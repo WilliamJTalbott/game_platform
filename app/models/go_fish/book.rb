@@ -1,11 +1,15 @@
 module GoFish
   class Book
     attr_reader :rank
-    SIZE = 4
 
     def initialize(rank)
       @rank = rank
     end
+
+    SIZE = 4
+
+    def as_json = {"rank" => rank}
+    def self.load(hash) = new(hash["rank"])
 
     def ==(other)
       rank == other.rank

@@ -1,15 +1,13 @@
 module GoFish
   class Game
 
-    attr_accessor :players, :deck, :turn_index, :results, :winner
+    attr_accessor :players, :deck, :turn_index, :results
 
     def initialize(players)
       @players = players
       @deck = Deck.new
       @turn_index = 0
       @results = []
-      @winner = nil
-
     end
 
     SMALL_HAND = 5
@@ -18,14 +16,16 @@ module GoFish
 
     def active_player = players[turn_index]
 
-    def start
+    def deal
       deck.shuffle
-      deal
+      players.each { |player| deck.deal(player, hand_amount) }
     end
 
     def play_turn(target, rank)
       new_turn_result(target, rank)
       handle_turn(target, rank)
+
+      return get_winner if is_winner?
     end
 
     def self.load(json)
@@ -39,13 +39,18 @@ module GoFish
 
     def as_json
       {
-        "players" => players.map(&:as_json)
+        "players" => players.map(&:as_json),
+        "deck" => deck.as_json,
+        "turn_index" => turn_index,
       }
     end
 
-    def self.from_json(json)
-      players = json["players"].map { |player_hash| Player.load(player_hash) }
-      self.new(players)
+    def self.from_json(hash)
+      players = hash["players"].map { |player_hash| Player.load(player_hash) }
+      game = self.new(players)
+      game.deck = Deck.load(hash["deck"])
+      game.turn_index = hash["turn_index"]
+      game
     end
 
     private
@@ -101,18 +106,13 @@ module GoFish
     end
 
     def repeat_turn
-      turn_checks
+      draw_on_empty(active_player)
       switch_turn if active_player.cards.empty?
     end
 
     def end_turn
-      turn_checks
-      switch_turn
-    end
-
-    def turn_checks
       draw_on_empty(active_player)
-      set_winner if is_winner?
+      switch_turn
     end
 
     def switch_turn
@@ -134,18 +134,15 @@ module GoFish
 
     def is_winner? = players.none? { |player| !player.cards.empty? }
 
-    def set_winner
+    def get_winner
       player = decide_winner
-      turn_result&.winner(player)
-      self.winner = player
+      return nil unless player
+      turn_result.winner(player)
+      player
     end
 
     def hand_amount
       players.size < MIN_PLAYERS_SMALL_HAND ? LARGE_HAND : SMALL_HAND
-    end
-
-    def deal
-      players.each { |player| deck.deal(player, hand_amount) }
     end
 
   end
