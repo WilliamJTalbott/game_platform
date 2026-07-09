@@ -42,20 +42,40 @@ class Game < ApplicationRecord
     [hours, minutes, seconds].map { |t| t.to_s.rjust(2, '0') }.join(':')
   end
 
+  def player_from_user(user)
+    self.go_fish.players.find { |player| player.user_id == user.id }
+  end
+
+  def is_user_turn?(user)
+    self.go_fish.active_player == self.player_from_user(user)
+  end
+
+  def started
+    self.started_at.present?
+  end
+
+  def messages(user)
+    player_from_user(user).messages.reverse
+  end
+
+  def opponents(user)
+    self.go_fish.players - [ player_from_user(user) ]
+  end
+
+  def opponent_names(user)
+    self.opponents(user).map(&:name)
+  end
+
+  def cards(user)
+    player_from_user(user)&.cards
+  end
+
   def winner
     self.participants.find_by(winner: true)&.user
   end
 
-  def player_from_user(user)
-    go_fish.players.find { |player| player.user_id == user.id }
-  end
-
-  def opponents(user)
-    go_fish.players - [ player_from_user(user) ]
-  end
-
-  def is_user_turn(user)
-    self.go_fish.active_player == self.player_from_user(user)
+  def ranks(user)
+    player_from_user(user).unique_cards.map(&:rank)
   end
 
   private

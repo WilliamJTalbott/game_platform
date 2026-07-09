@@ -8,7 +8,8 @@ div.game
 
       div.op-stack.items-stretch.gap-xs
         p Players
-        = render partial: "games/go_fish/opponent", collection: @opponents, as: :opponent
+        - if @game.started
+          = render partial: "games/go_fish/opponent", collection: @game.opponents(current_user), as: :opponent
 
   / Feed
   div.panel.panel--feed.panel--side
@@ -17,15 +18,14 @@ div.game
       p Game Feed
 
     div.panel__body
-    - if @started
+    - if @game.started
       div.feed__messages
-        = render partial: "games/go_fish/message", collection: @messages, as: :message
+        = render partial: "games/go_fish/message", collection: @game.messages(current_user), as: :message
 
       = simple_form_for :turn, url: game_turns_path(@game), html: {class: "request-form"} do |f|
-        = f.input :player_name, as: :select, collection: @opponent_names, selected: @opponent_names.first
-        = f.input :rank, as: :select, collection: @ranks, selected: @ranks.first
-        = f.button :submit, "Ask for card", class: "btn btn--primary", disabled: !@is_user_turn
-        
+        = f.input :player_name, as: :select, collection: @game.opponent_names(current_user), selected: @game.opponent_names(current_user).first
+        = f.input :rank, as: :select, collection: @game.ranks(current_user), selected: @game.ranks(current_user).first
+        = f.button :submit, "Ask for card", class: "btn btn--primary", disabled: !@game.is_user_turn?(current_user)
   / Hand
   div.panel.panel--hand.panel--base
 
@@ -33,7 +33,8 @@ div.game
       p Your Hand
 
     div.panel__body.hand
-      = render partial: "games/go_fish/card", collection: @cards, as: :card
+      - if @game.started
+        = render partial: "games/go_fish/card", collection: @game.cards(current_user), as: :card
 
   / Books
   div.panel.panel--books.panel--side.panel--base
@@ -42,13 +43,13 @@ div.game
 
     div.panel__body
 
-  - if @winner
+  - if @game.winner
     div.overlay.card
-      h1 = "#{@winner.email_address} wins!"
+      h1 = "#{@game.winner.email_address} wins!"
       form action="/reset" method="POST"
         button.btn.btn--primary name='reset_button' type="submit" Restart Game
 
-  - unless @started
+  - unless @game.started
     div.overlay.card
       h1 Waiting for players...
       = button_to "Start Game", start_game_path(@game), method: :post, class: "btn btn--primary"
