@@ -1,5 +1,6 @@
 .panel {
   --gf-navbar-height: 60px ;
+
   display: flex;
   flex-direction: column;
 
@@ -32,6 +33,8 @@
   }
 
   &.panel--side {
+    min-height: 0;
+    min-width: 0;
     border-left: var(--op-border-width) solid var(--op-color-border);
   }
 
@@ -88,22 +91,26 @@
   }
 
   .feed__messages{
-  overflow: auto;
+    overflow: auto;
 
-  display: flex;
-  flex-direction: column-reverse;
-  gap: var(--op-space-x-small);
-  mask-image: linear-gradient(to top, black 85%, transparent 100%);
-  padding-bottom: var(--op-space-medium);
-  }
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--op-space-x-small);
+    mask-image: linear-gradient(to top, black 85%, transparent 100%);
+    padding-bottom: var(--op-space-medium);
+    }
 }
 
 .panel--hand {
   grid-area: hand;
 
   .panel__body{
+    flex: 1;
+    min-height: 0;
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
+
     padding: var(--op-space-medium);
   }
 }

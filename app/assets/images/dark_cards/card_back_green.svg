@@ -9,7 +9,7 @@
   </defs>
 
   <!-- Card base -->
-  <rect width="180" height="252" rx="10" fill="#2a2a2a" stroke="#444444" stroke-width="1.5"/>
+  <rect x="1.5" y="1.5" width="177" height="249" rx="10" fill="#2a2a2a" stroke="#63666B" stroke-width="3"/>
 
   <!-- Inner field with lattice -->
   <rect x="14" y="14" width="152" height="224" rx="6" fill="#111a14"/>
