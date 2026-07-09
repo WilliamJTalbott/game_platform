@@ -9,11 +9,11 @@
           | New Game
 
       .collection
-        = render partial: 'game', collection: @user_games, locals: { is_user_game: true, }
+        = render partial: 'games/game_bar', collection: @user_games, locals: { user_game: true, }, as: :game
 
     .collection
       .game-bar.game-bar--header
         h1 All Games
 
       .collection
-        = render partial: 'game', collection: @other_games, locals: { is_user_game: false, }
+        = render partial: 'games/game_bar', collection: @other_games, locals: { user_game: false, }, as: :game

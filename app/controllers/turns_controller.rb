@@ -5,7 +5,7 @@ class TurnsController < ApplicationController
     @game.play_turn(game_params[:player_name], game_params[:rank])
     @game.save
     
-    redirect_to @game
+    redirect_to game_path(@game)
   end
 
   def check_user_turn

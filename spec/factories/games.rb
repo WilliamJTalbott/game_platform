@@ -1,9 +1,18 @@
 FactoryBot.define do
   factory :game do
     name { "My Game" }
+    type { "GoFishGame" }
 
     transient do
       user { nil }
+    end
+
+    trait :go_fish do
+      type { "GoFishGame" }
+    end
+
+    trait :crazy_eights do
+      type { "CrazyEightsGame" }
     end
 
     trait :has_user do

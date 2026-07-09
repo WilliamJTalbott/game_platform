@@ -54,13 +54,28 @@ RSpec.describe 'Games', type: :system do
   end
 
   context "[ View ]" do
-    let!(:game) { create(:game, :has_user, user: user) }
-    
-    it "lets user join a game" do
-      visit games_path
+    context "go_fish game" do
+      let!(:game) { create(:game, :go_fish, :has_user, user: user) }
 
-      click_on "View"
-      expect(page).to have_current_path(game_path(game))
+      it "lets user join a game" do
+        visit games_path
+        click_on "View"
+
+        expect(page).to have_current_path(game_path(game))
+        expect(page).to have_content("Books")
+      end
+    end
+
+    context "crazy_eights game" do
+      let!(:game) { create(:game, :crazy_eights, :has_user, user: user) }
+
+      it "lets user join a game" do
+        visit games_path
+        click_on "View"
+
+        expect(page).to have_current_path(game_path(game))
+        expect(page).to have_content("Table")
+      end
     end
 
   end
