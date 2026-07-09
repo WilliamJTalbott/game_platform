@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  # before_action :set_game_class
   
   def history
     render :history
@@ -18,14 +19,12 @@ def show
 end
 
 def create
-
-  value = params[:game][:type]
-  type_class = "#{value}Game".delete(' ').constantize
-  
+  type = params[:game][:type]
+  type_class = "#{type}Game".delete(' ').constantize
   @game = type_class.new(game_params)
   @participant = @game.participants.new(user: Current.session.user)
 
-  if @game.save
+  if @game.save!
     redirect_to game_path(@game)
   else
     render :new
@@ -45,6 +44,10 @@ end
 
   
   private
+
+  # def set_game_class
+  #   @game_class = params[:type].constantize
+  # end
 
   def game_params
     params.require(:game).permit( :name, :game_type )

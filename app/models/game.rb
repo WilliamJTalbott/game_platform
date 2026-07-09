@@ -42,6 +42,10 @@ class Game < ApplicationRecord
     [hours, minutes, seconds].map { |t| t.to_s.rjust(2, '0') }.join(':')
   end
 
+  # def self.type_names
+  #   self.subclasses.map(&:name)
+  # end
+
   def player_from_user(user)
     self.go_fish.players.find { |player| player.user_id == user.id }
   end
