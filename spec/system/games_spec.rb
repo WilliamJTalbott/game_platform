@@ -9,11 +9,35 @@ RSpec.describe 'Games', type: :system do
 
     it "lets user create a game" do 
       click_on "New Game"
-      fill_in "Name" , with: name
+      fill_in "Name", with: name
 
       expect do
         click_on "Create Game"
       end.to change(Game, :count).by 1
+    end
+
+    it "lets user create go_fish type" do 
+      click_on "New Game"
+      select "Go Fish", from: "Type"
+
+      expect do
+        click_on "Create Game"
+      end.to change(Game, :count).by 1
+
+      last_game = Game.last
+      expect(last_game).to be_an_instance_of(GoFishGame)
+    end
+
+  it "lets user create go_fish type" do
+      click_on "New Game" 
+      select "Crazy Eights", from: "Type"
+
+      expect do
+        click_on "Create Game"
+      end.to change(Game, :count).by 1
+
+      last_game = Game.last
+      expect(last_game).to be_an_instance_of(CrazyEightsGame)
     end
   end
 

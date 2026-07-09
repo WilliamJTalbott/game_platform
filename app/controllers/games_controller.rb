@@ -28,11 +28,15 @@ def show
 end
 
 def create
-  @game = Game.new(game_params)
+
+  value = params[:game][:type]
+  type_class = "#{value}Game".delete(' ').constantize
+  
+  @game = type_class.new(game_params)
   @participant = @game.participants.new(user: Current.session.user)
 
   if @game.save
-    redirect_to @game
+    redirect_to game_path(@game)
   else
     render :new
   end
@@ -55,5 +59,5 @@ end
   def game_params
     params.require(:game).permit( :name, :game_type )
   end
-
+  
 end

@@ -1,7 +1,6 @@
 class Game < ApplicationRecord
   has_many :participants
   has_many :users, through: :participants
-  enum :game_type, { "Go Fish": 0, "Secret Hitler": 1 }
 
   serialize :go_fish, coder: GoFish::Game
 
