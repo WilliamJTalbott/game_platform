@@ -15,16 +15,6 @@ class GamesController < ApplicationController
 
 def show
   @game = Game.find(params[:id])
-  @started = @game.started_at.present?
-  return unless @started
-    @current_player = @game.player_from_user(Current.user)
-    @messages = @current_player.messages.reverse
-    @opponents = @game.opponents(Current.user)
-    @opponent_names = @game.opponents(Current.user).map(&:name)
-    @cards = @current_player&.cards
-    @winner = @game.winner
-    @ranks = @current_player.unique_cards.map(&:rank)
-    @is_user_turn = @game.is_user_turn(Current.user)
 end
 
 def create

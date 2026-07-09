@@ -57,7 +57,7 @@ RSpec.describe 'Games', type: :system do
 
     it "allows user to take a turn" do
       visit game_path(game)
-      expect(game.is_user_turn(user)).to be true
+      expect(game.is_user_turn?(user)).to be true
       click_button "Ask for card"
       expect(page).to have_css(".message", text: "asked")
     end

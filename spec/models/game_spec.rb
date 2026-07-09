@@ -86,7 +86,6 @@ RSpec.describe Game, type: :model do
       player = game.player_from_user(user)
       opponents = game.opponents(user)
 
-
       expect(opponents).to_not be_empty
       expect(opponents).not_to include(player)
     end
