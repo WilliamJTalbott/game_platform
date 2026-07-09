@@ -39,7 +39,7 @@ end
       @game.save
     end
 
-    redirect_to @game
+    redirect_to game_path(@game)
   end
 
   

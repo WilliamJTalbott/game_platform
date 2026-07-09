@@ -88,7 +88,7 @@ RSpec.describe 'Games', type: :system do
 
     context "When not users turn" do
       before do
-        game.go_fish.turn_index = 1
+        game.state.turn_index = 1
         game.save
       end
       it "does not allow user to take a turn" do

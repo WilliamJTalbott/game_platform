@@ -2,18 +2,18 @@ class Game < ApplicationRecord
   has_many :participants
   has_many :users, through: :participants
 
-  serialize :go_fish, coder: GoFish::Game
+  serialize :state, coder: GoFish::Game
 
   def start
     self.started_at = Time.current
-    self.go_fish = GoFish::Game.new(create_players)
-    go_fish.deal
+    self.state = GoFish::Game.new(create_players)
+    state.deal
     save!
   end
 
   def play_turn(player_name, rank)
-    player = go_fish.players.find { |player| player.name == player_name}
-    go_fish.play_turn(player, rank)
+    player = state.players.find { |player| player.name == player_name}
+    state.play_turn(player, rank)
   end
 
   def can_start?
@@ -47,11 +47,11 @@ class Game < ApplicationRecord
   # end
 
   def player_from_user(user)
-    self.go_fish.players.find { |player| player.user_id == user.id }
+    self.state.players.find { |player| player.user_id == user.id }
   end
 
   def is_user_turn?(user)
-    self.go_fish.active_player == self.player_from_user(user)
+    self.state.active_player == self.player_from_user(user)
   end
 
   def started
@@ -63,7 +63,7 @@ class Game < ApplicationRecord
   end
 
   def opponents(user)
-    self.go_fish.players - [ player_from_user(user) ]
+    self.state.players - [ player_from_user(user) ]
   end
 
   def opponent_names(user)

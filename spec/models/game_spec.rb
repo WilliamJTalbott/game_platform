@@ -28,7 +28,7 @@ RSpec.describe Game, type: :model do
       expect(game.started_at).to_not be_nil
     end
     it "deals cards to players" do
-      player = game.go_fish.players.first
+      player = game.state.players.first
       expect(player.cards).to_not be_empty
     end
   end
@@ -48,12 +48,12 @@ RSpec.describe Game, type: :model do
   context "#action" do
     before do
       game.start
-      game.go_fish.players.last.name = "Toast"
-      game.go_fish.players.last.cards = []
+      game.state.players.last.name = "Toast"
+      game.state.players.last.cards = []
     end
 
     it "it runs a turn" do
-      expect { game.play_turn("Toast", "A") }.to change { game.go_fish.deck.cards.size }
+      expect { game.play_turn("Toast", "A") }.to change { game.state.deck.cards.size }
     end
 
   end
@@ -63,7 +63,7 @@ RSpec.describe Game, type: :model do
 
     before do
       game.start
-      game.go_fish.players.last.user_id = user.id
+      game.state.players.last.user_id = user.id
     end
 
     it "gets proper player" do
@@ -79,7 +79,7 @@ RSpec.describe Game, type: :model do
 
     before do
       game.start
-      game.go_fish.players.last.user_id = user.id
+      game.state.players.last.user_id = user.id
     end
 
     it "gets proper player" do

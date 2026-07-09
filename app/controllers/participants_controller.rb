@@ -5,7 +5,7 @@ class ParticipantsController < ApplicationController
     @participant = @game.participants.new(user: Current.session.user)
     
     if @participant.save
-      redirect_to @game
+      redirect_to game_path(@game)
     else
       redirect_to games_path
     end
