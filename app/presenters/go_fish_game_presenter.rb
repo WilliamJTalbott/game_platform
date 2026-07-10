@@ -1,7 +1,7 @@
-
 class GoFishGamePresenter
 
   attr_reader :game, :user
+  delegate :to_partial_path, to: :game
 
   def initialize(game, user)
     @game = game
@@ -39,13 +39,6 @@ class GoFishGamePresenter
 
   def ranks
     player.unique_cards.map(&:rank)
-  end
-
-
-  # ASK JOSH
-
-  def to_partial_path
-    "go_fish_games/go_fish_game"
   end
 
 end
