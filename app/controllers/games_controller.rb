@@ -1,5 +1,4 @@
 class GamesController < ApplicationController
-  # before_action :set_game_class
   
   def history
     render :history
@@ -15,7 +14,8 @@ class GamesController < ApplicationController
   end
 
 def show
-  @game = Game.find(params[:id])
+  game = Game.find(params[:id])
+  @game_info = game.presenter(Current.session.user)
 end
 
 def create
@@ -42,12 +42,7 @@ end
     redirect_to game_path(@game)
   end
 
-  
   private
-
-  # def set_game_class
-  #   @game_class = params[:type].constantize
-  # end
 
   def game_params
     params.require(:game).permit( :name, :game_type )

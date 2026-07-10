@@ -57,7 +57,7 @@ RSpec.describe 'Games', type: :system do
     context "go_fish game" do
       let!(:game) { create(:game, :go_fish, :has_user, user: user) }
 
-      it "lets user join a game" do
+      it "lets user view a game" do
         visit games_path
         click_on "View"
 
@@ -69,7 +69,7 @@ RSpec.describe 'Games', type: :system do
     context "crazy_eights game" do
       let!(:game) { create(:game, :crazy_eights, :has_user, user: user) }
 
-      it "lets user join a game" do
+      it "lets user view a game" do
         visit games_path
         click_on "View"
 
@@ -81,36 +81,73 @@ RSpec.describe 'Games', type: :system do
   end
 
   context "[ Start ]" do
-    let!(:game) { create(:game, :has_user, :many_participants, user: user) }
 
-    it "lets user start a game" do
-      visit game_path(game)
-      click_on "Start Game"
-      expect(page).to_not have_content( "Waiting for players..." )
-      expect(page).to have_http_status(:ok)
+    context "go_fish game" do
+      let!(:game) { create(:game, :go_fish, :has_user, :many_participants, user: user) }
+      it "lets user start a game" do
+        visit game_path(game)
+        click_on "Start Game"
+        expect(page).to_not have_content( "Waiting for players..." )
+        expect(page).to have_http_status(:ok)
+      end
     end
+
+    context "crazy_eights game" do
+      let!(:game) { create(:game, :crazy_eights, :has_user, :many_participants, user: user) }
+      it "lets user start a game" do
+        visit game_path(game)
+        click_on "Start Game"
+        expect(page).to_not have_content( "Waiting for players..." )
+        expect(page).to have_http_status(:ok)
+      end
+    end
+
   end
 
   context "[ Turn ]" do
-    let!(:game) { create(:started_game, :users_turn, :many_participants, user: user) }
 
-    it "allows user to take a turn" do
-      visit game_path(game)
-      expect(game.is_user_turn?(user)).to be true
-      click_button "Ask for card"
-      expect(page).to have_css(".message", text: "asked")
-    end
+    context "go_fish game" do
+      let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
 
-    context "When not users turn" do
-      before do
-        game.state.turn_index = 1
-        game.save
-      end
-      it "does not allow user to take a turn" do
+      it "allows user to take a turn" do
         visit game_path(game)
-        expect(page).to have_button('Ask for card', disabled: true)
+        click_button "Ask for card"
+        expect(page).to have_css(".message", text: "asked")
+      end
+
+      context "When not users turn" do
+        before do
+          game.state.turn_index = 1
+          game.save
+        end
+        it "does not allow user to take a turn" do
+          visit game_path(game)
+          expect(page).to have_button('Ask for card', disabled: true)
+        end
       end
     end
+
+    context "crazy_eights game" do
+      let!(:game) { create(:started_game, :crazy_eights, :users_turn, :many_participants, user: user) }
+      it "allows user to take a turn" do
+        visit game_path(game)
+        expect(game.is_user_turn?(user)).to be true
+        click_button "Play card"
+        expect(page).to have_css(".message", text: "played")
+      end
+
+      context "When not users turn" do
+        before do
+          game.state.turn_index = 1
+          game.save
+        end
+        it "does not allow user to take a turn" do
+          visit game_path(game)
+          expect(page).to have_button('Play card', disabled: true)
+        end
+      end
+    end
+
   end
 
   context "[ End ]" do

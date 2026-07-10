@@ -3,6 +3,8 @@ FactoryBot.define do
     name { "My Game" }
     type { "GoFishGame" }
 
+    initialize_with { type.present? ? type.constantize.new(attributes) : Game.new(attributes) }
+
     transient do
       user { nil }
     end

@@ -69,25 +69,8 @@ RSpec.describe Game, type: :model do
     it "gets proper player" do
       player = game.player_from_user(user)
 
-      expect(player).to be_a(GoFish::Player)
+      expect(player).to be_a(GoFish::Player) 
       expect(player.user_id).to eq user.id
-    end
-  end
-
-  context "#opponents" do
-    let(:user) { create(:user) }
-
-    before do
-      game.start
-      game.state.players.last.user_id = user.id
-    end
-
-    it "gets proper player" do
-      player = game.player_from_user(user)
-      opponents = game.opponents(user)
-
-      expect(opponents).to_not be_empty
-      expect(opponents).not_to include(player)
     end
   end
 

@@ -7,3 +7,7 @@ View is different so I need different tests for it...
 
 User visits website,
 Creates game, 
+
+# ASK JOSH
+
+Should save! be on model or @game.save on controller?

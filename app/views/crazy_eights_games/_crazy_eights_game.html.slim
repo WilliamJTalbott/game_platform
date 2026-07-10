@@ -1,0 +1,6 @@
+h1 Table
+
+- unless @game.started
+  div.overlay.card
+    h1 Waiting for players...
+    = button_to "Start Game", start_game_path(@game), method: :post, class: "btn btn--primary"
