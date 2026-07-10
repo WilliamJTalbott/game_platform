@@ -3,11 +3,14 @@ class Game < ApplicationRecord
   has_many :users, through: :participants
 
   def start
-    self.started_at = Time.current
 
+    return false unless can_start?
+
+    self.started_at = Time.current
     self.state = build_game
     state.deal
-    save!
+    save
+    
   end
 
   def play_turn(...)

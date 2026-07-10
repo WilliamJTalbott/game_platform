@@ -34,12 +34,12 @@ end
   def start
     @game = Game.find(params[:id])
 
-    if @game.can_start?
-      @game.start
-      @game.save
+    if @game.start
+      redirect_to game_path(@game)
+    else
+      render :show, status: :unprocessable_content
     end
 
-    redirect_to game_path(@game)
   end
 
   private

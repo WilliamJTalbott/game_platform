@@ -4,9 +4,9 @@ RSpec.describe Game, type: :model do
   let(:game) { create(:game, :many_participants) }
 
   context "#status" do
-    let(:game) { create(:game) }
+    let(:unstarted_game) { create(:game) }
     it "returns 'waiting' if game hasn't started" do
-      expect(game.status).to eq 'waiting'
+      expect(unstarted_game.status).to eq 'waiting'
     end
 
     it "returns 'started' if game has started" do
@@ -53,7 +53,8 @@ RSpec.describe Game, type: :model do
     end
 
     it "it runs a turn" do
-      expect { game.play_turn("Toast", "A") }.to change { game.state.deck.cards.size }
+      params = { "player_name" => "Toast" , "rank" => "A"}.symbolize_keys
+      expect { game.play_turn(**params) }.to change { game.state.deck.cards.size }
     end
 
   end

@@ -2,7 +2,7 @@ class TurnsController < ApplicationController
   before_action :check_user_turn
 
   def create
-    @game.play_turn(game_params[:player_name], game_params[:rank])
+    @game.play_turn(**game_params)
     @game.save
     
     redirect_to game_path(@game)
@@ -17,7 +17,7 @@ class TurnsController < ApplicationController
   end
 
   def game_params
-    params.require(:turn).permit(:player_name, :rank)
+    params.require(:turn).permit(:player_name, :rank, :card).to_h.symbolize_keys
   end
   
 end
