@@ -1,13 +1,19 @@
 # Plan
 
-Rails Form object for Turn Form ( If time )
-What test can drive building crazy eights?
-If I have a test the allows user to play a turn is that enough?
-View is different so I need different tests for it...
+  Crazy Eights logic.
 
-User visits website,
-Creates game, 
+  Then:
 
-# ASK JOSH
+  Form model validation for turn form.
 
-Should save! be on model or @game.save on controller?
+# EDGE CASES
+
+No cards left in deck
+
+Player can't play ( Draw cards until valid play )
+
+# Drawing
+ 
+When switching turns check if new player has any possible plays.
+If none draw card and check if its a valid play.
+If deck empty call reshuffle

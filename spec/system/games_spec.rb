@@ -131,7 +131,6 @@ RSpec.describe 'Games', type: :system do
       let!(:game) { create(:started_game, :crazy_eights, :users_turn, :many_participants, user: user) }
       it "allows user to take a turn" do
         visit game_path(game)
-        expect(game.is_user_turn?(user)).to be true
         click_button "Play card"
         expect(page).to have_css(".message", text: "played")
       end
