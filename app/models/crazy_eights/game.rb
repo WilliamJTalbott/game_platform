@@ -29,10 +29,17 @@ module CrazyEights
     def play_turn(card, suit = nil)
       validate(card, suit)
 
+      played_by = active_player
       active_player.remove(card)
       discard.place(card, suit)
+      new_turn_result(played_by, card)
+      turn_result.suit_changed(suit) if card.wild?
 
-      return active_player if wins?
+      if wins?
+        turn_result.winner
+        return played_by
+      end
+
       switch_turn
     end
 
@@ -102,6 +109,12 @@ module CrazyEights
     def wins?
       active_player.cards.empty?
     end
+
+    def new_turn_result(player, card)
+      results.append(TurnResult.new(players, player, card))
+    end
+
+    def turn_result = results.last
 
     def validate(card, suit)
       raise InvalidCardPlayed, "card is not in the player's hand" unless active_player.cards.include?(card)

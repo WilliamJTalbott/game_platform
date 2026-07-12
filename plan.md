@@ -1,19 +1,9 @@
 # Plan
 
-  Crazy Eights logic.
-
-  Then:
+  Messages
+  Win state
 
   Form model validation for turn form.
+  Remove validation from CrazyEights::Game
 
-# EDGE CASES
-
-No cards left in deck
-
-Player can't play ( Draw cards until valid play )
-
-# Drawing
- 
-When switching turns check if new player has any possible plays.
-If none draw card and check if its a valid play.
-If deck empty call reshuffle
+  Click card to play

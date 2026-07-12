@@ -71,6 +71,14 @@ RSpec.fdescribe CrazyEights::Game do
         game.play_turn(card)
         expect(game.discard.active_card).to eq card
       end
+
+      it "adds a played-card message for every player" do
+        game.play_turn(card)
+
+        expect(game.players).to all(satisfy do |player|
+          player.messages.any? { |message| message.text == "unset played A♠." }
+        end)
+      end
     end
 
     context "player does not have the card" do
@@ -108,6 +116,14 @@ RSpec.fdescribe CrazyEights::Game do
       it "Adds card to active card" do
         game.play_turn(card, suit)
         expect(game.discard.active_card).to eq outcome
+      end
+
+      it "adds an active-suit alert for every player" do
+        game.play_turn(card, suit)
+
+        expect(game.players).to all(satisfy do |player|
+          player.messages.any? { |message| message.text == "The active suit is now Clubs." }
+        end)
       end
     end
 
@@ -164,6 +180,14 @@ RSpec.fdescribe CrazyEights::Game do
       
       it "returns them as the winner" do
         expect(game.play_turn(card)).to eq active_player
+      end
+
+      it "adds a winner alert for every player" do
+        game.play_turn(card)
+
+        expect(game.players).to all(satisfy do |player|
+          player.messages.any? { |message| message.text == "unset wins!" }
+        end)
       end
     end
 
