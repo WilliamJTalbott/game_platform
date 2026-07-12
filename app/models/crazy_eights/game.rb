@@ -49,6 +49,7 @@ module CrazyEights
       {
         "players" => players.map(&:as_json),
         "deck" => deck.as_json,
+        "discard" => discard.as_json,
         "turn_index" => turn_index,
       }
     end
@@ -58,6 +59,7 @@ module CrazyEights
 
       game = self.new(players)
       game.deck = Deck.load(hash["deck"])
+      game.discard = Discard.load(hash.fetch("discard", {}))
       game.turn_index = hash["turn_index"]
       game
     end
@@ -75,10 +77,18 @@ module CrazyEights
 
     def dig_for_card
       loop do
+        replenish_deck if deck.depleted?
+
         card = deck.draw
         active_player.receive(card)
+
         return if discard.valid_play?(card)
       end
+    end
+
+    def replenish_deck
+      deck.cards = discard.recycle
+      deck.shuffle
     end
 
     def found_playable_card
@@ -94,6 +104,8 @@ module CrazyEights
     end
 
     def validate(card, suit)
+      raise InvalidCardPlayed, "card is not in the player's hand" unless active_player.cards.include?(card)
+
       if card.rank == Card::WILD
         raise InvalidSuitSelected, "rank needs to be valid" unless Card::SUITS.include?(suit)
       else

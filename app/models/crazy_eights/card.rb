@@ -45,8 +45,7 @@ module CrazyEights
     end
 
     def self.from_s(str)
-      arr = str.chars
-      new(arr.first, SUIT_SYMBOLS.key(arr.last))
+      new(str[0...-1], SUIT_SYMBOLS.key(str[-1]))
     end
 
     def wild?

@@ -13,6 +13,10 @@ module CrazyEights
       cards.pop(num)
     end
 
+    def shuffle
+      self.cards = cards.shuffle
+    end
+
     private
 
     def populate

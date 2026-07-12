@@ -1,8 +1,8 @@
 class CrazyEightsGame < Game
   serialize :state, coder: CrazyEights::Game
 
-  def play_turn(params)
-    state.play_turn(card_from_string(params))
+  def play_turn(card:, suit: nil)
+    state.play_turn(card_from_string(card), suit)
     save!
   end
 
@@ -16,8 +16,8 @@ class CrazyEightsGame < Game
 
   private
 
-  def card_from_string(params)
-    CrazyEights::Card.from_s(params[:card])
+  def card_from_string(card)
+    CrazyEights::Card.from_s(card)
   end
 
   def create_players

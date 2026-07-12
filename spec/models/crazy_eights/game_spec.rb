@@ -28,8 +28,15 @@ RSpec.fdescribe CrazyEights::Game do
   describe "#load" do
     let(:json) { game.as_json }
     let(:restored) { described_class.load(json) }
+
+    before do
+      game.discard.place(Card.new("8", "Spades"), "Hearts")
+    end
+
     it "preserves round-trip state" do
       expect(restored.players).to all be_a CrazyEights::Player
+      expect(restored.discard.cards).to eq game.discard.cards
+      expect(restored.discard.active_card).to eq game.discard.active_card
     end
   end
 
@@ -55,7 +62,10 @@ RSpec.fdescribe CrazyEights::Game do
 
     context "player plays a valid card" do
       let(:card) { Card.new("A", "Spades") }
-      before { game.discard.active_card = Card.new("2", "Spades") }
+      before do
+        active_player.cards << card
+        game.discard.active_card = Card.new("2", "Spades")
+      end
 
       it "Adds card to active card" do
         game.play_turn(card)
@@ -63,9 +73,22 @@ RSpec.fdescribe CrazyEights::Game do
       end
     end
 
+    context "player does not have the card" do
+      let(:card) { Card.new("A", "Spades") }
+
+      before { game.discard.active_card = Card.new("2", "Spades") }
+
+      it "throws an error" do
+        expect { game.play_turn(card) }.to raise_error(described_class::InvalidCardPlayed)
+      end
+    end
+
     context "player plays a wild without specifying suit" do
       let(:card) { Card.new("8", "Spades") }
-      before { game.discard.active_card = Card.new("2", "Hearts") }
+      before do
+        active_player.cards << card
+        game.discard.active_card = Card.new("2", "Hearts")
+      end
 
       it "throws InvalidRankSelected" do
         expect{ game.play_turn(card) }.to raise_error(described_class::InvalidSuitSelected)
@@ -77,7 +100,10 @@ RSpec.fdescribe CrazyEights::Game do
       let(:suit) { "Clubs" }
       let(:outcome) { Card.new(card.rank, suit) }
 
-      before { game.discard.active_card = Card.new("2", "Hearts") }
+      before do
+        active_player.cards << card
+        game.discard.active_card = Card.new("2", "Hearts")
+      end
 
       it "Adds card to active card" do
         game.play_turn(card, suit)
@@ -138,6 +164,26 @@ RSpec.fdescribe CrazyEights::Game do
       
       it "returns them as the winner" do
         expect(game.play_turn(card)).to eq active_player
+      end
+    end
+
+    context "the deck is empty" do
+      let(:card) { Card.new("A", "Spades") }
+      let(:recycled_card) { Card.new("A", "Hearts") }
+      let(:next_player) { game.players[1] }
+
+      before do
+        active_player.cards = [card, Card.new("3", "Clubs")]
+        next_player.cards = [Card.new("6", "Hearts")]
+        game.deck.cards = []
+        game.discard.cards = [recycled_card]
+        game.discard.active_card = Card.new("2", "Spades")
+      end
+
+      it "recycles the discard pile so the next player can draw" do
+        game.play_turn(card)
+
+        expect(next_player.cards).to include(recycled_card)
       end
     end
 

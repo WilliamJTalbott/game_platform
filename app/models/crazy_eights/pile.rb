@@ -29,11 +29,5 @@ module CrazyEights
       cards.empty?
     end
 
-    def shuffle
-      shuffled = cards.dup
-      shuffled.shuffle! while cards == shuffled
-      self.cards = shuffled
-    end
-
   end
 end

@@ -10,7 +10,7 @@ module CrazyEights
     end
 
     def out_of_cards?
-      player.empty?
+      cards.empty?
     end
 
     def add_normal_message(text)
