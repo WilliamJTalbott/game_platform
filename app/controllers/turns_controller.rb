@@ -3,8 +3,7 @@ class TurnsController < ApplicationController
 
   def create
     @game.play_turn(**game_params)
-    @game.save
-    
+
     redirect_to game_path(@game)
   end
 

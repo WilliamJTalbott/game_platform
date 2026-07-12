@@ -12,6 +12,7 @@ class CrazyEightsGamePresenter
   def user_turn? = game.user_turn?(user)
 
   def cards = player.cards
+  def active_card = game.state.discard.active_card
 
   def started?
     game.started_at.present?
