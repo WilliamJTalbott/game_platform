@@ -18,14 +18,14 @@ div.game
       p Game Feed
 
     div.panel__body
-    - if @game_info.started?
-      div.feed__messages
-        = render partial: "go_fish_games/message", collection: @game_info.messages, as: :message
+      - if @game_info.started?
+        div.feed__messages
+          = render partial: "go_fish_games/message", collection: @game_info.messages, as: :message
 
-      = simple_form_for :turn, url: game_turns_path(@game_info.game), html: {class: "request-form"} do |f|
-        = f.input :card, as: :select, collection: @game_info.cards, selected: @game_info.cards.first
-        = f.input :suit, as: :select, collection: CrazyEights::Card::SUITS, include_blank: true, label: "Suit"
-        = f.button :submit, "Play card", class: "btn btn--primary", disabled: !@game_info.user_turn?
+        = simple_form_for :turn, url: game_turns_path(@game_info.game), html: {class: "request-form"} do |f|
+          = f.input :card, as: :select, collection: @game_info.cards, selected: @game_info.cards.first
+          = f.input :suit, as: :select, collection: CrazyEights::Card::SUITS, include_blank: true, label: "Suit"
+          = f.button :submit, "Play card", class: "btn btn--primary", disabled: !@game_info.user_turn?
 
   / Hand
   div.panel.panel--hand.panel--base

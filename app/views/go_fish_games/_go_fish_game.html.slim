@@ -18,14 +18,14 @@ div.game
       p Game Feed
 
     div.panel__body
-    - if @game_info.started?
-      div.feed__messages
-        = render partial: "go_fish_games/message", collection: @game_info.messages, as: :message
+      - if @game_info.started?
+        div.feed__messages
+          = render partial: "go_fish_games/message", collection: @game_info.messages, as: :message
 
-      = simple_form_for :turn, url: game_turns_path(@game_info.game), html: {class: "request-form"} do |f|
-        = f.input :player_name, as: :select, collection: @game_info.opponent_names, selected: @game_info.opponent_names.first
-        = f.input :rank, as: :select, collection: @game_info.ranks, selected: @game_info.ranks.first
-        = f.button :submit, "Ask for card", class: "btn btn--primary", disabled: !@game_info.user_turn?
+        = simple_form_for :turn, url: game_turns_path(@game_info.game), html: {class: "request-form"} do |f|
+          = f.input :player_name, as: :select, collection: @game_info.opponent_names, selected: @game_info.opponent_names.first
+          = f.input :rank, as: :select, collection: @game_info.ranks, selected: @game_info.ranks.first
+          = f.button :submit, "Ask for card", class: "btn btn--primary", disabled: !@game_info.user_turn?
   / Hand
   div.panel.panel--hand.panel--base
 
