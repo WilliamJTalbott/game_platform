@@ -1,25 +1,25 @@
-div.game
+.game.game--crazy_eights
   / Board
-  div.panel.panel--board
+  .panel.panel--board
 
-    div.panel__header.header--top
+    .panel__header.header--top
       h2 = @game_info.name
-    div.panel__body
+    .panel__body
 
-      div.op-stack.items-stretch.gap-xs
+      .op-stack.items-stretch.gap-xs
         p Table
         - if @game_info.started?
-          = render "go_fish_games/card", card: @game_info.active_card
+          = render "crazy_eights_games/table", card: @game_info.active_card
 
   / Feed
-  div.panel.panel--feed.panel--side
+  .panel.panel--feed.panel--side
 
-    div.panel__header.header--top
+    .panel__header.header--top
       p Game Feed
 
-    div.panel__body
+    .panel__body
       - if @game_info.playable?
-        div.feed__messages
+        .feed__messages
           = render partial: "go_fish_games/message", collection: @game_info.messages, as: :message
 
         = simple_form_for :turn, url: game_turns_path(@game_info.game), html: {class: "request-form"} do |f|
@@ -28,28 +28,21 @@ div.game
           = f.button :submit, "Play card", class: "btn btn--primary", disabled: !@game_info.user_turn?
 
   / Hand
-  div.panel.panel--hand.panel--base
+  .panel.panel--hand.panel--base
 
-    div.panel__header
+    .panel__header
       p Your Hand
 
-    div.panel__body.hand
+    .panel__body.hand
       - if @game_info.started?
         = render partial: "go_fish_games/card", collection: @game_info.cards, as: :card
 
-  / Books
-  div.panel.panel--books.panel--side.panel--base
-    div.panel__header
-      p Books
-
-    div.panel__body
-
 - unless @game_info.started?
-  div.overlay.card
+  .overlay.card
     h1 Waiting for players...
     = button_to "Start Game", start_game_path(@game_info.game), method: :post, class: "btn btn--primary"
 
 - if @game_info.finished?
-  div.overlay.card
+  .overlay.card
     h1 = "#{@game_info.winner.email_address} wins!"
     = link_to "Back to Games", games_path, class: "btn btn--primary"

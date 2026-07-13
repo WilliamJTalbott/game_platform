@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe CrazyEightsGame, type: :model do
-  fdescribe "#play_turn" do
+  describe "#play_turn" do
     let(:winner) { create(:user) }
     let(:opponent) { create(:user) }
     let(:game) { create(:started_game, :crazy_eights, :has_participants, users: [winner, opponent]) }

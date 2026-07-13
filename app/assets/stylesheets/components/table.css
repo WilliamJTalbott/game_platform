@@ -1,0 +1,9 @@
+.table {
+  display: flex;
+  justify-content: center;
+
+  padding: var(--op-space-2x-large);
+  gap: var(--op-space-2x-large);
+
+  max-height: 400px
+}
