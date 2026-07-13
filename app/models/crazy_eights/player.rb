@@ -25,8 +25,8 @@ module CrazyEights
       messages << Message.new(:alert, text)
     end
 
-    def remove(card_refs)
-      self.cards = cards - Array(card_refs)
+    def remove(card)
+      cards.delete(card)
     end
 
     def receive(cards)

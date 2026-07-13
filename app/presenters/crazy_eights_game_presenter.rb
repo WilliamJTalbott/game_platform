@@ -14,6 +14,9 @@ class CrazyEightsGamePresenter
   def cards = player.cards
   def active_card = game.state.discard.active_card
   def messages = player.messages.reverse
+  def finished? = game.finished_at.present?
+  def playable? = started? && !finished?
+  def winner = game.participants.find_by(winner: true)&.user
 
   def started?
     game.started_at.present?

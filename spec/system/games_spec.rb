@@ -129,6 +129,17 @@ RSpec.describe 'Games', type: :system do
 
     context "crazy_eights game" do
       let!(:game) { create(:started_game, :crazy_eights, :users_turn, :many_participants, user: user) }
+
+      before do
+        player = game.player_from_user(user)
+        player.cards = [
+          CrazyEights::Card.new("A", "Spades"),
+          CrazyEights::Card.new("3", "Clubs")
+        ]
+        game.state.discard.active_card = CrazyEights::Card.new("2", "Spades")
+        game.save!
+      end
+
       it "allows user to take a turn" do
         visit game_path(game)
         click_button "Play card"

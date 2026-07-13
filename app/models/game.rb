@@ -27,7 +27,6 @@ class Game < ApplicationRecord
 
   def finish
     self.finished_at = Time.current
-    save!
   end
 
   def status

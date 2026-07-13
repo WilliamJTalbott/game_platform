@@ -1,5 +1,5 @@
 
-RSpec.fdescribe CrazyEights::Discard do
+RSpec.describe CrazyEights::Discard do
 
   Card = CrazyEights::Card
   

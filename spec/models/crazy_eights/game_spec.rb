@@ -1,6 +1,6 @@
 
 
-RSpec.fdescribe CrazyEights::Game do
+RSpec.describe CrazyEights::Game do
 
   let!(:players) { Array.new(num_players) { CrazyEights::Player.new } }
   let!(:game) { described_class.new(players) }
@@ -45,7 +45,7 @@ RSpec.fdescribe CrazyEights::Game do
       it "shuffles and deals the deck" do
         game.deal
         expect(active_player.cards).to_not eq(unshuffled_cards)
-        expect(active_player.cards.size).to eq(5)
+        expect(active_player.cards.size).to eq(described_class::SMALL_HAND)
       end
     end
   end
@@ -70,6 +70,14 @@ RSpec.fdescribe CrazyEights::Game do
       it "Adds card to active card" do
         game.play_turn(card)
         expect(game.discard.active_card).to eq card
+      end
+
+      it "removes an equivalent submitted card from the player's hand" do
+        submitted_card = Card.new(card.rank, card.suit)
+
+        game.play_turn(submitted_card)
+
+        expect(active_player.cards).not_to include(card)
       end
 
       it "adds a played-card message for every player" do

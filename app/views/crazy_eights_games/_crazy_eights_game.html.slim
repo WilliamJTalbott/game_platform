@@ -18,7 +18,7 @@ div.game
       p Game Feed
 
     div.panel__body
-      - if @game_info.started?
+      - if @game_info.playable?
         div.feed__messages
           = render partial: "go_fish_games/message", collection: @game_info.messages, as: :message
 
@@ -48,3 +48,8 @@ div.game
   div.overlay.card
     h1 Waiting for players...
     = button_to "Start Game", start_game_path(@game_info.game), method: :post, class: "btn btn--primary"
+
+- if @game_info.finished?
+  div.overlay.card
+    h1 = "#{@game_info.winner.email_address} wins!"
+    = link_to "Back to Games", games_path, class: "btn btn--primary"

@@ -10,7 +10,7 @@ class TurnsController < ApplicationController
   def check_user_turn
     @game = Game.find(params[:game_id])
 
-    unless @game.user_turn?(current_user)
+    unless @game.status == "started" && @game.user_turn?(current_user)
       render json: { errors: @game.errors.full_messages }, status: :unprocessable_entity
     end
   end
