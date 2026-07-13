@@ -34,3 +34,5 @@
 /config/*.key
 
 spec/examples.txt
+
+node_modules
