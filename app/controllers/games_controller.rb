@@ -14,8 +14,8 @@ class GamesController < ApplicationController
   end
 
 def show
-  game = Game.find(params[:id])
-  @game_info = game.presenter(Current.session.user)
+  @game = Game.find(params[:id])
+  @game_info = @game.presenter(Current.session.user)
 end
 
 def create

@@ -5,7 +5,8 @@ class TurnsController < ApplicationController
     @form = @game.form_class.new(game_params)
     @game.play_turn(**game_params) if @form.valid?
 
-    redirect_to game_path(@game)
+    BroadcastGameJob.perform_now(@game)
+    head :no_content
   end
 
   def check_user_turn

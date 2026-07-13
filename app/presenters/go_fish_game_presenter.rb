@@ -40,5 +40,8 @@ class GoFishGamePresenter
   def ranks
     player.unique_cards.map(&:rank)
   end
+  def to_partial_path
+    "go_fish_games/go_fish_game"
+  end
 
 end

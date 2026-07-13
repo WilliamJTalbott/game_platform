@@ -1,4 +1,8 @@
 class Game < ApplicationRecord
+  include Turbo::Broadcastable
+
+  # after_update_commit { broadcast_replace_to :game, target: dom_id(self) }
+
   has_many :participants
   has_many :users, through: :participants
 
