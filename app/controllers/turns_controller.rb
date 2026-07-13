@@ -2,7 +2,8 @@ class TurnsController < ApplicationController
   before_action :check_user_turn
 
   def create
-    @game.play_turn(**game_params)
+    @form = @game.form_class.new(game_params)
+    @game.play_turn(**game_params) if @form.valid?
 
     redirect_to game_path(@game)
   end

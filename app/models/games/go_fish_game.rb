@@ -14,6 +14,10 @@ class GoFishGame < Game
     GoFishGamePresenter.new(self, user)
   end
 
+  def form_class
+    GoFishForm
+  end
+
   private
 
   def player_from_name(name)

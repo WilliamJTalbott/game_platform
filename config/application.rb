@@ -28,9 +28,9 @@ module GamePlatform
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
     config.eager_load_paths << Rails.root.join("app", "models", "games")
-
     config.autoload_paths << Rails.root.join("app/presenters")
     config.eager_load_paths << Rails.root.join("app/presenters")
+    config.autoload_paths << Rails.root.join('app/forms')
 
     # Configuration for the application, engines, and railties goes here.
     #

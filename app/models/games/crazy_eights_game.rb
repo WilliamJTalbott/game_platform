@@ -16,6 +16,10 @@ class CrazyEightsGame < Game
     CrazyEightsGamePresenter.new(self, user)
   end
 
+  def form_class
+    CrazyEightsForm
+  end
+
   private
 
   def end_game(winner)

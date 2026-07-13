@@ -59,6 +59,10 @@ class Game < ApplicationRecord
     raise NotImplementedError, "#{self.class} must implement #presenter"
   end
 
+  def form_class
+    raise NotImplementedError, "#{self.class} must implement #form_class"
+  end
+
   private
 
   def create_players
