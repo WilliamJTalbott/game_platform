@@ -111,6 +111,7 @@ RSpec.describe 'Games', type: :system do
 
       it "allows user to take a turn" do
         visit game_path(game)
+        wait_for_stream_connection
         click_button "Ask for card"
         expect(page).to have_css(".message", text: "asked")
       end
@@ -142,6 +143,7 @@ RSpec.describe 'Games', type: :system do
 
       it "allows user to take a turn" do
         visit game_path(game)
+        wait_for_stream_connection
         click_button "Play card"
         expect(page).to have_css(".message", text: "played")
       end

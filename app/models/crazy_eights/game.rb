@@ -11,9 +11,6 @@ module CrazyEights
       @results = []
     end
 
-    class InvalidCardPlayed < StandardError; end
-    class InvalidSuitSelected < StandardError; end
-
     SMALL_HAND = 5
     LARGE_HAND = 7
     MIN_PLAYERS_SMALL_HAND = 4
@@ -27,8 +24,6 @@ module CrazyEights
     end
 
     def play_turn(card, suit = nil)
-      validate(card, suit)
-
       played_by = active_player
       active_player.remove(card)
       discard.place(card, suit)
@@ -115,16 +110,6 @@ module CrazyEights
     end
 
     def turn_result = results.last
-
-    def validate(card, suit)
-      raise InvalidCardPlayed, "card is not in the player's hand" unless active_player.cards.include?(card)
-
-      if card.rank == Card::WILD
-        raise InvalidSuitSelected, "rank needs to be valid" unless Card::SUITS.include?(suit)
-      else
-        raise InvalidCardPlayed, "card cannot be legally played" unless discard.valid_play?(card)
-      end
-    end
 
   end
 end

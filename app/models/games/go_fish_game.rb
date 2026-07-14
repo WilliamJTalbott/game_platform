@@ -10,8 +10,8 @@ class GoFishGame < Game
     save!
   end
 
-  def presenter(user)
-    GoFishGamePresenter.new(self, user)
+  def presenter(user, form = nil)
+    GoFishGamePresenter.new(self, user, form)
   end
 
   def form_class

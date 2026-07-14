@@ -59,7 +59,7 @@ class Game < ApplicationRecord
     state.active_player == player_from_user(user)
   end
 
-  def presenter(user)
+  def presenter(user, form = nil)
     raise NotImplementedError, "#{self.class} must implement #presenter"
   end
 

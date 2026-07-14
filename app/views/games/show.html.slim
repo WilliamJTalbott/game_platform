@@ -1,4 +1,3 @@
 = turbo_stream_from @game, Current.session.user
 
-= render partial: @game_info.to_partial_path,
-        locals: { game_info: @game_info }
+= render @game_info, game_info: @game_info

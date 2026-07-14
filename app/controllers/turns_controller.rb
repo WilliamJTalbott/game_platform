@@ -2,11 +2,14 @@ class TurnsController < ApplicationController
   before_action :check_user_turn
 
   def create
-    @form = @game.form_class.new(game_params)
-    @game.play_turn(**game_params) if @form.valid?
+    @form = @game.form_class.new(game_params.merge(game: @game.state))
 
-    BroadcastGameJob.perform_now(@game)
-    head :no_content
+    if @form.valid?
+      play_turn
+    else
+      render_invalid_turn
+    end
+
   end
 
   def check_user_turn
@@ -19,6 +22,24 @@ class TurnsController < ApplicationController
 
   def game_params
     params.require(:turn).permit(:player_name, :rank, :card, :suit).to_h.symbolize_keys
+  end
+
+  private
+
+  def play_turn
+    @game.play_turn(**game_params)
+    BroadcastGameJob.perform_now(@game)
+
+    head :no_content
+  end
+
+  def render_invalid_turn
+    render turbo_stream: GameTurboUpdate.stream(
+      turbo_stream,
+      @game,
+      current_user,
+      form: @form
+    ), status: :unprocessable_entity
   end
   
 end

@@ -12,8 +12,8 @@ class CrazyEightsGame < Game
     CrazyEights::Game.new(create_players)
   end
 
-  def presenter(user)
-    CrazyEightsGamePresenter.new(self, user)
+  def presenter(user, form = nil)
+    CrazyEightsGamePresenter.new(self, user, form)
   end
 
   def form_class
