@@ -34,6 +34,8 @@ module GamePlatform
 
     config.autoload_paths << Rails.root.join('app/jobs')
 
+    config.active_job.queue_adapter = :good_job
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files

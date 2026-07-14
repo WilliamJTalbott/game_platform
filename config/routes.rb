@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   resources :users
 
+  mount GoodJob::Engine => 'good_job'
+
   resources :games do
     resources :participants, only: [:create, :show]
     resources :turns, only: [:create]
