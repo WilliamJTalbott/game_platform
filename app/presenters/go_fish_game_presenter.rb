@@ -5,6 +5,10 @@ class GoFishGamePresenter < GamePresenter
 
   def user_turn? = game.user_turn?(user)
 
+  def started?
+    game.started_at.present?
+  end
+
   def messages
     player.messages.reverse
   end

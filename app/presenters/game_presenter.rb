@@ -8,8 +8,4 @@ class GamePresenter
     @form = form || game.form_class.new(game: game.state)
   end
 
-  def started?
-    game.started_at.present?
-  end
-
 end

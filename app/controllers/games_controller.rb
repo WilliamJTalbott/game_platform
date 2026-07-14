@@ -35,7 +35,7 @@ end
     @game = Game.find(params[:id])
 
     if @game.start
-      refresh
+      redirect_to game_path(@game)
     else
       render :show, status: :unprocessable_content
     end
@@ -43,11 +43,6 @@ end
   end
 
   private
-
-  def refresh
-    BroadcastGameJob.perform_now(@game)
-    head :no_content
-  end
 
   def game_params
     params.require(:game).permit( :name, :game_type )

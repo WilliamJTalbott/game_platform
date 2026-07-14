@@ -1,9 +1,9 @@
 # Plan
 
-    Create game should refresh other users index page
+  Messages
+  Win state
 
-    When new game is created -> Add new partial
+  Form model validation for turn form.
+  Remove validation from CrazyEights::Game
 
-    When game is modified -> Updated partial
-
-    When game is started -> Remove partial
+  Click card to play
