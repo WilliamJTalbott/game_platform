@@ -1,0 +1,20 @@
+details class="player-dropdown accordion" id="opponent-partial"
+  summary class="player-dropdown__summary"
+    div class="summery__name"
+      i class="ph ph-settings icon accordion__marker icon--small" caret-right
+      p #{opponent.name}
+    div class="summery__details"
+      dl
+        dt Cards:
+        dd #{opponent.cards.length}
+      dl
+        dt Books:
+        dd #{opponent.book_count}
+
+  div class="player-dropdown__expanded"
+    div class="expanded__hand"
+      - opponent.cards.size.times do
+        img.playing-card.playing-card--medium src="src/dark_cards/card_back.svg"
+
+    div class="expanded__books"
+

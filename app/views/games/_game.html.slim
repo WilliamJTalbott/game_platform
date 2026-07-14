@@ -1,6 +1,6 @@
 .game-bar.card
   p = game.name
   - if is_user_game
-    = button_to "View", game_path(game), class: "btn btn--primary"
+    = button_to "View", game_path(game), method: :get, class: "btn btn--primary"
   - else 
-    = button_to "Join", game_players_path(game), method: :post, class: "btn btn--primary"
+    = button_to "Join", game_participants_path(game), method: :post, class: "btn btn--primary"

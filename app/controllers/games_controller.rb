@@ -13,25 +13,32 @@ class GamesController < ApplicationController
     @game = Game.new
   end
 
-  def show
-    @game = Game.find(params[:id])
+def show
+  @game = Game.find(params[:id])
+end
+
+def create
+  @game = Game.new(game_params)
+  @participant = @game.participants.new(user: Current.session.user)
+
+  if @game.save
+    redirect_to @game
+  else
+    render :new
   end
+end
 
-  def create
-    @game = Game.new(game_params)
-    @player = @game.players.new(user: Current.session.user)
+  def start
+    @game = Game.find(params[:id])
 
-    if @game.save && @player.save
-      redirect_to @game
-    else
-      render :new
+    if @game.can_start?
+      @game.start
+      @game.save
     end
-  end
 
-  def join
-    @game = Game.find(params[:id])
     redirect_to @game
   end
+
   
   private
 

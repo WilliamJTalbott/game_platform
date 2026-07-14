@@ -1,0 +1,43 @@
+.card-container {
+
+  flex: 0 1 var(--gf-card-width-large);
+  min-width: var(--gf-card-width-min);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -20px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+
+.playing-card {
+
+  --_gf-playing-card-shadow: drop-shadow(0 3px 4px rgb(0 0 0 / 0.6));
+  --_gf-playing-card-shadow-hover: drop-shadow(0 6px 8px rgb(0 0 0 / 0.5));
+
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: var(--gf-card-aspect-ratio);
+
+  position: relative;
+  z-index: 1;
+
+  filter: var(--_gf-playing-card-shadow);
+  transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+
+  &.playing-card--playable:hover {
+    transform: translateY(calc(-1 * var(--gf-card-hover-lift)));
+    filter: var(--_gf-playing-card-shadow) var(--_gf-playing-card-shadow-hover);
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+}

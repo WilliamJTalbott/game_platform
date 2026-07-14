@@ -1,0 +1,79 @@
+div.game
+  / Board
+  div.panel.panel--board
+
+    div.panel__header.header--top
+      button.btn.btn--no-border.btn--icon
+        i.ph.ph-settings.icon.icon--weight-semi-bold arrow-left
+      h2 Game 1
+    div.panel__body
+
+      div.op-stack.items-stretch.gap-xs
+      p Players
+      - opponents.each do |opponent|
+        == slim :player_dropdown, locals: { player: opponent }
+
+  / Feed
+  div.panel.panel--feed.panel--side
+
+    div.panel__header.header--top
+      p Game Feed
+      .badge class=("badge--primary" if active_player == player ) = (active_player == player ? "Your turn" : "#{active_player.name}'s turn")
+
+    div.panel__body
+      div.feed__messages
+        - player.messages.reverse_each do |message|
+          - if message.type == :action
+            == slim :action, locals: { message: message }
+          - else
+            == slim :response, locals: { message: message, alert: message.type == :alert }
+
+      form.request-form action="/game" method="post"
+        div.request-form__details
+
+          div.form-group
+            label.form-label Player
+            select.form-control.form-control--small name='player'
+              - opponents.each do |opponent|
+                option = opponent.name
+
+          div.form-group
+            label.form-label Rank
+            select.form-control.form-control--small name='rank'
+              - player.unique_cards.each do |card|
+                option = card.rank
+
+        button.btn.btn--primary name='ask_button' Ask for card
+
+  / Hand
+  div.panel.panel--hand.panel--base
+
+    div.panel__header
+      p Your Hand
+
+    div.panel__body
+      - player.cards.each do |card|
+        == slim :card, locals: { card: card }
+  / Books
+  div.panel.panel--books.panel--side.panel--base
+    div.panel__header
+      p Books
+
+    div.panel__body
+      - player.books.each do |book|
+        == slim :book, locals: { book: }
+
+  / Overlay
+  - if winner
+    div.overlay.card
+      h1 Player wins!
+      form action="/reset" method="POST"
+        button.btn.btn--primary name='reset_button' type="submit" Restart Game
+
+  - unless started
+    div.overlay.card
+      h1 Waiting for players...
+      form action="/start" method="POST"
+        button.btn.btn--primary name='start_button' type="submit" Start Game
+
+

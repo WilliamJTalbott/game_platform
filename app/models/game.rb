@@ -1,12 +1,27 @@
 class Game < ApplicationRecord
-  has_many :players
+  has_many :participants
+  has_many :users, through: :participants
   enum :game_type, { "Go Fish": 0, "Secret Hitler": 1 }
+
+  serialize :go_fish, coder: GoFish::Game
 
   def start
     self.started_at = Time.current
+    self.go_fish = GoFish::Game.new(create_players)
+    go_fish.deal
+    save!
   end
 
-  def end
+  def play_turn(player_name, rank)
+    player = go_fish.players.find { |player| player.name == player_name}
+    go_fish.play_turn(player, rank)
+  end
+
+  def can_start?
+    participants.count >= 2 && started_at.nil?
+  end
+
+  def finish
     self.finished_at = Time.current
   end
 
@@ -16,7 +31,6 @@ class Game < ApplicationRecord
   end
 
   def duration
-
     return unless self.started_at && self.finished_at
 
     total_seconds = (self.started_at - self.finished_at).to_i
@@ -27,7 +41,48 @@ class Game < ApplicationRecord
     seconds = total_seconds % 60
 
     [hours, minutes, seconds].map { |t| t.to_s.rjust(2, '0') }.join(':')
+  end
 
+  def player_from_user(user)
+    self.go_fish.players.find { |player| player.user_id == user.id }
+  end
+
+  def is_user_turn?(user)
+    self.go_fish.active_player == self.player_from_user(user)
+  end
+
+  def started
+    self.started_at.present?
+  end
+
+  def messages(user)
+    player_from_user(user).messages.reverse
+  end
+
+  def opponents(user)
+    self.go_fish.players - [ player_from_user(user) ]
+  end
+
+  def opponent_names(user)
+    self.opponents(user).map(&:name)
+  end
+
+  def cards(user)
+    player_from_user(user)&.cards
+  end
+
+  def winner
+    self.participants.find_by(winner: true)&.user
+  end
+
+  def ranks(user)
+    player_from_user(user).unique_cards.map(&:rank)
+  end
+
+  private
+
+  def create_players
+    users.map { |user| GoFish::Player.new(user.id, user.email_address) }
   end
 
 end

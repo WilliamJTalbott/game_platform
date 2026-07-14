@@ -1,0 +1,18 @@
+:root {
+
+    --op-color-primary-h: 0;
+    --op-color-primary-s: 79%;
+    --op-color-primary-l: 38%;
+
+    --op-border-width: 1.8px;
+    --op-border-width-large: 3px;
+
+    --op-radius-x-large: 12px;
+
+    --gf-card-hover-lift: 50px;
+    --gf-card-height-large: 250px;
+    --gf-card-aspect-ratio: 5 / 7;
+    --gf-card-width-large: calc(var(--gf-card-height-large) * 5 / 7);
+    --gf-card-width-min: 56px;
+
+}

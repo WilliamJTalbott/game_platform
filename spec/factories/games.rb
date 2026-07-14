@@ -3,58 +3,69 @@ FactoryBot.define do
     name { "My Game" }
     game_type { "Go Fish" }
 
-    trait :started do
-      started_at { 3.hours.ago }
+    transient do
+      user { nil }
     end
 
-    trait :go_fish do
-      game_type { "Go Fish" }
+    trait :has_user do
+      after(:build) do |game, evaluator|
+        game.participants << build(:participant, game: game, user: evaluator.user)
+      end
     end
 
-    trait :secret_hitler do
-      game_type { "Secret Hitler" }
-    end
-
-    trait :finished do
-      started
-      finished_at { 1.hour.ago }
-    end
-
-    trait :many_players do
-
+    trait :many_participants do
       transient do
-        users { [] } 
+        users_count { 4 }
+      end
+
+      participants do
+        Array.new(users_count) { association(:participant) }
+      end
+    end
+
+    trait :has_participants do
+      transient do
+        users { [] }
       end
 
       after(:build) do |game, evaluator|
         evaluator.users.each do |user|
-          game.players << build(:player, game: game, user: user)
+          game.participants << build(:participant, game: game, user: user)
         end
       end
     end
 
-    trait :won do
-      many_players
+    factory :started_game do
+      trait :users_turn do
+        has_user
 
-      after(:build) do |game|
-        game.players.first.update(winner: true)
+        after(:create) do |game, evaluator|
+          turn_index_from_user(game, evaluator.user)
+        end
+      end
+
+      after(:create) do |game|
         game.start
-        game.end
+      end
+
+      factory :finished_game do
+        trait :user_won do
+          after(:build) do |game, evaluator|
+            game.participants << build(:participant, :winner, game: game, user: evaluator.user,)
+          end
+        end
+
+        after(:create) do |game|
+          game.finish
+        end
       end
     end
 
-    trait :lost do
-      many_players
-
-      after(:build) do |game|
-        game.players.second.update(winner: true)
-        game.start
-        game.end
-      end
-    end
-
-    factory :waiting, traits: [:few_players]
-    factory :waiting_full, traits: [:many_players]
-    factory :in_progress, traits: [:started]
   end
+end
+
+def turn_index_from_user(game, user)
+  state = game.go_fish
+  player = state.players.find { |player| player.user_id == user.id }
+  state.turn_index = state.players.index(player) 
 end

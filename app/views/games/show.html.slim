@@ -1,6 +1,55 @@
-.game
-  .game__header
-    h1 = @game.name
-    .badge = @game.status
+div.game
+  / Board
+  div.panel.panel--board
 
-  .game__body
+    div.panel__header.header--top
+      h2 = @game.name
+    div.panel__body
+
+      div.op-stack.items-stretch.gap-xs
+        p Players
+        - if @game.started
+          = render partial: "games/go_fish/opponent", collection: @game.opponents(current_user), as: :opponent
+
+  / Feed
+  div.panel.panel--feed.panel--side
+
+    div.panel__header.header--top
+      p Game Feed
+
+    div.panel__body
+    - if @game.started
+      div.feed__messages
+        = render partial: "games/go_fish/message", collection: @game.messages(current_user), as: :message
+
+      = simple_form_for :turn, url: game_turns_path(@game), html: {class: "request-form"} do |f|
+        = f.input :player_name, as: :select, collection: @game.opponent_names(current_user), selected: @game.opponent_names(current_user).first
+        = f.input :rank, as: :select, collection: @game.ranks(current_user), selected: @game.ranks(current_user).first
+        = f.button :submit, "Ask for card", class: "btn btn--primary", disabled: !@game.is_user_turn?(current_user)
+  / Hand
+  div.panel.panel--hand.panel--base
+
+    div.panel__header
+      p Your Hand
+
+    div.panel__body.hand
+      - if @game.started
+        = render partial: "games/go_fish/card", collection: @game.cards(current_user), as: :card
+
+  / Books
+  div.panel.panel--books.panel--side.panel--base
+    div.panel__header
+      p Books
+
+    div.panel__body
+
+  - if @game.winner
+    div.overlay.card
+      h1 = "#{@game.winner.email_address} wins!"
+      form action="/reset" method="POST"
+        button.btn.btn--primary name='reset_button' type="submit" Restart Game
+
+  - unless @game.started
+    div.overlay.card
+      h1 Waiting for players...
+      = button_to "Start Game", start_game_path(@game), method: :post, class: "btn btn--primary"

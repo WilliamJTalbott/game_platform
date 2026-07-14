@@ -1,0 +1,103 @@
+.player-dropdown {
+
+.player-dropdown__summary {
+
+    background-color: var(--op-color-primary-plus-max);
+
+    height: var(--op-input-height-large);
+
+    font-size: var(--op-font-medium);
+    font-weight: var(--op-font-weight-normal);
+    padding-right: var(--op-space-medium);
+    padding-left: var(--op-space-x-small);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: var(--op-radius-medium);
+
+    .summery__name {
+    display: flex;
+    gap: var(--op-space-x-small);
+
+    .icon {
+        flex: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-size: var(--op-font-large);
+        font-weight: bolder;
+    }
+    }
+
+    .summery__details {
+    display: flex;
+    gap: var(--op-space-medium);
+
+    dl {
+        display: flex;
+        gap: var(--op-space-3x-small);
+        dd {font-weight: var(--op-font-weight-semi-bold);}
+    }
+    }
+}
+
+.player-dropdown__summary:hover {
+    outline: var(--op-border-width) solid var(--op-color-primary-plus-six);
+    outline-offset: calc(var(--op-border-width) * -1);
+}
+
+
+.player-dropdown__expanded {
+    padding: var(--op-space-small) var(--op-space-medium);
+    display: flex;
+    justify-content: space-between;
+    border-top: 0;
+    border-inline: var(--op-border-width) solid var(--op-color-border);
+    border-bottom: var(--op-border-width) solid var(--op-color-border);
+    background-color: var(--op-color-neutral-plus-eight);
+
+    border-bottom-left-radius: var(--op-radius-medium);
+    border-bottom-right-radius: var(--op-radius-medium);
+
+    .expanded__hand {
+    display: flex;
+    }
+
+    .expanded__books {
+    display: flex;
+    justify-content: end;
+    }
+}
+}
+
+.player-dropdown[open] {
+
+color: var(--op-color-primary-on-plus-eight);
+
+.player-dropdown__summary {
+
+    border-bottom: 0;
+    border-top: var(--op-border-width) solid var(--op-color-primary-plus-four);
+    border-inline: var(--op-border-width) solid var(--op-color-primary-plus-four);
+    background-color: var(--op-color-primary-plus-eight);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    .icon {
+    display: grid;
+    place-content: center;
+
+    border-radius: var(--op-radius-medium);
+    padding: var(--op-space-x-small);
+    
+    background-color: var(--op-color-primary-plus-five);
+    border: var(--op-border-width) solid var(--op-color-primary-plus-three);
+    }
+}
+.player-dropdown__expanded {
+    border-color: var(--op-color-primary-plus-four);
+}
+}
+

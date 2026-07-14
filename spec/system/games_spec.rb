@@ -1,59 +1,86 @@
 require 'rails_helper'
 RSpec.describe 'Games', type: :system do
-  let(:be_on_games_page) { have_content 'Games' }
+
   let(:user) { create(:user) }
-
   before { login_user(user) }
-  
-  it 'shows the games index' do
-    visit games_path
-    expect(page).to be_on_games_page
-  end
 
-  it 'lets user go to game/new' do
-    visit games_path
-    click_on "New Game"
-    expect(page).to have_content "Setup Game"
-  end
+  context "[ Create ]" do
+    let(:name) { "Test Game" }
 
-  context "When a user creates a game" do
-    let!(:game) { build(:game) }
-    it "adds to Database and reroutes to game/show" do 
+    it "lets user create a game" do 
+      click_on "New Game"
+      fill_in "Name" , with: name
+
       expect do
-        setup_game(game.name, game.game_type)
-        expect(page).to have_content game.name
+        click_on "Create Game"
       end.to change(Game, :count).by 1
     end
   end
 
-  context "When a game has been created" do
+  context "[ Join ]" do
     let!(:game) { create(:game) }
-    it "lets other users join" do
+
+    it "lets user join a game" do
+      visit games_path
+
       expect do
-        visit games_path
         click_on "Join"
-        expect(page).to have_current_path(game_path(game))
-      end.to change(game.players, :count).by 1
+      end.to change(game.participants, :count).by 1
     end
   end
 
-  context "When a game has been created" do
-    let!(:game) { create(:game) }
-    it "lets other users join" do
-      expect do
-        visit games_path
-        click_on "Join"
-        expect(page).to have_current_path(game_path(game))
-      end.to change(game.players, :count).by 1
+  context "[ View ]" do
+    let!(:game) { create(:game, :has_user, user: user) }
+    
+    it "lets user join a game" do
+      visit games_path
+
+      click_on "View"
+      expect(page).to have_current_path(game_path(game))
+    end
+
+  end
+
+  context "[ Start ]" do
+    let!(:game) { create(:game, :has_user, :many_participants, user: user) }
+
+    it "lets user start a game" do
+      visit game_path(game)
+      click_on "Start Game"
+      expect(page).to_not have_content( "Waiting for players..." )
+      expect(page).to have_http_status(:ok)
     end
   end
 
-  context "When a game has finished" do
-    let(:game_name) { "This game" }
-    let!(:finished_game) { create(:game, :go_fish, :finished, name: game_name) }
-    it "shown in participant history" do
-      visit history_index_path
-      expect(page).to have_content( game_name )
+  context "[ Turn ]" do
+    let!(:game) { create(:started_game, :users_turn, :many_participants, user: user) }
+
+    it "allows user to take a turn" do
+      visit game_path(game)
+      expect(game.is_user_turn?(user)).to be true
+      click_button "Ask for card"
+      expect(page).to have_css(".message", text: "asked")
+    end
+
+    context "When not users turn" do
+      before do
+        game.go_fish.turn_index = 1
+        game.save
+      end
+      it "does not allow user to take a turn" do
+        visit game_path(game)
+        expect(page).to have_button('Ask for card', disabled: true)
+      end
     end
   end
+
+  context "[ End ]" do
+    let!(:game) { create(:finished_game, :user_won, :many_participants, user: user) }
+    
+    it "does stuff" do
+      visit game_path(game)
+      expect(page).to have_content("#{user.email_address} wins!")
+    end
+  end
+
 end

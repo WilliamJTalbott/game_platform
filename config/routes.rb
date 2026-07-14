@@ -7,7 +7,12 @@ Rails.application.routes.draw do
   resources :users
 
   resources :games do
-    resources :players, only: [:create, :show]
+    resources :participants, only: [:create, :show]
+    resources :turns, only: [:create]
+
+    member do
+      post :start
+    end
   end
 
   resources :stats, only: [:index]
