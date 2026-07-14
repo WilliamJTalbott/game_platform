@@ -1,5 +1,5 @@
 .container.container--sm.container--md-padding
-
+  = turbo_stream_from 'games'
   .contents
     .collection
       .game-bar.game-bar--header
@@ -15,5 +15,5 @@
       .game-bar.game-bar--header
         h1 All Games
 
-      .collection
+      .collection id="games"
         = render partial: 'games/game_bar', collection: @other_games, locals: { user_game: false, }, as: :game
