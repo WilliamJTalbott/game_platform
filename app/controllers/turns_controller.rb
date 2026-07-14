@@ -28,13 +28,13 @@ class TurnsController < ApplicationController
 
   def play_turn
     @game.play_turn(**game_params)
-    BroadcastGameJob.perform_now(@game)
 
+    BroadcastGameJob.perform_now(@game)
     head :no_content
   end
 
   def render_invalid_turn
-    render turbo_stream: GameTurboUpdate.stream(
+    render turbo_stream: GameTurboUpdate.stream_form(
       turbo_stream,
       @game,
       current_user,

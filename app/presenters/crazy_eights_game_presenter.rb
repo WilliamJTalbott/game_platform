@@ -11,8 +11,4 @@ class CrazyEightsGamePresenter < GamePresenter
   def playable? = started? && !finished?
   def winner = game.participants.find_by(winner: true)&.user
 
-  def started?
-    game.started_at.present?
-  end
-
 end

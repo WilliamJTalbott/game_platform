@@ -1,4 +1,5 @@
 require 'rails_helper'
+
 RSpec.describe 'Games', type: :system do
 
   let(:user) { create(:user) }
@@ -111,6 +112,8 @@ RSpec.describe 'Games', type: :system do
 
       it "allows user to take a turn" do
         visit game_path(game)
+        connect_turbo_cable_stream_sources
+
         click_button "Ask for card"
         expect(page).to have_css(".message", text: "asked")
       end
