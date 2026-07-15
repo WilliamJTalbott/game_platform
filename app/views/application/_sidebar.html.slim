@@ -2,31 +2,32 @@
   nav.sidebar.sidebar--padded.sidebar--drawer
     a.sidebar__brand href="/"
       h1 Go Fish
-    
+
     .sidebar__content.sidebar__content--start
-      a.btn.btn--no-border href="/"
+      = link_to root_path, method: :get, class: "btn btn--no-border" do
         i.ph.ph-settings.icon.icon--weight-semi-bold spade
         | Games
-      a.btn.btn--no-border href="/stats"
+
+      = link_to stats_path, method: :get, class: "btn btn--no-border" do
         i.ph.ph-settings.icon.icon--weight-semi-bold chart-line
         | Stats
 
-      = button_to rules_path, method: :get, class: "btn btn--no-border" do 
+      = link_to rules_path, method: :get, class: "btn btn--no-border" do
         i.ph.ph-settings.icon.icon--weight-semi-bold book-bookmark
         | Rules
 
-      = button_to history_index_path, method: :get, class: "btn btn--no-border" do 
+      = link_to history_index_path, method: :get, class: "btn btn--no-border" do
         i.ph.ph-settings.icon.icon--weight-semi-bold books
         | History
 
-        
-    
     .sidebar__content.sidebar__content--end
+
       .divider
-      button.btn.btn--no-border
+
+      = link_to session_path, method: :delete, class: "btn btn--no-border" do
         i.ph.ph-settings.icon.icon--weight-semi-bold user
         | Profile
 
-      = button_to session_path, method: :delete, class: "btn btn--no-border" do 
+      = link_to session_path, method: :delete, class: "btn btn--no-border" do
         i.ph.ph-settings.icon.icon--weight-semi-bold sign-out
         | Logout
