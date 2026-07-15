@@ -1,0 +1,5 @@
+.profile {
+  padding: var(--op-space-2x-large);
+  display: flex;
+  flex-direction: column;
+}
