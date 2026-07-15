@@ -1,0 +1,12 @@
+.modal-wrapper.modal-wrapper--active
+  .modal-wrapper__backdrop
+  .modal.modal--login
+    = simple_form_for @user do |f|
+      .modal__header
+        | Edit User
+
+      .modal__body
+        = f.input :name, input_html: { value: @user.name }
+
+      .modal__footer
+        = f.button :submit, "Update Profile"

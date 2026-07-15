@@ -2,4 +2,16 @@
   padding: var(--op-space-2x-large);
   display: flex;
   flex-direction: column;
+  width: fit-content;
+  gap: var(--op-space-large);
+
+  h1 {
+    color: var(--op-color-primary-minus-seven);
+  }
+
+  btn {
+    margin-top: var(--op-space-2x-large);
+    flex-shrink: 1;
+  }
+
 }

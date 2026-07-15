@@ -1,3 +1,7 @@
 .profile
   h1 = @user.name
-  h2 = @user.email_address
+  p = @user.email_address
+
+  = link_to edit_user_path(Current.session.user), class: "btn" do
+    i.ph.ph-settings.icon.icon--weight-semi-bold gear
+    | Edit
