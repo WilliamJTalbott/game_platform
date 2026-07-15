@@ -169,4 +169,13 @@ RSpec.describe 'Games', type: :system do
     end
   end
 
+  context "When games have been deleted" do
+    let!(:game) { create(:deleted_game) }
+
+    it "shows no deleted games" do
+      visit games_path
+      expect(page).to_not have_content("Join")
+    end
+  end
+
 end

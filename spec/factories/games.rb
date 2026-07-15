@@ -45,6 +45,14 @@ FactoryBot.define do
       end
     end
 
+    factory :deleted_game do
+      deleted_at { Time.current }
+    end
+
+    factory :old_game do
+      created_at { 3.days.ago }
+    end
+
     factory :started_game do
       trait :users_turn do
         has_user
