@@ -33,7 +33,7 @@ class CrazyEightsGame < Game
   end
 
   def create_players
-    users.map { |user| CrazyEights::Player.new(user.id, user.email_address) }
+    users.map { |user| CrazyEights::Player.new(user.id, user.name) }
   end
 
 end

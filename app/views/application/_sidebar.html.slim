@@ -28,6 +28,6 @@
         i.ph.ph-settings.icon.icon--weight-semi-bold user
         | Profile
 
-      = link_to session_path, method: :delete, class: "btn btn--no-border" do
+      = link_to session_path, data: { turbo_method: :delete }, class: "btn btn--no-border" do
         i.ph.ph-settings.icon.icon--weight-semi-bold sign-out
         | Logout

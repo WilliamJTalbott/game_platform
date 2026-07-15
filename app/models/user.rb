@@ -1,5 +1,8 @@
 class User < ApplicationRecord
   has_secure_password
+
+  after_validation :create_name
+
   has_many :sessions, dependent: :destroy
 
   has_many :participants, dependent: :destroy
@@ -10,8 +13,11 @@ class User < ApplicationRecord
 
   def games_played = self.games.where.not(finished_at: nil).size
   def games_won = self.participants.where(winner: true).size
-    
   def win_percentage = ( (games_won.to_f / games_played) * 100 ).round(1)
 
+  def create_name
+    username = email_address.split('@').first
+    self.name = username.titleize
+  end
 
 end

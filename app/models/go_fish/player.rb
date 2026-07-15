@@ -27,13 +27,13 @@ module GoFish
     end
 
     def take(rank)
-      matches = get_rank(rank)
+      matches = cards_of_rank(rank)
       remove_cards(matches)
       matches
     end
 
-    def get_rank(rank)
-      player.each.select{|card| rank == card.rank }
+    def cards_of_rank(rank)
+      cards.select { |card| card.rank == rank }
     end
 
     def out_of_cards?
@@ -85,11 +85,7 @@ module GoFish
     end
 
     def completed_book?(rank)
-      get_rank(rank).size == Book::SIZE
-    end
-
-    def get_rank(rank)
-      cards.select { |card| card.rank == rank }
+      cards_of_rank(rank).size == Book::SIZE
     end
 
     def make_book(rank)

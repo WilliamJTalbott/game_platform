@@ -25,7 +25,7 @@ class GoFishGame < Game
   end
   
   def create_players
-    users.map { |user| GoFish::Player.new(user.id, user.email_address) }
+    users.map { |user| GoFish::Player.new(user.id, user.name) }
   end
 
 end

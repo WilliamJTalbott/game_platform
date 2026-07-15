@@ -165,7 +165,7 @@ RSpec.describe 'Games', type: :system do
     
     it "does stuff" do
       visit game_path(game)
-      expect(page).to have_content("#{user.email_address} wins!")
+      expect(page).to have_content("#{user.name} wins!")
     end
   end
 

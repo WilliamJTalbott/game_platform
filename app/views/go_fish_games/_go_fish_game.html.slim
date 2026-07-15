@@ -62,7 +62,7 @@
 
   - if game_info.winner
     .overlay.card
-      h1 = "#{game_info.winner.email_address} wins!"
+      h1 = "#{game_info.winner.name} wins!"
       form action="/reset" method="POST"
         button.btn.btn--primary name='reset_button' type="submit" Restart Game
 
