@@ -9453,7 +9453,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 
 class turn_timer_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
   connect() {
-    this.timeLeft = 5;
+    this.timeLeft = this.durationValue;
     this.updateDisplay();
     this.timer = setInterval(() => {
       this.tick();
@@ -9462,7 +9462,7 @@ class turn_timer_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
   tick() {
     this.timeLeft--;
     this.updateDisplay();
-    if (this.timeLeft === 0) {
+    if (this.timeLeft <= 0) {
       clearInterval(this.timer);
       this.timerOver();
     }
@@ -9477,6 +9477,7 @@ class turn_timer_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
   }
 }
 __publicField(turn_timer_controller_default, "targets", ["display"]);
+__publicField(turn_timer_controller_default, "values", { duration: Number });
 
 
 /***/ }

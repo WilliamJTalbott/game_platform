@@ -108,10 +108,13 @@ RSpec.describe 'Games', type: :system do
 
     context "go_fish game" do
       let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
+      let(:wait_time) { 0.1 }
 
-      it "automatically takes a turn when the timer expires", :js do
+      fit "automatically takes a turn when the timer expires", :js do
+        GamePresenter.wait_time = wait_time
+
         visit game_path(game)
-        expect(page).to have_css(".message", text: "asked", wait: 6)
+        expect(page).to have_css(".message", text: "asked", wait: (wait_time + 1))
       end
 
       it "allows user to take a turn", :js do

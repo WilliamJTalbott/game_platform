@@ -3,9 +3,10 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="turn-timer"
 export default class extends Controller {
     static targets = [ "display" ]
+    static values = { duration: Number }
 
     connect() {
-        this.timeLeft = 5
+        this.timeLeft = this.durationValue
         this.updateDisplay()
 
         this.timer = setInterval(() => { this.tick() }, 1000)
@@ -15,7 +16,7 @@ export default class extends Controller {
         this.timeLeft--
         this.updateDisplay()
 
-        if (this.timeLeft === 0) {
+        if (this.timeLeft <= 0) {
             clearInterval(this.timer)
             this.timerOver()
         }

@@ -15,10 +15,9 @@
   .panel.panel--feed.panel--side
 
     .panel__header.header--top
-      - if game_info.started?
-        - if game_info.user_turn?
-          div data-controller="turn-timer"
-            h2 data-turn-timer-target="display"
+      - if game_info.started? && game_info.user_turn?
+        div data-controller="turn-timer" data-turn-timer-duration-value="#{game_info.wait_time}"
+          h2 data-turn-timer-target="display"
 
       p Game Feed
 
