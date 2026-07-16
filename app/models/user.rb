@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_secure_password validations: false
+  has_secure_password
 
   after_validation :create_name, if: :name_blank?
 
@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :games, through: :participants
 
   validates :email_address, presence: true, uniqueness: { case_insensitive: true }, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, length: { minimum: 8 }, allow_nil: true
+  validates :password, length: { minimum: 8 }, on: :create
 
   def games_played = self.games.where.not(finished_at: nil).size
   def games_won = self.participants.where(winner: true).size

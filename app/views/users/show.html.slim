@@ -1,7 +1,13 @@
 .profile
-  h1 = @user.name
-  p = @user.email_address
+  h1
+    = @user.name
+    - if @user.country.present?
+      = " #{Data::Country.find(@user.country).flag}"
 
-  = link_to edit_user_path(Current.session.user), class: "btn" do
-    i.ph.ph-settings.icon.icon--weight-semi-bold gear
-    | Edit
+  p = @user.email_address
+  p = [@user.state, @user.country].select(&:present?).join(", ")
+
+  - if @user == Current.session.user
+    = link_to edit_user_path(@user), class: "btn" do
+      i.ph.ph-settings.icon.icon--weight-semi-bold gear
+      | Edit

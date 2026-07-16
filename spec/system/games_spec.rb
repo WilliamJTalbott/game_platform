@@ -109,7 +109,12 @@ RSpec.describe 'Games', type: :system do
     context "go_fish game" do
       let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
 
-      it "allows user to take a turn" do
+      it "automatically takes a turn when the timer expires", :js do
+        visit game_path(game)
+        expect(page).to have_css(".message", text: "asked", wait: 3)
+      end
+
+      it "allows user to take a turn", :js do
         visit game_path(game)
         click_button "Ask for card"
         expect(page).to have_css(".message", text: "asked")
@@ -140,7 +145,7 @@ RSpec.describe 'Games', type: :system do
         game.save!
       end
 
-      it "allows user to take a turn" do
+      it "allows user to take a turn", :js do
         visit game_path(game)
         click_button "Play card"
         expect(page).to have_css(".message", text: "played")

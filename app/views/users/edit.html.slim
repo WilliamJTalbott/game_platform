@@ -1,12 +1,20 @@
 .modal-wrapper.modal-wrapper--active
   .modal-wrapper__backdrop
   .modal.modal--login
-    = simple_form_for @user do |f|
+    = simple_form_for @user, data: {controller: "location-selection", location_selection_url_value: turbo_fetch_users_path} do |f|
       .modal__header
         | Edit User
 
       .modal__body
         = f.input :name, input_html: { value: @user.name }
+
+        = f.input :country,
+                collection: Data::Country.all,
+                priority: ['US'],
+                include_blank: true,
+                input_html: { data: { action: "location-selection#perform"} }
+        #state-container
+          = f.input :state, as: :select
 
       .modal__footer
         = f.button :submit, "Update Profile"

@@ -86,3 +86,5 @@ gem "slim-rails", "~> 4.0"
 gem "simple_form", "~> 5.4"
 
 gem 'good_job'
+
+gem "data_for"

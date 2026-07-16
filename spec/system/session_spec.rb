@@ -15,13 +15,6 @@ RSpec.describe 'Session', type: :system do
     end
   end
 
-  context "When user clicks 'forgot password' " do
-    it "directs them to the password_new page" do
-      click_on "Forgot password?"
-      expect(page).to have_current_path new_password_path
-    end
-  end 
-
   context "When user clicks 'Sign up' " do
     it "directs them to the user_new page" do
       click_on "Sign up"

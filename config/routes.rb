@@ -2,11 +2,15 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
-  root 'games#index'
-
-  resources :users
+  concern :turbo_fetch do
+    patch :turbo_fetch, on: :collection
+  end
 
   mount GoodJob::Engine => 'good_job'
+
+  root 'games#index'
+
+  resources :users, concerns: :turbo_fetch
 
   resources :games do
     resources :participants, only: [:create, :show]

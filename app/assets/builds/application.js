@@ -8904,6 +8904,416 @@ class Subscriptions {
 
 /***/ },
 
+/***/ "./node_modules/@rails/request.js/src/fetch_request.js"
+/*!*************************************************************!*\
+  !*** ./node_modules/@rails/request.js/src/fetch_request.js ***!
+  \*************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FetchRequest: () => (/* binding */ FetchRequest)
+/* harmony export */ });
+/* harmony import */ var _fetch_response__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fetch_response */ "./node_modules/@rails/request.js/src/fetch_response.js");
+/* harmony import */ var _request_interceptor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./request_interceptor */ "./node_modules/@rails/request.js/src/request_interceptor.js");
+/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./lib/utils */ "./node_modules/@rails/request.js/src/lib/utils.js");
+
+
+
+class FetchRequest {
+  constructor(method, url, options = {}) {
+    this.method = method;
+    this.options = options;
+    this.originalUrl = url.toString();
+  }
+  async perform() {
+    try {
+      const requestInterceptor = _request_interceptor__WEBPACK_IMPORTED_MODULE_1__.RequestInterceptor.get();
+      if (requestInterceptor) {
+        await requestInterceptor(this);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    const fetch = window.Turbo ? window.Turbo.fetch : window.fetch;
+    const response = new _fetch_response__WEBPACK_IMPORTED_MODULE_0__.FetchResponse(await fetch(this.url, this.fetchOptions));
+    if (response.unauthenticated && response.authenticationURL) {
+      return Promise.reject(window.location.href = response.authenticationURL);
+    }
+    if (response.isScript) {
+      await response.activeScript();
+    }
+    const responseStatusIsTurboStreamable = response.ok || response.unprocessableEntity;
+    if (responseStatusIsTurboStreamable && response.isTurboStream) {
+      await response.renderTurboStream();
+    }
+    return response;
+  }
+  addHeader(key, value) {
+    const headers = this.additionalHeaders;
+    headers[key] = value;
+    this.options.headers = headers;
+  }
+  sameHostname() {
+    if (!this.originalUrl.startsWith("http:") && !this.originalUrl.startsWith("https:")) {
+      return true;
+    }
+    try {
+      return new URL(this.originalUrl).hostname === window.location.hostname;
+    } catch (_) {
+      return true;
+    }
+  }
+  get fetchOptions() {
+    return {
+      method: this.method.toUpperCase(),
+      headers: this.headers,
+      body: this.formattedBody,
+      signal: this.signal,
+      credentials: this.credentials,
+      redirect: this.redirect,
+      keepalive: this.keepalive
+    };
+  }
+  get headers() {
+    const baseHeaders = {
+      "X-Requested-With": "XMLHttpRequest",
+      "Content-Type": this.contentType,
+      Accept: this.accept
+    };
+    if (this.sameHostname()) {
+      baseHeaders["X-CSRF-Token"] = this.csrfToken;
+    }
+    return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.compact)(
+      Object.assign(baseHeaders, this.additionalHeaders)
+    );
+  }
+  get csrfToken() {
+    return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.getCookie)((0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.metaContent)("csrf-param")) || (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.metaContent)("csrf-token");
+  }
+  get contentType() {
+    if (this.options.contentType) {
+      return this.options.contentType;
+    } else if (this.body == null || this.body instanceof window.FormData) {
+      return void 0;
+    } else if (this.body instanceof window.File) {
+      return this.body.type;
+    }
+    return "application/json";
+  }
+  get accept() {
+    switch (this.responseKind) {
+      case "html":
+        return "text/html, application/xhtml+xml";
+      case "turbo-stream":
+        return "text/vnd.turbo-stream.html, text/html, application/xhtml+xml";
+      case "json":
+        return "application/json, application/vnd.api+json";
+      case "script":
+        return "text/javascript, application/javascript";
+      default:
+        return "*/*";
+    }
+  }
+  get body() {
+    return this.options.body;
+  }
+  get query() {
+    const originalQuery = (this.originalUrl.split("?")[1] || "").split("#")[0];
+    const params = new URLSearchParams(originalQuery);
+    let requestQuery = this.options.query;
+    if (requestQuery instanceof window.FormData) {
+      requestQuery = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.stringEntriesFromFormData)(requestQuery);
+    } else if (requestQuery instanceof window.URLSearchParams) {
+      requestQuery = requestQuery.entries();
+    } else {
+      requestQuery = Object.entries(requestQuery || {});
+    }
+    (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.mergeEntries)(params, requestQuery);
+    const query = params.toString();
+    return query.length > 0 ? `?${query}` : "";
+  }
+  get url() {
+    return this.originalUrl.split("?")[0].split("#")[0] + this.query;
+  }
+  get responseKind() {
+    return this.options.responseKind || "html";
+  }
+  get signal() {
+    return this.options.signal;
+  }
+  get redirect() {
+    return this.options.redirect || "follow";
+  }
+  get credentials() {
+    return this.options.credentials || "same-origin";
+  }
+  get keepalive() {
+    return this.options.keepalive || false;
+  }
+  get additionalHeaders() {
+    return this.options.headers || {};
+  }
+  get formattedBody() {
+    const bodyIsAString = Object.prototype.toString.call(this.body) === "[object String]";
+    const contentTypeIsJson = this.headers["Content-Type"] === "application/json";
+    if (contentTypeIsJson && !bodyIsAString) {
+      return JSON.stringify(this.body);
+    }
+    return this.body;
+  }
+}
+
+
+/***/ },
+
+/***/ "./node_modules/@rails/request.js/src/fetch_response.js"
+/*!**************************************************************!*\
+  !*** ./node_modules/@rails/request.js/src/fetch_response.js ***!
+  \**************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FetchResponse: () => (/* binding */ FetchResponse)
+/* harmony export */ });
+class FetchResponse {
+  constructor(response) {
+    this.response = response;
+  }
+  get statusCode() {
+    return this.response.status;
+  }
+  get redirected() {
+    return this.response.redirected;
+  }
+  get ok() {
+    return this.response.ok;
+  }
+  get unauthenticated() {
+    return this.statusCode === 401;
+  }
+  get unprocessableEntity() {
+    return this.statusCode === 422;
+  }
+  get authenticationURL() {
+    return this.response.headers.get("WWW-Authenticate");
+  }
+  get contentType() {
+    const contentType = this.response.headers.get("Content-Type") || "";
+    return contentType.replace(/;.*$/, "");
+  }
+  get headers() {
+    return this.response.headers;
+  }
+  get html() {
+    if (this.contentType.match(/^(application|text)\/(html|xhtml\+xml)$/)) {
+      return this.text;
+    }
+    return Promise.reject(new Error(`Expected an HTML response but got "${this.contentType}" instead`));
+  }
+  get json() {
+    if (this.contentType.match(/^application\/.*json$/)) {
+      return this.responseJson || (this.responseJson = this.response.json());
+    }
+    return Promise.reject(new Error(`Expected a JSON response but got "${this.contentType}" instead`));
+  }
+  get text() {
+    return this.responseText || (this.responseText = this.response.text());
+  }
+  get isTurboStream() {
+    return this.contentType.match(/^text\/vnd\.turbo-stream\.html/);
+  }
+  get isScript() {
+    return this.contentType.match(/\b(?:java|ecma)script\b/);
+  }
+  async renderTurboStream() {
+    if (this.isTurboStream) {
+      if (window.Turbo) {
+        await window.Turbo.renderStreamMessage(await this.text);
+      } else {
+        console.warn("You must set `window.Turbo = Turbo` to automatically process Turbo Stream events with request.js");
+      }
+    } else {
+      return Promise.reject(new Error(`Expected a Turbo Stream response but got "${this.contentType}" instead`));
+    }
+  }
+  async activeScript() {
+    if (this.isScript) {
+      const script = document.createElement("script");
+      const metaTag = document.querySelector("meta[name=csp-nonce]");
+      if (metaTag) {
+        const nonce = metaTag.nonce === "" ? metaTag.content : metaTag.nonce;
+        if (nonce) {
+          script.setAttribute("nonce", nonce);
+        }
+      }
+      script.innerHTML = await this.text;
+      document.body.appendChild(script);
+    } else {
+      return Promise.reject(new Error(`Expected a Script response but got "${this.contentType}" instead`));
+    }
+  }
+}
+
+
+/***/ },
+
+/***/ "./node_modules/@rails/request.js/src/index.js"
+/*!*****************************************************!*\
+  !*** ./node_modules/@rails/request.js/src/index.js ***!
+  \*****************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FetchRequest: () => (/* reexport safe */ _fetch_request__WEBPACK_IMPORTED_MODULE_0__.FetchRequest),
+/* harmony export */   FetchResponse: () => (/* reexport safe */ _fetch_response__WEBPACK_IMPORTED_MODULE_1__.FetchResponse),
+/* harmony export */   RequestInterceptor: () => (/* reexport safe */ _request_interceptor__WEBPACK_IMPORTED_MODULE_2__.RequestInterceptor),
+/* harmony export */   destroy: () => (/* reexport safe */ _verbs__WEBPACK_IMPORTED_MODULE_3__.destroy),
+/* harmony export */   get: () => (/* reexport safe */ _verbs__WEBPACK_IMPORTED_MODULE_3__.get),
+/* harmony export */   patch: () => (/* reexport safe */ _verbs__WEBPACK_IMPORTED_MODULE_3__.patch),
+/* harmony export */   post: () => (/* reexport safe */ _verbs__WEBPACK_IMPORTED_MODULE_3__.post),
+/* harmony export */   put: () => (/* reexport safe */ _verbs__WEBPACK_IMPORTED_MODULE_3__.put)
+/* harmony export */ });
+/* harmony import */ var _fetch_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fetch_request */ "./node_modules/@rails/request.js/src/fetch_request.js");
+/* harmony import */ var _fetch_response__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fetch_response */ "./node_modules/@rails/request.js/src/fetch_response.js");
+/* harmony import */ var _request_interceptor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./request_interceptor */ "./node_modules/@rails/request.js/src/request_interceptor.js");
+/* harmony import */ var _verbs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./verbs */ "./node_modules/@rails/request.js/src/verbs.js");
+
+
+
+
+
+
+
+/***/ },
+
+/***/ "./node_modules/@rails/request.js/src/lib/utils.js"
+/*!*********************************************************!*\
+  !*** ./node_modules/@rails/request.js/src/lib/utils.js ***!
+  \*********************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   compact: () => (/* binding */ compact),
+/* harmony export */   getCookie: () => (/* binding */ getCookie),
+/* harmony export */   mergeEntries: () => (/* binding */ mergeEntries),
+/* harmony export */   metaContent: () => (/* binding */ metaContent),
+/* harmony export */   stringEntriesFromFormData: () => (/* binding */ stringEntriesFromFormData)
+/* harmony export */ });
+function getCookie(name) {
+  const cookies = document.cookie ? document.cookie.split("; ") : [];
+  const prefix = `${encodeURIComponent(name)}=`;
+  const cookie = cookies.find((cookie2) => cookie2.startsWith(prefix));
+  if (cookie) {
+    const value = cookie.split("=").slice(1).join("=");
+    if (value) {
+      return decodeURIComponent(value);
+    }
+  }
+}
+function compact(object) {
+  const result = {};
+  for (const key in object) {
+    const value = object[key];
+    if (value !== void 0) {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+function metaContent(name) {
+  const element = document.head.querySelector(`meta[name="${name}"]`);
+  return element && element.content;
+}
+function stringEntriesFromFormData(formData) {
+  return [...formData].reduce((entries, [name, value]) => {
+    return entries.concat(typeof value === "string" ? [[name, value]] : []);
+  }, []);
+}
+function mergeEntries(searchParams, entries) {
+  for (const [name, value] of entries) {
+    if (value instanceof window.File) continue;
+    if (searchParams.has(name) && !name.includes("[]")) {
+      searchParams.delete(name);
+      searchParams.set(name, value);
+    } else {
+      searchParams.append(name, value);
+    }
+  }
+}
+
+
+/***/ },
+
+/***/ "./node_modules/@rails/request.js/src/request_interceptor.js"
+/*!*******************************************************************!*\
+  !*** ./node_modules/@rails/request.js/src/request_interceptor.js ***!
+  \*******************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RequestInterceptor: () => (/* binding */ RequestInterceptor)
+/* harmony export */ });
+class RequestInterceptor {
+  static register(interceptor) {
+    this.interceptor = interceptor;
+  }
+  static get() {
+    return this.interceptor;
+  }
+  static reset() {
+    this.interceptor = void 0;
+  }
+}
+
+
+/***/ },
+
+/***/ "./node_modules/@rails/request.js/src/verbs.js"
+/*!*****************************************************!*\
+  !*** ./node_modules/@rails/request.js/src/verbs.js ***!
+  \*****************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   destroy: () => (/* binding */ destroy),
+/* harmony export */   get: () => (/* binding */ get),
+/* harmony export */   patch: () => (/* binding */ patch),
+/* harmony export */   post: () => (/* binding */ post),
+/* harmony export */   put: () => (/* binding */ put)
+/* harmony export */ });
+/* harmony import */ var _fetch_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fetch_request */ "./node_modules/@rails/request.js/src/fetch_request.js");
+
+async function get(url, options) {
+  const request = new _fetch_request__WEBPACK_IMPORTED_MODULE_0__.FetchRequest("get", url, options);
+  return request.perform();
+}
+async function post(url, options) {
+  const request = new _fetch_request__WEBPACK_IMPORTED_MODULE_0__.FetchRequest("post", url, options);
+  return request.perform();
+}
+async function put(url, options) {
+  const request = new _fetch_request__WEBPACK_IMPORTED_MODULE_0__.FetchRequest("put", url, options);
+  return request.perform();
+}
+async function patch(url, options) {
+  const request = new _fetch_request__WEBPACK_IMPORTED_MODULE_0__.FetchRequest("patch", url, options);
+  return request.perform();
+}
+async function destroy(url, options) {
+  const request = new _fetch_request__WEBPACK_IMPORTED_MODULE_0__.FetchRequest("delete", url, options);
+  return request.perform();
+}
+
+
+
+/***/ },
+
 /***/ "./app/javascript/controllers/application.js"
 /*!***************************************************!*\
   !*** ./app/javascript/controllers/application.js ***!
@@ -8917,7 +9327,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
 
 const application = _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Application.start();
-application.debug = false;
+application.debug = true;
 window.Stimulus = application;
 
 
@@ -8955,9 +9365,65 @@ __webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _application__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./application */ "./app/javascript/controllers/application.js");
 /* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
+/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
+/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
 
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_2__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+
+/***/ },
+
+/***/ "./app/javascript/controllers/location_selection_controller.js"
+/*!*********************************************************************!*\
+  !*** ./app/javascript/controllers/location_selection_controller.js ***!
+  \*********************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ location_selection_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+/* harmony import */ var _rails_request_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @rails/request.js */ "./node_modules/@rails/request.js/src/index.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+
+class location_selection_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  async perform() {
+    const body = new FormData(this.element);
+    const response = await (0,_rails_request_js__WEBPACK_IMPORTED_MODULE_1__.patch)(this.urlValue, { body, responseKind: "turbo-stream" });
+    if (response.ok) this.countValue += 1;
+  }
+}
+__publicField(location_selection_controller_default, "values", { url: String, count: Number });
+
+
+/***/ },
+
+/***/ "./app/javascript/controllers/turn_timer_controller.js"
+/*!*************************************************************!*\
+  !*** ./app/javascript/controllers/turn_timer_controller.js ***!
+  \*************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (class extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  connect() {
+  }
+});
+__webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
 
 
 /***/ }

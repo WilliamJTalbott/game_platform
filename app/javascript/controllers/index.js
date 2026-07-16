@@ -6,3 +6,9 @@ import { application } from "./application"
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import LocationSelectionController from "./location_selection_controller"
+application.register("location-selection", LocationSelectionController)
+
+import TurnTimerController from "./turn_timer_controller"
+application.register("turn-timer", TurnTimerController)

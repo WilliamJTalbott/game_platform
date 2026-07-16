@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :require_authentication, only: [:new, :create]
+  layout "no_sidebar", only: [:new, :create]
 
   def new
     @user = User.new
@@ -26,15 +27,19 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    if @user.update!(name_params)
+    if @user.update!(update_params)
       redirect_to user_path(@user)
     else
       render :edit
     end
   end
 
-  def name_params
-    params.require(:user).permit(:name)
+  def turbo_fetch
+    @user = User.new(country: params.dig(:user, :country))
+  end
+
+  def update_params
+    params.require(:user).permit(:name, :country, :state)
   end
 
   def user_params
