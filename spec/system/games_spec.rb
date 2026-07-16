@@ -111,7 +111,7 @@ RSpec.describe 'Games', type: :system do
 
       it "automatically takes a turn when the timer expires", :js do
         visit game_path(game)
-        expect(page).to have_css(".message", text: "asked", wait: 3)
+        expect(page).to have_css(".message", text: "asked", wait: 6)
       end
 
       it "allows user to take a turn", :js do

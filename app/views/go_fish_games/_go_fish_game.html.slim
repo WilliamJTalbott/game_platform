@@ -15,6 +15,11 @@
   .panel.panel--feed.panel--side
 
     .panel__header.header--top
+      - if game_info.started?
+        - if game_info.user_turn?
+          div data-controller="turn-timer"
+            h2 data-turn-timer-target="display"
+
       p Game Feed
 
     .panel__body
@@ -25,6 +30,7 @@
         = simple_form_for game_info.form,
                 as: :turn,
                 url: game_turns_path(game_info.game),
+                data: {controller: "game-form", action: "turn-timer:ended@window->game-form#submitForm" },
                 html: {class: "request-form"} do |f|
 
           = f.input :player_name,
@@ -40,7 +46,8 @@
           = f.button :submit,
                   "Ask for card",
                   class: "btn btn--primary",
-                  disabled: !game_info.user_turn?
+                  disabled: !game_info.user_turn?,
+                  data: { 'game-form_target': 'button' }
   / Hand
   .panel.panel--hand.panel--base
 

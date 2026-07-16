@@ -9334,6 +9334,32 @@ window.Stimulus = application;
 
 /***/ },
 
+/***/ "./app/javascript/controllers/game_form_controller.js"
+/*!************************************************************!*\
+  !*** ./app/javascript/controllers/game_form_controller.js ***!
+  \************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ game_form_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+class game_form_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  submitForm(event) {
+    console.log("SEND FORM");
+    this.buttonTarget.click();
+  }
+}
+__publicField(game_form_controller_default, "targets", ["button"]);
+
+
+/***/ },
+
 /***/ "./app/javascript/controllers/hello_controller.js"
 /*!********************************************************!*\
   !*** ./app/javascript/controllers/hello_controller.js ***!
@@ -9364,16 +9390,19 @@ __webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _application__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./application */ "./app/javascript/controllers/application.js");
-/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
-/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
-/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
+/* harmony import */ var _game_form_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game_form_controller */ "./app/javascript/controllers/game_form_controller.js");
+/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
+/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
+/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
 
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("game-form", _game_form_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_2__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_3__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_3__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_4__["default"]);
 
 
 /***/ },
@@ -9415,15 +9444,39 @@ __publicField(location_selection_controller_default, "values", { url: String, co
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (/* binding */ turn_timer_controller_default)
 /* harmony export */ });
 /* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (class extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+class turn_timer_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
   connect() {
+    this.timeLeft = 5;
+    this.updateDisplay();
+    this.timer = setInterval(() => {
+      this.tick();
+    }, 1e3);
   }
-});
-__webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
+  tick() {
+    this.timeLeft--;
+    this.updateDisplay();
+    if (this.timeLeft === 0) {
+      clearInterval(this.timer);
+      this.timerOver();
+    }
+  }
+  timerOver() {
+    console.log("DISPATCH");
+    this.dispatch("ended");
+  }
+  updateDisplay() {
+    console.log("UPDATING DISPLAY");
+    this.displayTarget.textContent = this.timeLeft;
+  }
+}
+__publicField(turn_timer_controller_default, "targets", ["display"]);
 
 
 /***/ }
