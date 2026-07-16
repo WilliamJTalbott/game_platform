@@ -1,17 +1,18 @@
-= simple_form_for @user, data: {controller: "location-selection", location_selection_url_value: turbo_fetch_users_path} do |f|
-  .modal__header
+= simple_form_for @user,
+        data: {controller: "location-selection", location_selection_url_value: turbo_fetch_users_path} do |f|
+
+  = content_for :modal_header do
     | Edit User
 
-  .modal__body
-    = f.input :name, input_html: { value: @user.name }
+  = f.input :name, input_html: { value: @user.name }
 
-    = f.input :country,
-            collection: Data::Country.all,
-            priority: ['US'],
-            include_blank: true,
-            input_html: { data: { action: "location-selection#perform"} }
-    #state-container
-      = f.input :state, as: :select
+  = f.input :country,
+          collection: Data::Country.all,
+          priority: ['US'],
+          include_blank: true,
+          input_html: { data: { action: "location-selection#perform"} }
+  #state-container
+    = f.input :state, as: :select
 
-  .modal__footer
-    = f.button :submit, "Update Profile"
+  = content_for :modal_footer do
+    = f.button :submit, "Update Profile", form: f.id

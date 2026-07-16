@@ -114,7 +114,7 @@ RSpec.describe 'Games', type: :system do
         GamePresenter.wait_time = wait_time
 
         visit game_path(game)
-        expect(page).to have_css(".message", text: "asked", wait: (wait_time + 1))
+        expect(page).to have_css(".message", text: "asked")
       end
 
       it "allows user to take a turn", :js do
