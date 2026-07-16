@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
   skip_before_action :require_authentication, only: [:new, :create]
-  layout "no_sidebar", only: [:new, :create]
 
   def new
     @user = User.new
+    render layout: "no_sidebar"
   end
 
   def show
@@ -17,12 +17,13 @@ class UsersController < ApplicationController
       start_new_session_for(@user)
       redirect_to root_path
     else
-      render :new
+      render :new, layout: 'no_sidebar'
     end
   end
 
   def edit
     @user = User.find(params[:id])
+    render layout: 'modal'
   end
 
   def update
@@ -30,7 +31,7 @@ class UsersController < ApplicationController
     if @user.update!(update_params)
       redirect_to user_path(@user)
     else
-      render :edit
+      render :edit, status: :unprocessable_entity, layout: 'modal'
     end
   end
 

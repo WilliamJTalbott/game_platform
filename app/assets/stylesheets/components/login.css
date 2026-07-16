@@ -1,14 +1,14 @@
-.modal--login {
+/*.modal--login {*/
 
-  .modal__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/*  .modal__header {*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
 
-    .header__action {
-      display: flex;
-      justify-content: end;
-      align-items: center;
-    }
-  }
-}
+/*    .header__action {*/
+/*      display: flex;*/
+/*      justify-content: end;*/
+/*      align-items: center;*/
+/*    }*/
+/*  }*/
+/*}*/

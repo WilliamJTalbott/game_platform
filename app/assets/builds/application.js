@@ -9334,6 +9334,37 @@ window.Stimulus = application;
 
 /***/ },
 
+/***/ "./app/javascript/controllers/dialog_controller.js"
+/*!*********************************************************!*\
+  !*** ./app/javascript/controllers/dialog_controller.js ***!
+  \*********************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (class extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  connect() {
+    if (!this.element.open) this.open();
+  }
+  disconnect() {
+    this.close();
+  }
+  open() {
+    setTimeout(() => this.element.show(), 0);
+  }
+  close() {
+    this.element.close();
+  }
+});
+__webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
+
+
+/***/ },
+
 /***/ "./app/javascript/controllers/game_form_controller.js"
 /*!************************************************************!*\
   !*** ./app/javascript/controllers/game_form_controller.js ***!
@@ -9390,19 +9421,22 @@ __webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _application__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./application */ "./app/javascript/controllers/application.js");
-/* harmony import */ var _game_form_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./game_form_controller */ "./app/javascript/controllers/game_form_controller.js");
-/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
-/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
-/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
+/* harmony import */ var _dialog_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./dialog_controller */ "./app/javascript/controllers/dialog_controller.js");
+/* harmony import */ var _game_form_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game_form_controller */ "./app/javascript/controllers/game_form_controller.js");
+/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
+/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
+/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
 
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("game-form", _game_form_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("dialog", _dialog_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_2__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("game-form", _game_form_controller__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_3__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_4__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_4__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_5__["default"]);
 
 
 /***/ },
@@ -9579,6 +9613,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _controllers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./controllers */ "./app/javascript/controllers/index.js");
 
 
+document.addEventListener("turbo:frame-missing", (event) => {
+  if (event.target.id === "modal") {
+    event.preventDefault();
+    event.detail.visit(event.detail.response.url, { action: "replace" });
+  }
+});
 
 })();
 

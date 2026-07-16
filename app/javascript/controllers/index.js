@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import DialogController from "./dialog_controller"
+application.register("dialog", DialogController)
+
 import GameFormController from "./game_form_controller"
 application.register("game-form", GameFormController)
 

@@ -5,4 +5,6 @@ html
   body.op-page
     .sidebar = render 'sidebar'
 
-    = yield
+    .op-page__main
+      = turbo_frame_tag 'modal'
+      = yield
