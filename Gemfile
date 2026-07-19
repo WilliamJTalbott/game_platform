@@ -71,6 +71,8 @@ end
 
 group :test do
   gem "capybara-playwright-driver"
+  gem "selenium-webdriver"
+  gem "selenium-devtools"
   gem "marsh_grass"
   gem "pry"
 end

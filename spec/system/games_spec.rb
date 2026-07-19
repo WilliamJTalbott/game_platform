@@ -186,4 +186,40 @@ RSpec.describe 'Games', type: :system do
     end
   end
 
+  context "[ OFFLINE ]", :chrome do
+    let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
+
+    after do
+      go_online
+    end
+
+    it "tells user when they are offline" do
+
+      visit game_path(game)
+      expect(page).to have_current_path(game_path(game))
+      expect(page).to_not have_content("You are offline")
+
+      go_offline
+      expect(page).to have_content("You are offline")
+    end
+
+    fit "shows the offline page when navigation fails" do
+      visit game_path(game)
+      expect(page).to have_current_path(game_path(game))
+
+      go_offline
+      page.refresh
+
+      expect(page).to have_content("You're Offline")
+    end
+  end
+
+end
+
+def go_offline
+  page.driver.browser.network_conditions = { offline: true, latency: 0, throughput: 0 }
+end
+
+def go_online
+  page.driver.browser.network_conditions = { offline: false, latency: 0, throughput: 1_000_000 }
 end
