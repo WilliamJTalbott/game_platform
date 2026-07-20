@@ -1,5 +1,5 @@
 RSpec.describe GoFish::TurnResult do
-  let!(:players) {[GoFish::Player.new(nil, "Bob"), GoFish::Player.new(nil, "Tom"), GoFish::Player.new(nil, "Jerry")]}
+  let!(:players) { [ GoFish::Player.new(nil, "Bob"), GoFish::Player.new(nil, "Tom"), GoFish::Player.new(nil, "Jerry") ] }
   let!(:current_player) { players.first }
   let!(:target_player) { players[1] }
   let!(:viewing_player) { players.last }
@@ -13,8 +13,8 @@ RSpec.describe GoFish::TurnResult do
 
     xcontext "when a book on a player is created" do
       before do
-        current_player.cards = [GoFish::Card.new("A"), GoFish::Card.new("A"), GoFish::Card.new("A")]
-        current_player.receive([GoFish::Card.new("A")])
+        current_player.cards = [ GoFish::Card.new("A"), GoFish::Card.new("A"), GoFish::Card.new("A") ]
+        current_player.receive([ GoFish::Card.new("A") ])
       end
 
       it "lists the book type created" do
@@ -25,7 +25,7 @@ RSpec.describe GoFish::TurnResult do
 
     context "when a player askes and gets cards" do
       before do
-        target_player.cards = [GoFish::Card.new("A"), GoFish::Card.new("A")]
+        target_player.cards = [ GoFish::Card.new("A"), GoFish::Card.new("A") ]
         turn_result.got_cards(2)
       end
       it "lists the amount of cards recieved" do
@@ -34,5 +34,4 @@ RSpec.describe GoFish::TurnResult do
       end
     end
   end
-
 end

@@ -1,7 +1,6 @@
 
 module GoFish
   class Deck
-    
     attr_accessor :cards
 
     CARDS_COUNT = 52
@@ -16,7 +15,7 @@ module GoFish
 
     def as_json
       {
-        "cards" => cards.map(&:as_json),
+        "cards" => cards.map(&:as_json)
       }
     end
 
@@ -29,13 +28,13 @@ module GoFish
     def draw(player)
       card = cards.pop
       player.receive(card)
-      return card
+      card
     end
 
     def deal(player, num)
       cards_array = cards.pop(num)
       player.receive(cards_array)
-      return cards_array
+      cards_array
     end
 
     def remaining
@@ -51,6 +50,5 @@ module GoFish
       shuffled.shuffle! while cards == shuffled
       self.cards = shuffled
     end
-
   end
 end

@@ -44,7 +44,7 @@ module CrazyEights
     end
 
     def self.dump(obj)
-      return obj.as_json
+      obj.as_json
     end
 
     def as_json
@@ -52,7 +52,7 @@ module CrazyEights
         "players" => players.map(&:as_json),
         "deck" => deck.as_json,
         "discard" => discard.as_json,
-        "turn_index" => turn_index,
+        "turn_index" => turn_index
       }
     end
 
@@ -69,7 +69,7 @@ module CrazyEights
     def hand_amount
       players.size < MIN_PLAYERS_SMALL_HAND ? LARGE_HAND : SMALL_HAND
     end
-    
+
     private
 
     def switch_turn
@@ -94,7 +94,6 @@ module CrazyEights
     end
 
     def found_playable_card
-
       active_player.cards.each do |card|
         return true if discard.valid_play?(card)
       end
@@ -110,6 +109,5 @@ module CrazyEights
     end
 
     def turn_result = results.last
-
   end
 end

@@ -1,6 +1,5 @@
 module CrazyEights
   class Deck < Pile
-
     def initialize
       @cards = populate
     end
@@ -26,6 +25,5 @@ module CrazyEights
         end
       end
     end
-
   end
 end

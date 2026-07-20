@@ -1,6 +1,5 @@
 module CrazyEights
   class Discard < Pile
-
     attr_accessor :active_card
 
     def initialize
@@ -36,11 +35,10 @@ module CrazyEights
     def recycle
       top_card = cards.last
       recyclable_cards = cards[0...-1]
-      self.cards = [top_card]
+      self.cards = [ top_card ]
       recyclable_cards
     end
 
     private
-
   end
 end

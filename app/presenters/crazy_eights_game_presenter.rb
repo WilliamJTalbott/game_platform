@@ -1,5 +1,4 @@
 class CrazyEightsGamePresenter < GamePresenter
-
   def name = game.name
   def player = game.player_from_user(user)
   def user_turn? = game.user_turn?(user)
@@ -14,5 +13,4 @@ class CrazyEightsGamePresenter < GamePresenter
   def started?
     game.started_at.present?
   end
-
 end

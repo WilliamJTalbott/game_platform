@@ -1,7 +1,6 @@
 
 
 RSpec.describe CrazyEights::Game do
-
   let!(:players) { Array.new(num_players) { CrazyEights::Player.new } }
   let!(:game) { described_class.new(players) }
 
@@ -51,7 +50,6 @@ RSpec.describe CrazyEights::Game do
   end
 
   describe "#play_turn" do
-
     context "player plays a valid card" do
       let(:card) { Card.new("A", "Spades") }
       before do
@@ -123,7 +121,7 @@ RSpec.describe CrazyEights::Game do
 
       context "new user has playable card" do
         before do
-          next_player.cards = [card]
+          next_player.cards = [ card ]
         end
 
         it "switches turn at end of round" do
@@ -144,7 +142,6 @@ RSpec.describe CrazyEights::Game do
           expect(next_player.cards.size).to be > 1
         end
       end
-
     end
 
     context "player runs out of cards" do
@@ -155,7 +152,7 @@ RSpec.describe CrazyEights::Game do
         game.discard.active_card = card
         game.active_player.cards = [ card ]
       end
-      
+
       it "returns them as the winner" do
         expect(game.play_turn(card)).to eq active_player
       end
@@ -175,10 +172,10 @@ RSpec.describe CrazyEights::Game do
       let(:next_player) { game.players[1] }
 
       before do
-        active_player.cards = [card, Card.new("3", "Clubs")]
-        next_player.cards = [Card.new("6", "Hearts")]
+        active_player.cards = [ card, Card.new("3", "Clubs") ]
+        next_player.cards = [ Card.new("6", "Hearts") ]
         game.deck.cards = []
-        game.discard.cards = [recycled_card]
+        game.discard.cards = [ recycled_card ]
         game.discard.active_card = Card.new("2", "Spades")
       end
 
@@ -188,7 +185,5 @@ RSpec.describe CrazyEights::Game do
         expect(next_player.cards).to include(recycled_card)
       end
     end
-
-
   end
 end

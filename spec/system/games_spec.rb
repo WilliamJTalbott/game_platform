@@ -1,13 +1,12 @@
 require 'rails_helper'
 RSpec.describe 'Games', type: :system do
-
   let(:user) { create(:user) }
   before { login_user(user) }
 
   context "[ Create ]" do
     let(:name) { "Test Game" }
 
-    it "lets user create a game" do 
+    it "lets user create a game" do
       click_on "New Game"
       fill_in "Name", with: name
 
@@ -16,7 +15,7 @@ RSpec.describe 'Games', type: :system do
       end.to change(Game, :count).by 1
     end
 
-    it "lets user create go_fish type" do 
+    it "lets user create go_fish type" do
       click_on "New Game"
       select "Go Fish", from: "Type"
 
@@ -29,7 +28,7 @@ RSpec.describe 'Games', type: :system do
     end
 
   it "lets user create go_fish type" do
-      click_on "New Game" 
+      click_on "New Game"
       select "Crazy Eights", from: "Type"
 
       expect do
@@ -77,17 +76,15 @@ RSpec.describe 'Games', type: :system do
         expect(page).to have_content("Table")
       end
     end
-
   end
 
   context "[ Start ]" do
-
     context "go_fish game" do
       let!(:game) { create(:game, :go_fish, :has_user, :many_participants, user: user) }
       it "lets user start a game" do
         visit game_path(game)
         click_on "Start Game"
-        expect(page).to_not have_content( "Waiting for players..." )
+        expect(page).to_not have_content("Waiting for players...")
         expect(page).to have_http_status(:ok)
       end
     end
@@ -97,15 +94,13 @@ RSpec.describe 'Games', type: :system do
       it "lets user start a game" do
         visit game_path(game)
         click_on "Start Game"
-        expect(page).to_not have_content( "Waiting for players..." )
+        expect(page).to_not have_content("Waiting for players...")
         expect(page).to have_http_status(:ok)
       end
     end
-
   end
 
   context "[ Turn ]" do
-
     context "go_fish game" do
       let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
       let(:wait_time) { 0.1 }
@@ -165,12 +160,11 @@ RSpec.describe 'Games', type: :system do
         end
       end
     end
-
   end
 
   context "[ End ]" do
     let!(:game) { create(:finished_game, :user_won, :many_participants, user: user) }
-    
+
     it "does stuff" do
       visit game_path(game)
       expect(page).to have_content("#{user.name} wins!")
@@ -185,5 +179,4 @@ RSpec.describe 'Games', type: :system do
       expect(page).to_not have_content("Join")
     end
   end
-
 end

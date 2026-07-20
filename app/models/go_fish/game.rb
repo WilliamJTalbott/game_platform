@@ -1,6 +1,5 @@
 module GoFish
   class Game
-
     attr_accessor :players, :deck, :turn_index, :results
 
     def initialize(players)
@@ -25,7 +24,7 @@ module GoFish
       new_turn_result(target, rank)
       handle_turn(target, rank)
 
-      return get_winner if is_winner?
+      get_winner if is_winner?
     end
 
     def self.load(json)
@@ -34,14 +33,14 @@ module GoFish
     end
 
     def self.dump(obj)
-      return obj.as_json
+      obj.as_json
     end
 
     def as_json
       {
         "players" => players.map(&:as_json),
         "deck" => deck.as_json,
-        "turn_index" => turn_index,
+        "turn_index" => turn_index
       }
     end
 
@@ -56,7 +55,6 @@ module GoFish
     private
 
     def handle_turn(target, rank)
-
       return repeat_turn if get_matches(target, rank)
       return repeat_turn if go_fish&.rank == rank
       end_turn
@@ -71,9 +69,9 @@ module GoFish
       tied_players = players.select { |player| player.book_count == highest_count }
 
       if tied_players.length == 1
-        return tied_players.first
+        tied_players.first
       else
-        return handle_book_tie(tied_players)
+        handle_book_tie(tied_players)
       end
     end
 
@@ -96,7 +94,7 @@ module GoFish
       return nil if matches.empty?
 
       handle_matches(target, matches)
-      return matches
+      matches
     end
 
     def handle_matches(target, matches)
@@ -144,6 +142,5 @@ module GoFish
     def hand_amount
       players.size < MIN_PLAYERS_SMALL_HAND ? LARGE_HAND : SMALL_HAND
     end
-
   end
 end

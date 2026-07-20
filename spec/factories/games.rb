@@ -78,12 +78,11 @@ FactoryBot.define do
         end
       end
     end
-
   end
 end
 
 def turn_index_from_user(game, user)
   state = game.state
   player = state.players.find { |player| player.user_id == user.id }
-  state.turn_index = state.players.index(player) 
+  state.turn_index = state.players.index(player)
 end

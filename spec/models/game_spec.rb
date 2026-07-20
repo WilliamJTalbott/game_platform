@@ -53,10 +53,9 @@ RSpec.describe Game, type: :model do
     end
 
     it "it runs a turn" do
-      params = { "player_name" => "Toast" , "rank" => "A"}.symbolize_keys
+      params = { "player_name" => "Toast", "rank" => "A" }.symbolize_keys
       expect { game.play_turn(**params) }.to change { game.state.deck.cards.size }
     end
-
   end
 
   context "#player_from_user" do
@@ -70,9 +69,8 @@ RSpec.describe Game, type: :model do
     it "gets proper player" do
       player = game.player_from_user(user)
 
-      expect(player).to be_a(GoFish::Player) 
+      expect(player).to be_a(GoFish::Player)
       expect(player.user_id).to eq user.id
     end
   end
-
 end

@@ -1,5 +1,4 @@
 class GoFishGamePresenter < GamePresenter
-
   def name = game.name
   def player = game.player_from_user(user)
 
@@ -14,7 +13,7 @@ class GoFishGamePresenter < GamePresenter
   end
 
   def opponents
-    game.state.players - [player]
+    game.state.players - [ player ]
   end
 
   def opponent_names
@@ -32,5 +31,4 @@ class GoFishGamePresenter < GamePresenter
   def ranks
     player.unique_cards.map(&:rank)
   end
-
 end

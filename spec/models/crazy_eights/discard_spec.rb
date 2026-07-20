@@ -1,8 +1,7 @@
 
 RSpec.describe CrazyEights::Discard do
-
   Card = CrazyEights::Card
-  
+
   context "#valid_play?" do
     let(:discard) { described_class.new }
 
@@ -45,7 +44,5 @@ RSpec.describe CrazyEights::Discard do
         expect(discard.valid_play?(card)).to eq true
       end
     end
-
   end
-
 end

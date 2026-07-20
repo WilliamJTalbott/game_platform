@@ -9,5 +9,4 @@ class GamePresenter
     @user = user
     @form = form || game.form_class.new(game: game.state)
   end
-
 end

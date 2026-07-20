@@ -80,7 +80,7 @@ module GoFish
     private
 
     def process_card(card)
-      self.cards = cards + [card]
+      self.cards = cards + [ card ]
       make_book(card.rank) if completed_book?(card.rank)
     end
 

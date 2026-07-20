@@ -9,7 +9,6 @@ class TurnsController < ApplicationController
     else
       render_invalid_turn
     end
-
   end
 
   def check_user_turn
@@ -41,5 +40,4 @@ class TurnsController < ApplicationController
       form: @form
     ), status: :unprocessable_entity
   end
-  
 end

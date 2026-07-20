@@ -30,9 +30,9 @@ module GamePlatform
     config.eager_load_paths << Rails.root.join("app", "models", "games")
     config.autoload_paths << Rails.root.join("app/presenters")
     config.eager_load_paths << Rails.root.join("app/presenters")
-    config.autoload_paths << Rails.root.join('app/forms')
+    config.autoload_paths << Rails.root.join("app/forms")
 
-    config.autoload_paths << Rails.root.join('app/jobs')
+    config.autoload_paths << Rails.root.join("app/jobs")
 
     config.active_job.queue_adapter = :good_job
 

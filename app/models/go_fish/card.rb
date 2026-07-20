@@ -47,6 +47,5 @@ module GoFish
     def suit_symbol
       SUIT_SYMBOLS[suit]
     end
-
   end
 end

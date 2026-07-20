@@ -35,5 +35,4 @@ class CrazyEightsGame < Game
   def create_players
     users.map { |user| CrazyEights::Player.new(user.id, user.name) }
   end
-
 end

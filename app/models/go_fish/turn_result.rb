@@ -25,7 +25,6 @@ module GoFish
     end
 
     def go_fish
-
     self.went_fishing = true
 
       players.each do |player|
@@ -56,10 +55,10 @@ module GoFish
 
     def as_json
       {
-        'current_player' => current_player,
-        'rank' => target_rank,
-        'went_fishing' => went_fishing,
-        'display' => "No Output messages for bot yet...",
+        "current_player" => current_player,
+        "rank" => target_rank,
+        "went_fishing" => went_fishing,
+        "display" => "No Output messages for bot yet..."
       }
     end
 
@@ -93,6 +92,5 @@ module GoFish
 
     def winner_message_secondperson = "You win!"
     def winner_message_thirdperson(winner) = "#{winner.name} wins!"
-
   end
 end

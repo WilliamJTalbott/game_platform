@@ -9,9 +9,8 @@ RSpec.describe "Participant", type: :model do
     it "is valid" do
       expect(participant).to be_valid
     end
-
   end
-  
+
   context "When participant is already in game" do
     let!(:participant) { create(:participant, game: game, user: user) }
     let!(:participant2) { build(:participant, game: game, user: user) }
@@ -28,5 +27,4 @@ RSpec.describe "Participant", type: :model do
       expect(participant).not_to be_valid
     end
   end
-
 end

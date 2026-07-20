@@ -4,13 +4,13 @@ RSpec.describe CrazyEightsGame, type: :model do
   describe "#play_turn" do
     let(:winner) { create(:user) }
     let(:opponent) { create(:user) }
-    let(:game) { create(:started_game, :crazy_eights, :has_participants, users: [winner, opponent]) }
+    let(:game) { create(:started_game, :crazy_eights, :has_participants, users: [ winner, opponent ]) }
     let(:winning_player) { game.player_from_user(winner) }
     let(:winning_card) { CrazyEights::Card.new("A", "Spades") }
 
     before do
       game.state.turn_index = game.state.players.index(winning_player)
-      winning_player.cards = [winning_card]
+      winning_player.cards = [ winning_card ]
       game.state.discard.active_card = CrazyEights::Card.new("2", "Spades")
       game.save!
     end

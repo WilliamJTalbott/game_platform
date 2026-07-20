@@ -1,5 +1,4 @@
 class GamesController < ApplicationController
-  
   def history
     render :history
   end
@@ -20,7 +19,7 @@ end
 
 def create
   type = params[:game][:type]
-  type_class = "#{type}Game".delete(' ').constantize
+  type_class = "#{type}Game".delete(" ").constantize
   @game = type_class.new(game_params)
   @participant = @game.participants.new(user: Current.session.user)
 
@@ -39,13 +38,11 @@ end
     else
       render :show, status: :unprocessable_content
     end
-
   end
 
   private
 
   def game_params
-    params.require(:game).permit( :name, :game_type )
+    params.require(:game).permit(:name, :game_type)
   end
-  
 end

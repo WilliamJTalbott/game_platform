@@ -8,7 +8,7 @@ module GoFish
 
     SIZE = 4
 
-    def as_json = {"rank" => rank}
+    def as_json = { "rank" => rank }
     def self.load(hash) = new(hash["rank"])
 
     def ==(other)
@@ -18,6 +18,5 @@ module GoFish
     def <=>(other)
       Card::RANKS.index(rank) <=> Card::RANKS.index(other.rank)
     end
-
   end
 end

@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe GoFishForm do
   let(:active_player) { GoFish::Player.new(nil, "Active Player") }
   let(:opponent) { GoFish::Player.new(nil, "Opponent") }
-  let(:game) { GoFish::Game.new([active_player, opponent]) }
+  let(:game) { GoFish::Game.new([ active_player, opponent ]) }
   let(:player_name) { opponent.name }
   let(:rank) { "A" }
   let(:form) { described_class.new(game:, player_name:, rank:) }

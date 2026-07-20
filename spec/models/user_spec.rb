@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-
   context "When valid email is passed in" do
     let(:user) { build(:user, email_address: "toast@jelly.com") }
     it "is valid" do
@@ -29,5 +28,4 @@ RSpec.describe User, type: :model do
       expect(user).to be_invalid
     end
   end
-
 end

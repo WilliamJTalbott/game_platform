@@ -1,7 +1,7 @@
 require 'rails_helper'
 RSpec.describe 'Stats', type: :system do
   let(:user) { create(:user) }
-    
+
   it 'shows the games index' do
     login_user(user)
     visit stats_path
@@ -11,7 +11,7 @@ RSpec.describe 'Stats', type: :system do
   xcontext "when user has played" do
     let(:games_lost) { 8 }
     let(:games_won) { 5 }
-    
+
     let!(:users) { create_list(:user, 5) }
 
     before do
@@ -23,13 +23,12 @@ RSpec.describe 'Stats', type: :system do
 
     it "shows number of games played" do
       visit stats_path
-      expect(page).to have_content( games_lost + games_won )
+      expect(page).to have_content(games_lost + games_won)
     end
 
     it "shows number of games won" do
       visit stats_path
-      expect(page).to have_content( games_won )
+      expect(page).to have_content(games_won)
     end
   end
-
 end

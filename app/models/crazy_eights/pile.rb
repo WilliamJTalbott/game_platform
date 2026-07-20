@@ -1,6 +1,5 @@
 module CrazyEights
   class Pile
-    
     attr_accessor :cards
 
     CARDS_COUNT = 52
@@ -11,7 +10,7 @@ module CrazyEights
 
     def as_json
       {
-        "cards" => cards.map(&:as_json),
+        "cards" => cards.map(&:as_json)
       }
     end
 
@@ -20,7 +19,7 @@ module CrazyEights
       deck.cards = hash.fetch("cards", []).map { |card| Card.load(card) }
       deck
     end
-    
+
     def remaining
       cards.size
     end
@@ -28,6 +27,5 @@ module CrazyEights
     def depleted?
       cards.empty?
     end
-
   end
 end

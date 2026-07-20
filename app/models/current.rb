@@ -3,5 +3,4 @@ class Current < ActiveSupport::CurrentAttributes
   delegate :user, to: :session, allow_nil: true
 
   def games = user&.games
-
 end

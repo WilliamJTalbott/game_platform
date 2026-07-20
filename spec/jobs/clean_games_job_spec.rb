@@ -2,7 +2,6 @@
 require 'rspec'
 
 RSpec.describe CleanGamesJob do
-
   context 'when preformed' do
     let! (:game) { create(:old_game) }
 

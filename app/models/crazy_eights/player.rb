@@ -53,8 +53,7 @@ module CrazyEights
     private
 
     def process_card(card)
-      self.cards = cards + [card]
+      self.cards = cards + [ card ]
     end
-
   end
 end

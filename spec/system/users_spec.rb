@@ -31,7 +31,6 @@ RSpec.describe 'User', type: :system do
         expect(page).to have_content("is too short (minimum is 8 characters)")
       end
     end
-
   end
 
   context "when user editing their profile" do
@@ -55,13 +54,11 @@ RSpec.describe 'User', type: :system do
     end
 
     it "updates the states when a country is selected", :js do
-      expect(page).to_not have_select("State", with_options: ["Alabama"])
+      expect(page).to_not have_select("State", with_options: [ "Alabama" ])
 
       select "United States", from: "Country"
 
-      expect(page).to have_select("State", with_options: ["Alabama"])
+      expect(page).to have_select("State", with_options: [ "Alabama" ])
     end
-
   end
-
 end

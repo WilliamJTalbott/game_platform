@@ -5,14 +5,12 @@ class Game < ApplicationRecord
   has_many :users, through: :participants
 
   def start
-
     return false unless can_start?
 
     self.started_at = Time.current
     self.state = build_game
     state.deal
     save
-    
   end
 
   def play_turn(...)
@@ -32,8 +30,8 @@ class Game < ApplicationRecord
   end
 
   def status
-    return 'waiting' unless self.started_at
-    return self.finished_at ? 'finished' : 'started'
+    return "waiting" unless self.started_at
+    self.finished_at ? "finished" : "started"
   end
 
   def duration
@@ -46,7 +44,7 @@ class Game < ApplicationRecord
     minutes = (total_seconds / 60) % 60
     seconds = total_seconds % 60
 
-    [hours, minutes, seconds].map { |t| t.to_s.rjust(2, '0') }.join(':')
+    [ hours, minutes, seconds ].map { |t| t.to_s.rjust(2, "0") }.join(":")
   end
 
   def player_from_user(user)
@@ -70,5 +68,4 @@ class Game < ApplicationRecord
   def create_players
     raise NotImplementedError, "#{self.class} must implement #create_players"
   end
-
 end
