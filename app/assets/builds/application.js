@@ -9382,7 +9382,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 
 class game_form_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
   submitForm(event) {
-    console.log("SEND FORM");
     this.buttonTarget.click();
   }
 }
@@ -9502,11 +9501,9 @@ class turn_timer_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
     }
   }
   timerOver() {
-    console.log("DISPATCH");
     this.dispatch("ended");
   }
   updateDisplay() {
-    console.log("UPDATING DISPLAY");
     this.displayTarget.textContent = this.timeLeft;
   }
 }

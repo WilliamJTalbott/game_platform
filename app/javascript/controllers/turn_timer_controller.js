@@ -23,12 +23,10 @@ export default class extends Controller {
     }
 
     timerOver() {
-        console.log("DISPATCH")
         this.dispatch("ended")
     }
 
     updateDisplay() {
-        console.log("UPDATING DISPLAY")
         this.displayTarget.textContent = this.timeLeft
     }
 }
