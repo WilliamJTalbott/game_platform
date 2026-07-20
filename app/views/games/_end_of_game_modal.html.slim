@@ -1,0 +1,21 @@
+.modal-wrapper.modal-wrapper--active
+  .modal-wrapper__backdrop
+  .modal
+    .modal__header
+      - if game_info.won?
+        h1 You win
+      - else
+        h1 You lose
+        p = "#{game_info.winner.name} wins!"
+
+    .modal__body
+      table.scoreboard
+        - game_info.scoreboard.each do |entry|
+          tr class=("scoreboard__row--winner" if entry.winner?)
+            td = entry.name
+            td = entry.score
+
+    .modal__footer
+      = link_to "Return to main page", root_path, class: "btn btn--primary"
+      = link_to "View stats", stats_path, class: "btn"
+      = link_to "Create a new game", new_game_path, class: "btn"
