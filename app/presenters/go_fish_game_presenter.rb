@@ -24,11 +24,11 @@ class GoFishGamePresenter < GamePresenter
     player&.cards
   end
 
-  def winner
-    game.participants.find_by(winner: true)&.user
-  end
-
   def ranks
     player.unique_cards.map(&:rank)
   end
+
+  private
+
+  def score_for(player) = player.book_count
 end
