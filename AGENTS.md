@@ -38,7 +38,8 @@ bin/ci                                              # full CI: setup, rubocop, b
 
 - **TDD-first is the goal.** Write the failing spec before the code. Feel free to recommend stronger/missing tests at any time.
 - **Use FactoryBot for test setup wherever possible** rather than hand-building records.
-- PORO game logic (`app/models/go_fish`, `app/models/crazy_eights`) is unit-tested exhaustively; `spec/system` covers user flows in a real browser via the Playwright driver.
+- **Test at the lowest layer that can prove the behavior.** PORO game rules → `spec/models/{go_fish,crazy_eights}` (unit-tested exhaustively, no DB); persistence/`play_turn` glue → `spec/models/games`; per-user view data → `spec/presenters`; HTTP + authorization → `spec/requests`; live wiring only (Turbo broadcasts, JS) → `spec/system` (Playwright). Heuristic: a scenario that's still true with the browser off does **not** belong in a system spec — keep those few and coarse.
+- **Request specs authenticate via `sign_in(user)`** (`spec/support/request_auth_helpers.rb`), which logs in through the real session endpoint. Note `cookies.signed[:session_id]` does *not* work in Rack::Test request specs — that's why the helper posts to `session_path` instead.
 
 ## Architecture (big picture)
 
@@ -53,13 +54,16 @@ See **[docs/architecture.md](docs/architecture.md)** for the full model map, the
 These are things you would *not* infer from a quick read:
 
 - **7-line methods.** Keep every method to ~7 lines or fewer — this is the dominant norm, broken only where a longer method is genuinely clearer. Treat each `it` block in specs the same way (~7 lines ideally). If a method runs long, extract a well-named private method.
+- **Structure specs as Given/When/Then.** The *given* (the subject and its baseline state) belongs in the `describe` block; the *when* (the action or condition under test) belongs in an inner `context` block (prefer `context` over nested `describe` for this); the *then* (the expectation) belongs in the `it` block. Read top-to-bottom, a spec should say "describe X, given …; context when …; it then …".
 - **Instance variables:** fine in Rails code (controllers, models, views). Avoid them in plain Ruby scripts — prefer passing values through arguments and return values.
 - **The jsonb round-trip is a trap.** Every PORO implements `as_json` + `self.load`. Add a field to one without the other and it silently vanishes on reload. And `play_turn` only persists because the STI subclass calls `save!` — mutating the PORO alone changes nothing.
 - **Keep controllers skinny.** Validation lives in **Form objects** (`app/forms/`, `ActiveModel::Model` wrappers over PORO state); rules live in the POROs. Controllers just validate-then-delegate.
 - **Always render through a Presenter** (`app/presenters/`), never a model directly — presenters build the *per-user* view so each player sees only their own hand and message log. Use them correctly and as the norm.
+- **CSS is served by Propshaft, not bundled.** Styling uses the **Optics** design system (via CDN) + **design tokens** (`--op-*` from Optics, `--gf-*`/`--_gf-*` for the project) + **BEM** class naming, one block per file in `app/assets/stylesheets/components/`. To add styles you just drop a `.css` file there — `stylesheet_link_tag :app` auto-includes it; there is no manifest, `@import`, or CSS build step. The empty `application.css` and webpack CSS build are unused — don't "fix" them. See [docs/frontend.md](docs/frontend.md).
 
 ## Key context
 
 - **[docs/architecture.md](docs/architecture.md)** — the two `Game` layers, jsonb serialization, the turn/broadcast cycle, adding a game type.
+- **[docs/frontend.md](docs/frontend.md)** — how CSS loads (Propshaft `:app`, no bundler), Optics, design tokens, and BEM conventions.
 - **[docs/games/go-fish.md](docs/games/go-fish.md)** — Go Fish rules and how `GoFish::Game` implements them.
 - **[docs/games/crazy-eights.md](docs/games/crazy-eights.md)** — Crazy Eights rules and how `CrazyEights::Game` implements them.
