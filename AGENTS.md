@@ -16,6 +16,7 @@ This is primarily a **skill-development project** for the author, but it should 
 - **GoodJob** for background jobs + cron
 - **RSpec** + **FactoryBot** + **Capybara/Playwright** for tests
 - **Kamal** + Docker for deploy; **Honeybadger** for errors
+- **Auth is hand-rolled** (cookie-backed `Session` model + a `Current` object) — **no Devise**. Use `Current.session` / `current_user`.
 
 ## Run / develop
 
@@ -56,9 +57,6 @@ These are things you would *not* infer from a quick read:
 - **The jsonb round-trip is a trap.** Every PORO implements `as_json` + `self.load`. Add a field to one without the other and it silently vanishes on reload. And `play_turn` only persists because the STI subclass calls `save!` — mutating the PORO alone changes nothing.
 - **Keep controllers skinny.** Validation lives in **Form objects** (`app/forms/`, `ActiveModel::Model` wrappers over PORO state); rules live in the POROs. Controllers just validate-then-delegate.
 - **Always render through a Presenter** (`app/presenters/`), never a model directly — presenters build the *per-user* view so each player sees only their own hand and message log. Use them correctly and as the norm.
-- **Auth is hand-rolled**, not Devise — a signed cookie holds a `Session` id; use `Current.session` / `current_user`.
-- **Turn timer:** `turn_timer_controller.js` counts down `presenter.wait_time`; on expiry it auto-submits the move form. Idle turns are forced along this way.
-- **Games are soft-deleted** (`deleted_at`); `CleanGamesJob` (GoodJob cron, every 15 min) sweeps games older than 3 days. Lobby queries filter `deleted_at`.
 
 ## Key context
 
