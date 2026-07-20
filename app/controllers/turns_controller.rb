@@ -13,6 +13,7 @@ class TurnsController < ApplicationController
 
   def check_user_turn
     @game = Game.find(params[:game_id])
+    return render_finished_game if @game.status == "finished"
 
     unless @game.status == "started" && @game.user_turn?(current_user)
       render json: { errors: @game.errors.full_messages }, status: :unprocessable_entity
@@ -38,6 +39,14 @@ class TurnsController < ApplicationController
       @game,
       current_user,
       form: @form
+    ), status: :unprocessable_entity
+  end
+
+  def render_finished_game
+    render turbo_stream: turbo_stream.replace(
+      "end_of_game_modal",
+      partial: "games/end_of_game_modal",
+      locals: { game_info: @game.presenter(current_user) }
     ), status: :unprocessable_entity
   end
 end

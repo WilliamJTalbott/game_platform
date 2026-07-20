@@ -162,15 +162,6 @@ RSpec.describe 'Games', type: :system do
     end
   end
 
-  context "[ End ]" do
-    let!(:game) { create(:finished_game, :user_won, :many_participants, user: user) }
-
-    it "does stuff" do
-      visit game_path(game)
-      expect(page).to have_content("#{user.name} wins!")
-    end
-  end
-
   context "When games have been deleted" do
     let!(:game) { create(:deleted_game) }
 

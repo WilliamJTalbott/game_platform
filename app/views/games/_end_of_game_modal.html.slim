@@ -6,7 +6,8 @@
         h1 You win
       - else
         h1 You lose
-        p = "#{game_info.winner.name} wins!"
+        - if game_info.winner
+          p = "#{game_info.winner.name} wins!"
 
     .modal__body
       table.scoreboard
