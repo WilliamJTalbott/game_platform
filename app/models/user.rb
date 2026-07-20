@@ -13,7 +13,11 @@ class User < ApplicationRecord
 
   def games_played = self.games.where.not(finished_at: nil).size
   def games_won = self.participants.where(winner: true).size
-  def win_percentage = ((games_won.to_f / games_played) * 100).round(1)
+  def win_percentage
+    return 0 if games_played.zero?
+
+    ((games_won.to_f / games_played) * 100).round(1)
+  end
 
   def create_name
     username = email_address.split("@").first

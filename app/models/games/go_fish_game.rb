@@ -6,7 +6,9 @@ class GoFishGame < Game
   end
 
   def play_turn(player_name:, rank:)
-    state.play_turn(player_from_name(player_name), rank)
+    winner = state.play_turn(player_from_name(player_name), rank)
+    end_game(winner) if winner
+
     save!
   end
 

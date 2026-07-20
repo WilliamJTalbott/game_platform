@@ -22,12 +22,6 @@ class CrazyEightsGame < Game
 
   private
 
-  def end_game(winner)
-    winner_participant = participants.find_by!(user_id: winner.user_id)
-    winner_participant.update!(winner: true)
-    finish
-  end
-
   def card_from_string(card)
     CrazyEights::Card.from_s(card)
   end

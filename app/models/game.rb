@@ -29,6 +29,11 @@ class Game < ApplicationRecord
     self.finished_at = Time.current
   end
 
+  def end_game(winner)
+    participants.find_by!(user_id: winner.user_id).update!(winner: true)
+    finish
+  end
+
   def status
     return "waiting" unless self.started_at
     self.finished_at ? "finished" : "started"
