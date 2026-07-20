@@ -1,10 +1,15 @@
 doctype html
 html
-  head = render 'head'
+  head
+    = render "head"
 
-  body.op-page
-    .sidebar = render 'sidebar'
+  body.op-page(
+    data-controller="service-worker"
+    data-service-worker-url-value=pwa_service_worker_path(format: :js)
+  )
+    .sidebar
+      = render "sidebar"
 
     .op-page__main
-      = turbo_frame_tag 'modal'
+      = turbo_frame_tag "modal"
       = yield

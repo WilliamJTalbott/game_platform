@@ -1,3 +1,7 @@
 = turbo_stream_from @game, Current.session.user
 
+div data-controller="offline-alert" data-action="online@window->offline-alert#goOnline offline@window->offline-alert#goOffline"
+  div id="offline-popup" data-offline-alert-target="popup" class="popup"
+    p You are offline
+
 = render @game_info, game_info: @game_info

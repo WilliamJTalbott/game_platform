@@ -9425,7 +9425,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _game_form_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./game_form_controller */ "./app/javascript/controllers/game_form_controller.js");
 /* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
 /* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
-/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
+/* harmony import */ var _offline_alert_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./offline_alert_controller */ "./app/javascript/controllers/offline_alert_controller.js");
+/* harmony import */ var _service_worker_controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./service_worker_controller */ "./app/javascript/controllers/service_worker_controller.js");
+/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
 
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("dialog", _dialog_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -9436,7 +9438,11 @@ _application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_c
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_4__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_5__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("offline-alert", _offline_alert_controller__WEBPACK_IMPORTED_MODULE_5__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("service-worker", _service_worker_controller__WEBPACK_IMPORTED_MODULE_6__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_7__["default"]);
 
 
 /***/ },
@@ -9466,6 +9472,80 @@ class location_selection_controller_default extends _hotwired_stimulus__WEBPACK_
   }
 }
 __publicField(location_selection_controller_default, "values", { url: String, count: Number });
+
+
+/***/ },
+
+/***/ "./app/javascript/controllers/offline_alert_controller.js"
+/*!****************************************************************!*\
+  !*** ./app/javascript/controllers/offline_alert_controller.js ***!
+  \****************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ offline_alert_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+class offline_alert_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  connect() {
+    this.updateStatus();
+  }
+  goOnline() {
+    this.updateStatus();
+  }
+  goOffline() {
+    this.updateStatus();
+  }
+  updateStatus() {
+    if (navigator.onLine) {
+      this.popupTarget.classList.remove("show");
+    } else {
+      this.popupTarget.classList.add("show");
+    }
+  }
+}
+__publicField(offline_alert_controller_default, "targets", ["popup"]);
+
+
+/***/ },
+
+/***/ "./app/javascript/controllers/service_worker_controller.js"
+/*!*****************************************************************!*\
+  !*** ./app/javascript/controllers/service_worker_controller.js ***!
+  \*****************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ service_worker_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+class service_worker_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  async connect() {
+    if (!("serviceWorker" in navigator)) return;
+    try {
+      this.registration = await navigator.serviceWorker.register(
+        this.urlValue,
+        { scope: "/" }
+      );
+      console.log("Service worker registered");
+    } catch (error) {
+      console.error("Service worker registration failed", error);
+    }
+  }
+}
+__publicField(service_worker_controller_default, "values", {
+  url: String
+});
 
 
 /***/ },

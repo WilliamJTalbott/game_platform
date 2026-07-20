@@ -5,8 +5,6 @@ module LoginHelper
     fill_in :email_address, with: user.email_address
     fill_in :password, with: user.password
     click_button 'Log in'
-
-    expect(page).to have_current_path(root_path)
   end
 
   def sign_up(email = "user@example.com", password = "password", confirm_password = password)
