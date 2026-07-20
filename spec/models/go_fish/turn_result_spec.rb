@@ -11,18 +11,6 @@ RSpec.describe GoFish::TurnResult do
       expect(action_message.text).to include("Bob", "Tom", "A")
     end
 
-    xcontext "when a book on a player is created" do
-      before do
-        current_player.cards = [ GoFish::Card.new("A"), GoFish::Card.new("A"), GoFish::Card.new("A") ]
-        current_player.receive([ GoFish::Card.new("A") ])
-      end
-
-      it "lists the book type created" do
-        expect(current_player.book_count).to eq 1
-        expect(turn_result.output).to include("a book of A's")
-      end
-    end
-
     context "when a player askes and gets cards" do
       before do
         target_player.cards = [ GoFish::Card.new("A"), GoFish::Card.new("A") ]
