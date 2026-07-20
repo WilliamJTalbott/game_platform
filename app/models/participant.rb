@@ -3,7 +3,7 @@ class Participant < ApplicationRecord
   belongs_to :user
 
   validates :game_id, uniqueness: { scope: :user }
-  validate :not_started
+  validate :not_started, on: :create
   
   def not_started
     if game&.started_at.present?

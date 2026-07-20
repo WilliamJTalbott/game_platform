@@ -2,6 +2,6 @@
   div.message.message--action
     p = message.text
 - else
-  div.message.message--response class=(alert ? 'response--alert' : '')
+  div.message.message--response class=(message.type == :alert ? 'response--alert' : '')
     i.response__icon.ph.ph-arrow-elbow-down-right
     p = message.text

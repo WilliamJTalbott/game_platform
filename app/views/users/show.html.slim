@@ -1,0 +1,13 @@
+.profile
+  h1
+    = @user.name
+    - if @user.country.present?
+      = " #{Data::Country.find(@user.country).flag}"
+
+  p = @user.email_address
+  p = [@user.state, @user.country].select(&:present?).join(", ")
+
+  - if @user == Current.session.user
+    = link_to edit_user_path(@user), class: "btn", data: { turbo_frame: 'modal' } do
+      i.ph.ph-settings.icon.icon--weight-semi-bold gear
+      | Edit

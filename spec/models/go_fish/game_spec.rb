@@ -2,8 +2,7 @@ RSpec.describe GoFish::Game do
   let(:num_players) { 5 }
   let!(:players) { Array.new(num_players) { GoFish::Player.new } }
   let!(:game) { described_class.new(players) }
-  let(:player) { players.first }
-
+  
   let!(:target_player) {game.players[1]}
   let(:active_player) { game.active_player }
 

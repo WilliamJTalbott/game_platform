@@ -1,10 +1,20 @@
 FactoryBot.define do
   factory :game do
     name { "My Game" }
-    game_type { "Go Fish" }
+    type { "GoFishGame" }
+
+    initialize_with { type.present? ? type.constantize.new(attributes) : Game.new(attributes) }
 
     transient do
       user { nil }
+    end
+
+    trait :go_fish do
+      type { "GoFishGame" }
+    end
+
+    trait :crazy_eights do
+      type { "CrazyEightsGame" }
     end
 
     trait :has_user do
@@ -33,6 +43,14 @@ FactoryBot.define do
           game.participants << build(:participant, game: game, user: user)
         end
       end
+    end
+
+    factory :deleted_game do
+      deleted_at { Time.current }
+    end
+
+    factory :old_game do
+      created_at { 3.days.ago }
     end
 
     factory :started_game do
@@ -65,7 +83,7 @@ FactoryBot.define do
 end
 
 def turn_index_from_user(game, user)
-  state = game.go_fish
+  state = game.state
   player = state.players.find { |player| player.user_id == user.id }
   state.turn_index = state.players.index(player) 
 end

@@ -1,8 +1,10 @@
 doctype html
 html
   head = render 'head'
-  = stylesheet_link_tag "https://cdn.jsdelivr.net/npm/@rolemodel/optics@2.3.1/dist/css/optics+phosphor_icons.min.css"
-  = stylesheet_link_tag :app, "data-turbo-track": "reload"
+
   body.op-page
-    sidebar = render 'sidebar'
-    = yield
+    .sidebar = render 'sidebar'
+
+    .op-page__main
+      = turbo_frame_tag 'modal'
+      = yield

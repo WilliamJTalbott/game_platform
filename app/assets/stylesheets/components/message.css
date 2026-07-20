@@ -15,7 +15,7 @@
       background-color: var(--op-color-primary-plus-five);
   }
 
-  &.message--action:not(:first-child) {
+  &.message--action {
     margin-top: var(--op-space-small);
   }
 

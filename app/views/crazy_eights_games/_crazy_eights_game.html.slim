@@ -1,0 +1,63 @@
+.game.game--crazy_eights id=dom_id(game_info.game)
+  / Board
+  .panel.panel--board
+
+    .panel__header.header--top
+      h2 = game_info.name
+    .panel__body
+
+      .op-stack.items-stretch.gap-xs
+        p Table
+        - if game_info.started?
+          = render "crazy_eights_games/table", card: game_info.active_card
+
+  / Feed
+  .panel.panel--feed.panel--side
+
+    .panel__header.header--top
+      p Game Feed
+
+    .panel__body
+      - if game_info.playable?
+        .feed__messages
+          = render partial: "go_fish_games/message", collection: game_info.messages, as: :message
+
+        = simple_form_for game_info.form,
+                as: :turn,
+                url: game_turns_path(game_info.game),
+                html: {class: "request-form"} do |f|
+
+          = f.input :card,
+                  as: :select,
+                  collection: game_info.cards,
+                  include_blank: false
+
+          = f.input :suit,
+                  as: :select,
+                  collection: CrazyEights::Card::SUITS,
+                  include_blank: true,
+                  label: "Suit"
+
+          = f.button :submit, "Play card",
+                  class: "btn btn--primary",
+                  disabled: !game_info.user_turn?
+
+  / Hand
+  .panel.panel--hand.panel--base
+
+    .panel__header
+      p Your Hand
+
+    .panel__body.hand
+      - if game_info.started?
+        = render partial: "go_fish_games/card", collection: game_info.cards, as: :card
+
+- unless game_info.started?
+  .overlay.card
+    h1 Waiting for players...
+    = button_to "Start Game", start_game_path(game_info.game), method: :post, class: "btn btn--primary"
+
+- if game_info.finished?
+  .overlay.card
+    h1 = "#{game_info.winner.name} wins!"
+    = link_to "Back to Games", games_path, class: "btn btn--primary"

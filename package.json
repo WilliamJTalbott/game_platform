@@ -1,8 +1,30 @@
 {
   "devDependencies": {
-    "playwright": "^1.61.1"
+    "@csstools/postcss-sass": "^5.1.1",
+    "@honeybadger-io/js": "^6.14.0",
+    "@honeybadger-io/webpack": "^6.3.2",
+    "css-loader": "^7.1.4",
+    "css-minimizer-webpack-plugin": "^8.0.0",
+    "esbuild": "^0.28.1",
+    "esbuild-loader": "^4.5.0",
+    "mini-css-extract-plugin": "^2.10.2",
+    "playwright": "^1.61.1",
+    "postcss": "^8.5.19",
+    "postcss-loader": "^8.2.1",
+    "postcss-preset-env": "^11.3.2",
+    "postcss-scss": "^4.0.9",
+    "webpack": "^5.108.4",
+    "webpack-cli": "^7.2.1"
   },
   "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.23",
+    "@rails/request.js": "^0.0.13",
     "@rolemodel/optics": "^2.4.0"
-  }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "webpack --config ./webpack.config.js"
+  },
+  "packageManager": "yarn@1.22.22"
 }

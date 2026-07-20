@@ -21,10 +21,10 @@ RSpec.describe "Participant", type: :model do
   end
 
   context "When game is active" do
-    before { game.start }
+    let (:started_game) { create(:started_game, :many_participants, :has_user, user: user) }
 
     it "is invalid" do
-      participant = build(:participant, game: game, user: user)
+      participant = build(:participant, game: started_game, user: user)
       expect(participant).not_to be_valid
     end
   end

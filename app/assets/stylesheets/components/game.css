@@ -11,4 +11,10 @@
   grid-template-areas:
     "board feed"
     "hand books";
+
+  &.game--crazy_eights {
+    grid-template-areas:
+  "board feed"
+  "hand feed";
+  }
 }

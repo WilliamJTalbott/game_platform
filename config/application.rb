@@ -27,6 +27,14 @@ module GamePlatform
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
+    config.eager_load_paths << Rails.root.join("app", "models", "games")
+    config.autoload_paths << Rails.root.join("app/presenters")
+    config.eager_load_paths << Rails.root.join("app/presenters")
+    config.autoload_paths << Rails.root.join('app/forms')
+
+    config.autoload_paths << Rails.root.join('app/jobs')
+
+    config.active_job.queue_adapter = :good_job
 
     # Configuration for the application, engines, and railties goes here.
     #
