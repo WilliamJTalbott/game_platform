@@ -123,7 +123,14 @@ self-detecting.
 
 ---
 
-## Item 2 — Extract a shared card-game PORO layer 🟡 (ready to build)
+## Item 2 — Extract a shared card-game PORO layer ✅ (done, Tier 3 deferred)
+
+**Done:** Tiers 1 & 2 of the manifest below — `Serializable`, `Messageable`,
+`CardGame::Card`/`Pile`/`Deck`, and `Book`/`Player`/`Game` all wired onto
+`Serializable`. See [docs/serialization.md](../serialization.md) for the
+resulting mechanism. Tier 3 (unifying `Player` beyond the two mixins, or the
+`Game` rules classes) remains **intentionally deferred** until a real third game
+exists — see that tier's own section below for why.
 
 **Serves the goal:** delivers done-criteria **#2 (inherited, not copied)**. This is
 what makes a new game *small* — it inherits its cards, deck, and serialization
@@ -154,7 +161,12 @@ and gets serialization for free, instead of copying four files.
 
 ---
 
-## Item 3 — Make "adding a game" purely additive 🟡 (ready to build)
+## Item 3 — Make "adding a game" purely additive ✅ (done)
+
+**Done:** `Game.playable`/`.from_type`/`.label`/`.permitted_turn_params`
+(`app/models/game.rb`), consumed by the new-game view and both controllers. Fixes
+the unguarded `constantize` and the dead `:game_type` strong param described
+below.
 
 **Serves the goal:** delivers done-criterion **#1 (additive)** and the safety half
 of **#4** (no unsafe game-type input). This is what keeps the shared view and

@@ -23,9 +23,9 @@ User ──< Session
 
 ### 2. Game-logic layer (Plain Old Ruby Objects)
 
-Pure Ruby under `app/models/go_fish/` and `app/models/crazy_eights/`. These hold the **rules and mutable game state** and know nothing about the database.
+Pure Ruby under `app/models/go_fish/` and `app/models/crazy_eights/`, plus a shared `app/models/card_game/` namespace. These hold the **rules and mutable game state** and know nothing about the database.
 
-Per game namespace: `Game`, `Player`, `Deck`, `Card`, `TurnResult`, plus `Book` (Go Fish) and `Discard` / `Pile` / `Message` (Crazy Eights).
+Per game namespace: `Game`, `Player`, `TurnResult`, plus `Book` (Go Fish) and `Discard` (Crazy Eights, subclasses `CardGame::Pile`). `Card`, `Message`, `Pile`, and `Deck` are **shared** (`app/models/card_game/`) — a new game reuses them as-is rather than re-implementing its own.
 
 - `GoFish::Game` / `CrazyEights::Game` own `players`, `deck`, `turn_index`, and a list of `TurnResult`s.
 - `Player` holds a hand of `Card`s and a `messages` log (per-player narration built during a turn).
@@ -41,9 +41,9 @@ Each `*Game` subclass declares:
 serialize :state, coder: CrazyEights::Game   # or GoFish::Game
 ```
 
-The PORO `Game` implements `self.dump(obj)` (→ `as_json`) and `self.load(json)` (→ `from_json`). So the entire live game — hands, deck, discard, whose turn it is — is stored as one JSON blob in `games.state`.
+The PORO `Game` implements `self.dump(obj)` (→ `as_json`) and `self.load(hash)`. So the entire live game — hands, deck, discard, whose turn it is — is stored as one JSON blob in `games.state`.
 
-**Round-trip contract:** every PORO in the tree implements `as_json` and `self.load(hash)`, and they must stay in sync. If you add a field to a PORO, you must add it to *both* `as_json` and `load`, or it silently vanishes on the next save/reload.
+**Round-trip contract:** every PORO in the tree needs matching `as_json`/`self.load`. Most of them get this for free by `include`-ing the **`Serializable`** concern and declaring a `serializes` schema, instead of hand-writing the two methods — see [docs/serialization.md](docs/serialization.md). The `*::Game` PORO itself still defines a one-line `self.dump(obj) = obj.as_json`, which is the bridge to the AR `serialize` coder protocol, not something `Serializable` generates.
 
 ### The turn cycle
 
@@ -68,7 +68,9 @@ TurnsController#create
 
 ## Adding a new game type
 
-1. Write the rules engine as POROs under `app/models/<game>/` (`Game`, `Player`, `Deck`, `Card`, `TurnResult`, …), each with `as_json` + `self.load`. TDD these first.
-2. Add an STI subclass under `app/models/games/` that `serialize`s `state` and implements the abstract interface from `Game`: `build_game`, `play_turn`, `presenter`, `form_class`, `create_players`.
-3. Add a `*Form` validator in `app/forms/`.
-4. Add a `*GamePresenter` in `app/presenters/` and the matching view partial.
+1. Write the rules engine as POROs under `app/models/<game>/` (`Game`, `Player`, `TurnResult`, …), reusing `CardGame::Card`/`Pile`/`Deck`/`Message` as-is. `include Serializable` and declare a `serializes` schema instead of hand-writing `as_json`/`self.load` (see [docs/serialization.md](docs/serialization.md)). TDD these first.
+2. Add an STI subclass under `app/models/games/` that `serialize`s `state`, implements the abstract interface from `Game` (`build_game`, `play_turn`, `presenter`, `form_class`, `create_players`), and declares `label`/`permitted_turn_params`.
+3. Register it in `Game::TYPES` (`app/models/game.rb`) — the one line that wires it into the new-game form and both controllers via the `Game.playable`/`.from_type` registry. No other shared file needs to change.
+4. Add a `*Form` validator in `app/forms/`.
+5. Add a `*GamePresenter` in `app/presenters/` and the matching view partial.
+6. Add `it_behaves_like "a platform game", …` to the new game's model spec with `legal_turn`/`winning_turn` lambdas — this is the contract that proves the new game is wired correctly.
