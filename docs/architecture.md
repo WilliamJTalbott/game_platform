@@ -25,10 +25,10 @@ User ──< Session
 
 Pure Ruby under `app/models/go_fish/` and `app/models/crazy_eights/`, plus a shared `app/models/card_game/` namespace. These hold the **rules and mutable game state** and know nothing about the database.
 
-Per game namespace: `Game`, `Player`, `TurnResult`, plus `Book` (Go Fish) and `Discard` (Crazy Eights, subclasses `CardGame::Pile`). `Card`, `Message`, `Pile`, and `Deck` are **shared** (`app/models/card_game/`) — a new game reuses them as-is rather than re-implementing its own.
+Per game namespace: `Game`, `Player`, `TurnResult`, plus `Book` (Go Fish) and `Discard` (Crazy Eights, subclasses `CardGame::Pile`). `Card`, `Message`, `Pile`, `Deck`, `Game`, and `Player` are **shared** (`app/models/card_game/`) — a new game inherits from the shared base and only adds its genuine differences.
 
 - `GoFish::Game` / `CrazyEights::Game` both inherit from `CardGame::Game`, which owns the shared spine: hand-size constants, `active_player`, `hand_amount`, and the `self.dump`/`self.load` bridge (see below). `deal` is declared abstract on the base (`raise NotImplementedError`) — each subclass implements its own, since setup genuinely differs per game (e.g. Crazy Eights also seeds the discard pile). Subclasses own `players`, `deck`, `turn_index`, and a list of `TurnResult`s.
-- `Player` holds a hand of `Card`s and a `messages` log (per-player narration built during a turn).
+- `GoFish::Player` / `CrazyEights::Player` both inherit from `CardGame::Player`, which owns the hand of `Card`s, the `messages` log, `out_of_cards?`, and `receive` (which delegates each card to `process_card`). `process_card` is declared abstract on the base — each subclass implements its own, since Go Fish also has to detect and pull out completed books while Crazy Eights just appends the card. `GoFish::Player` additionally owns `books` and the book-related helpers (`take`, `cards_of_rank`, `make_book`, …); `CrazyEights::Player` additionally owns `remove`.
 - `TurnResult` is the narrator: when a turn happens it appends `Message`s to each player describing what they saw (attacking / defending / viewer perspectives).
 
 **Why POROs instead of AR models?** The game rules are complex, mutation-heavy, and have nothing to do with persistence. Keeping them as plain objects makes them fast and exhaustively unit-testable without touching the DB, and keeps rules independent of Rails.
@@ -68,7 +68,7 @@ TurnsController#create
 
 ## Adding a new game type
 
-1. Write the rules engine as POROs under `app/models/<game>/` (`Game < CardGame::Game`, `Player`, `TurnResult`, …), reusing `CardGame::Card`/`Pile`/`Deck`/`Message` as-is. `Game` inherits the shared spine (hand-size constants, `active_player`, `hand_amount`, `dump`/`load`) from `CardGame::Game` and only needs to implement `deal` and `play_turn` plus its own `serializes players: [ Player ], …` line — `Serializable`'s schema merges with the base's via inheritance (see [docs/serialization.md](docs/serialization.md)). TDD these first.
+1. Write the rules engine as POROs under `app/models/<game>/` (`Game < CardGame::Game`, `Player < CardGame::Player`, `TurnResult`, …), reusing `CardGame::Card`/`Pile`/`Deck`/`Message` as-is. `Game` inherits the shared spine (hand-size constants, `active_player`, `hand_amount`, `dump`/`load`) from `CardGame::Game` and only needs to implement `deal` and `play_turn`. `Player` inherits its spine (accessors, `initialize`, `out_of_cards?`, `receive`) from `CardGame::Player` and only needs to implement `process_card`. Both declare their own `serializes …` line for whatever extra state they add — `Serializable`'s schema merges with the base's via inheritance (see [docs/serialization.md](docs/serialization.md)). TDD these first.
 2. Add an STI subclass under `app/models/games/` that `serialize`s `state`, implements the abstract interface from `Game` (`build_game`, `play_turn`, `presenter`, `form_class`, `create_players`), and declares `label`/`permitted_turn_params`.
 3. Register it in `Game::TYPES` (`app/models/game.rb`) — the one line that wires it into the new-game form and both controllers via the `Game.playable`/`.from_type` registry. No other shared file needs to change.
 4. Add a `*Form` validator in `app/forms/`.

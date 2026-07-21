@@ -11,6 +11,6 @@
     Add turn-state awareness UI. 
     Fix Books display
     Fix End State UI
-    Add shared game engine to reduce code duplication
+    ~~Add shared game engine to reduce code duplication~~ (done: CardGame::Game + CardGame::Player extractions)
 
 # Messages Refactor
