@@ -1,5 +1,7 @@
 module GoFish
   class Game
+    include Serializable
+
     attr_accessor :players, :deck, :turn_index, :results
 
     def initialize(players)
@@ -8,6 +10,8 @@ module GoFish
       @turn_index = 0
       @results = []
     end
+
+    serializes :turn_index, players: [ Player ], deck: CardGame::Deck
 
     SMALL_HAND = 5
     LARGE_HAND = 7
@@ -27,29 +31,12 @@ module GoFish
       get_winner if is_winner?
     end
 
-    def self.load(json)
-      return if json.blank?
-      from_json(json)
-    end
-
     def self.dump(obj)
       obj.as_json
     end
 
-    def as_json
-      {
-        "players" => players.map(&:as_json),
-        "deck" => deck.as_json,
-        "turn_index" => turn_index
-      }
-    end
-
-    def self.from_json(hash)
-      players = hash["players"].map { |player_hash| Player.load(player_hash) }
-      game = self.new(players)
-      game.deck = CardGame::Deck.load(hash["deck"])
-      game.turn_index = hash["turn_index"]
-      game
+    def self.load(hash)
+      super&.tap { |game| game.results = [] }
     end
 
     private

@@ -53,15 +53,6 @@ module GoFish
       end
     end
 
-    def as_json
-      {
-        "current_player" => current_player,
-        "rank" => target_rank,
-        "went_fishing" => went_fishing,
-        "display" => "No Output messages for bot yet..."
-      }
-    end
-
     private
 
     def asked_for_card

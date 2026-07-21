@@ -1,5 +1,6 @@
 module CrazyEights
   class Player
+    include Serializable
     include Messageable
 
     attr_accessor :user_id, :cards, :name, :messages
@@ -10,6 +11,8 @@ module CrazyEights
       @cards = []
       @messages = []
     end
+
+    serializes :user_id, :name, cards: [ CardGame::Card ], messages: [ CardGame::Message ]
 
     def out_of_cards?
       cards.empty?
@@ -23,23 +26,6 @@ module CrazyEights
       Array(cards).each { |card| process_card(card) }
     end
 
-    def self.load(hash)
-      player = new(hash["user_id"], hash["name"])
-
-      player.cards = hash.fetch("cards", []).map { |card| CardGame::Card.load(card) }
-      player.messages = hash.fetch("messages", []).map { |message| CardGame::Message.load(message) }
-
-      player
-    end
-
-    def as_json
-      {
-        "user_id" => user_id,
-        "name" => name,
-        "cards" => cards.map(&:as_json),
-        "messages" => messages.map(&:as_json)
-      }
-    end
     private
 
     def process_card(card)

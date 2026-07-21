@@ -1,5 +1,6 @@
 module GoFish
   class Player
+    include Serializable
     include Messageable
 
     attr_accessor :user_id, :cards, :books, :name, :messages
@@ -11,6 +12,8 @@ module GoFish
       @books = []
       @messages = []
     end
+
+    serializes :user_id, :name, cards: [ CardGame::Card ], books: [ Book ], messages: [ CardGame::Message ]
 
     def remove_cards(cards)
       self.cards -= Array(cards)
@@ -40,26 +43,6 @@ module GoFish
 
     def out_of_cards?
       player.empty?
-    end
-
-    def self.load(hash)
-      player = new(hash["user_id"], hash["name"])
-
-      player.cards = hash.fetch("cards", []).map { |card| CardGame::Card.load(card) }
-      player.books = hash.fetch("books", []).map { |book| Book.load(book) }
-      player.messages = hash.fetch("messages", []).map { |message| CardGame::Message.load(message) }
-
-      player
-    end
-
-    def as_json
-      {
-        "user_id" => user_id,
-        "name" => name,
-        "cards" => cards.map(&:as_json),
-        "books" => books.map(&:as_json),
-        "messages" => messages.map(&:as_json)
-      }
     end
 
     def receive(cards)
