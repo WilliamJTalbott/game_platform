@@ -1,0 +1,32 @@
+.scoreboard {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    color: var(--op-color-neutral-minus-two);
+    font-size: var(--op-font-small);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: var(--op-font-weight-medium);
+  }
+
+  th, td {
+    padding: var(--op-space-small) var(--op-space-medium);
+    text-align: left;
+  }
+
+  .scoreboard__row--winner {
+    background-color: var(--op-color-primary-plus-seven);
+    color: var(--op-color-primary-on-plus-seven);
+  }
+
+  .scoreboard__crown {
+    margin-left: var(--op-space-small);
+  }
+
+  .scoreboard__you {
+    margin-left: var(--op-space-small);
+    color: var(--op-color-neutral-minus-two);
+    font-weight: var(--op-font-weight-medium);
+  }
+}

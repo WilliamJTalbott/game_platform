@@ -6,13 +6,10 @@ class CrazyEightsGamePresenter < GamePresenter
   def cards = player.cards
   def active_card = game.state.discard.active_card
   def messages = player.messages.reverse
-  def playable? = started? && !finished?
-
-  def started?
-    game.started_at.present?
-  end
+  def score_label = "Cards left"
 
   private
 
   def score_for(player) = player.cards.count
+  def score_order = :asc
 end

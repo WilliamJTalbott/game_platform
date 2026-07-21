@@ -46,6 +46,34 @@ RSpec.describe GoFishGamePresenter do
       it "marks the winning player" do
         expect(presenter.scoreboard.select(&:winner?).map(&:name)).to eq [ winner.name ]
       end
+
+      it "labels the score column as Books" do
+        expect(presenter.score_label).to eq "Books"
+      end
+
+      it "marks the viewer's own row as you" do
+        expect(presenter.scoreboard.select(&:you?).map(&:name)).to eq [ winner.name ]
+      end
+
+      it "ranks players with the most books first" do
+        winner_player = game.state.players.find { |player| player.user_id == winner.id }
+        runner_up, third = (game.state.players - [ winner_player ]).first(2)
+        winner_player.books = [ "3", "4", "5" ]
+        runner_up.books = [ "3", "4" ]
+        third.books = [ "3" ]
+
+        ranked_scores = presenter.scoreboard.sort_by(&:rank).map(&:score)
+        expect(ranked_scores).to eq ranked_scores.sort.reverse
+      end
+
+      it "ranks the winner first even when tied on books with another player" do
+        winner_player = game.state.players.find { |player| player.user_id == winner.id }
+        other_player = (game.state.players - [ winner_player ]).first
+        winner_player.books = [ "3" ]
+        other_player.books = [ "3" ]
+
+        expect(presenter.scoreboard.find { |entry| entry.rank == 1 }.name).to eq winner.name
+      end
     end
   end
 

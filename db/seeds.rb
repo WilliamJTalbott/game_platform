@@ -6,11 +6,16 @@ Game.destroy_all
 
 puts "Seeding database with FactoryBot..."
 
-GAMES_LOST = 8
-GAMES_WON = 5
+# Log in as 'me@example.com' / 'password' to view the end-of-game screens.
+me = create(:user, email_address: "me@example.com")
+opponent = create(:user, email_address: "opponent@example.com")
 
-# Use 'person1@example.com' and 'password' to login
+# A finished Go Fish game you WON -> modal shows "You win".
+create(:finished_game, :go_fish, :user_won, :has_participants,
+       name: "Go Fish — you win", user: me, users: [ opponent ]).save!
 
-# users = create_list(:user, 5)
-# GAMES_LOST.times { create(:game, :go_fish, :lost, users: users) }
-# GAMES_WON.times { create(:game, :go_fish, :won, users: users) }
+# A finished Go Fish game you LOST -> modal shows "You lose".
+create(:finished_game, :go_fish, :user_won, :has_participants,
+       name: "Go Fish — you lose", user: opponent, users: [ me ]).save!
+
+puts "Done. Sign in as me@example.com / password and open a game."

@@ -14,7 +14,7 @@ RSpec.describe "Games", type: :request do
 
         expect(response.body).to include("Return to main page")
           .and include("View stats")
-          .and include("Create a new game")
+          .and include("New Game")
       end
 
       it "greets the winning viewer with a win message" do

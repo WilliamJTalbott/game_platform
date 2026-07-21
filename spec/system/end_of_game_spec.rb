@@ -16,10 +16,10 @@ RSpec.describe "End of game", type: :system do
         expect(page).to have_text("You win")
       end
 
-      it "offers Return to main page, View stats, and Create a new game" do
+      it "offers Return to main page, View stats, and New Game" do
         expect(page).to have_link("Return to main page")
         expect(page).to have_link("View stats")
-        expect(page).to have_link("Create a new game")
+        expect(page).to have_link("New Game")
       end
     end
 
@@ -37,18 +37,17 @@ RSpec.describe "End of game", type: :system do
       end
     end
 
-    context "when choosing 'Create a new game'" do
+    context "when choosing 'New Game'" do
       it "starts the new-game flow" do
-        click_on "Create a new game"
+        click_on "New Game"
         expect(page).to have_current_path(new_game_path)
       end
     end
-  end
 
-  describe "a live win by an opponent" do
-    context "when another player makes the winning move", :js do
-      it "shows the modal to the waiting player without a refresh" do
-        skip "pending live end-of-game broadcast"
+    context "when choosing 'Return to main page' with Turbo enabled", :js do
+      it "navigates the whole page, not just the modal's turbo frame" do
+        click_on "Return to main page"
+        expect(page).to have_current_path(root_path)
       end
     end
   end

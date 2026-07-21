@@ -4,10 +4,6 @@ class GoFishGamePresenter < GamePresenter
 
   def user_turn? = game.user_turn?(user)
 
-  def started?
-    game.started_at.present?
-  end
-
   def messages
     player.messages.reverse
   end
@@ -28,7 +24,10 @@ class GoFishGamePresenter < GamePresenter
     player.unique_cards.map(&:rank)
   end
 
+  def score_label = "Books"
+
   private
 
   def score_for(player) = player.book_count
+  def score_order = :desc
 end

@@ -31,7 +31,7 @@ class UsersController < ApplicationController
     if @user.update!(update_params)
       redirect_to user_path(@user)
     else
-      render :edit, status: :unprocessable_entity, layout: "modal"
+      render :edit, status: :unprocessable_content, layout: "modal"
     end
   end
 

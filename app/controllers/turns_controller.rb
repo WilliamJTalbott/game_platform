@@ -16,7 +16,7 @@ class TurnsController < ApplicationController
     return render_finished_game if @game.status == "finished"
 
     unless @game.status == "started" && @game.user_turn?(current_user)
-      render json: { errors: @game.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @game.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -39,7 +39,7 @@ class TurnsController < ApplicationController
       @game,
       current_user,
       form: @form
-    ), status: :unprocessable_entity
+    ), status: :unprocessable_content
   end
 
   def render_finished_game
@@ -47,6 +47,6 @@ class TurnsController < ApplicationController
       "end_of_game_modal",
       partial: "games/end_of_game_modal",
       locals: { game_info: @game.presenter(current_user) }
-    ), status: :unprocessable_entity
+    ), status: :unprocessable_content
   end
 end

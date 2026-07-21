@@ -19,5 +19,19 @@ class GameTurboUpdate
       partial: game_info.to_partial_path,
       locals: { game_info: }
     )
+
+    broadcast_end_of_game_modal(game, user, game_info)
+  end
+
+  def self.broadcast_end_of_game_modal(game, user, game_info)
+    return unless game_info.finished?
+
+    Turbo::StreamsChannel.broadcast_replace_to(
+      game,
+      user,
+      target: "end_of_game_modal",
+      partial: "games/end_of_game_modal",
+      locals: { game_info: }
+    )
   end
 end

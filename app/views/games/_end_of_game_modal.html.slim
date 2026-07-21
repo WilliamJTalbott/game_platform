@@ -1,22 +1,35 @@
-.modal-wrapper.modal-wrapper--active
-  .modal-wrapper__backdrop
-  .modal
-    .modal__header
+.end-of-game-modal-wrapper.end-of-game-modal-wrapper--active
+  .end-of-game-modal-wrapper__backdrop
+  .end-of-game-modal
+    .end-of-game-modal__header
       - if game_info.won?
-        h1 You win
+        h1 You win!
+      - elsif game_info.winner
+        h1 = "#{game_info.winner.name} wins!"
       - else
         h1 You lose
-        - if game_info.winner
-          p = "#{game_info.winner.name} wins!"
+      = link_to "View stats", stats_path, class: "btn btn--no-border btn--small"
 
-    .modal__body
+    .end-of-game-modal__body
       table.scoreboard
-        - game_info.scoreboard.each do |entry|
-          tr class=("scoreboard__row--winner" if entry.winner?)
-            td = entry.name
-            td = entry.score
+        thead
+          tr
+            th Rank
+            th Player
+            th = game_info.score_label
+        tbody
+          - game_info.scoreboard.sort_by(&:rank).each do |entry|
+            tr class=("scoreboard__row--winner" if entry.winner?)
+              td = entry.rank
+              td
+                = entry.name
+                - if entry.winner?
+                  span.scoreboard__crown 👑
+                - if entry.you?
+                  span.scoreboard__you
+                    | (You)
+              td = entry.score
 
-    .modal__footer
+    .end-of-game-modal__footer
+      = link_to "New Game", new_game_path, class: "btn"
       = link_to "Return to main page", root_path, class: "btn btn--primary"
-      = link_to "View stats", stats_path, class: "btn"
-      = link_to "Create a new game", new_game_path, class: "btn"

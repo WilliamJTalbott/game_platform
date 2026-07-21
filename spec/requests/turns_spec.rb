@@ -11,7 +11,7 @@ RSpec.describe "Turns", type: :request do
     context "when a turn is submitted" do
       it "rejects the turn" do
         post game_turns_path(game), params: { turn: { card: "A of Spades" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
 
       it "does not mutate the game state" do
@@ -34,7 +34,7 @@ RSpec.describe "Turns", type: :request do
     context "when a further turn is submitted" do
       it "rejects the turn" do
         post game_turns_path(game), params: { turn: { player_name: "anyone", rank: "A" } }
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
       end
     end
   end
