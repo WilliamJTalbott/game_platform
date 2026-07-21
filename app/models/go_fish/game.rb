@@ -1,9 +1,5 @@
 module GoFish
-  class Game
-    include Serializable
-
-    attr_accessor :players, :deck, :turn_index, :results
-
+  class Game < CardGame::Game
     def initialize(players)
       @players = players
       @deck = CardGame::Deck.new
@@ -11,13 +7,7 @@ module GoFish
       @results = []
     end
 
-    serializes :turn_index, players: [ Player ], deck: CardGame::Deck
-
-    SMALL_HAND = 5
-    LARGE_HAND = 7
-    MIN_PLAYERS_SMALL_HAND = 4
-
-    def active_player = players[turn_index]
+    serializes players: [ Player ]
 
     def deal
       deck.shuffle
@@ -29,14 +19,6 @@ module GoFish
       handle_turn(target, rank)
 
       get_winner if is_winner?
-    end
-
-    def self.dump(obj)
-      obj.as_json
-    end
-
-    def self.load(hash)
-      super&.tap { |game| game.results = [] }
     end
 
     private
@@ -125,10 +107,6 @@ module GoFish
       return nil unless player
       turn_result.winner(player)
       player
-    end
-
-    def hand_amount
-      players.size < MIN_PLAYERS_SMALL_HAND ? LARGE_HAND : SMALL_HAND
     end
   end
 end

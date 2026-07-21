@@ -27,7 +27,7 @@ Pure Ruby under `app/models/go_fish/` and `app/models/crazy_eights/`, plus a sha
 
 Per game namespace: `Game`, `Player`, `TurnResult`, plus `Book` (Go Fish) and `Discard` (Crazy Eights, subclasses `CardGame::Pile`). `Card`, `Message`, `Pile`, and `Deck` are **shared** (`app/models/card_game/`) — a new game reuses them as-is rather than re-implementing its own.
 
-- `GoFish::Game` / `CrazyEights::Game` own `players`, `deck`, `turn_index`, and a list of `TurnResult`s.
+- `GoFish::Game` / `CrazyEights::Game` both inherit from `CardGame::Game`, which owns the shared spine: hand-size constants, `active_player`, `hand_amount`, and the `self.dump`/`self.load` bridge (see below). `deal` is declared abstract on the base (`raise NotImplementedError`) — each subclass implements its own, since setup genuinely differs per game (e.g. Crazy Eights also seeds the discard pile). Subclasses own `players`, `deck`, `turn_index`, and a list of `TurnResult`s.
 - `Player` holds a hand of `Card`s and a `messages` log (per-player narration built during a turn).
 - `TurnResult` is the narrator: when a turn happens it appends `Message`s to each player describing what they saw (attacking / defending / viewer perspectives).
 
@@ -68,7 +68,7 @@ TurnsController#create
 
 ## Adding a new game type
 
-1. Write the rules engine as POROs under `app/models/<game>/` (`Game`, `Player`, `TurnResult`, …), reusing `CardGame::Card`/`Pile`/`Deck`/`Message` as-is. `include Serializable` and declare a `serializes` schema instead of hand-writing `as_json`/`self.load` (see [docs/serialization.md](docs/serialization.md)). TDD these first.
+1. Write the rules engine as POROs under `app/models/<game>/` (`Game < CardGame::Game`, `Player`, `TurnResult`, …), reusing `CardGame::Card`/`Pile`/`Deck`/`Message` as-is. `Game` inherits the shared spine (hand-size constants, `active_player`, `hand_amount`, `dump`/`load`) from `CardGame::Game` and only needs to implement `deal` and `play_turn` plus its own `serializes players: [ Player ], …` line — `Serializable`'s schema merges with the base's via inheritance (see [docs/serialization.md](docs/serialization.md)). TDD these first.
 2. Add an STI subclass under `app/models/games/` that `serialize`s `state`, implements the abstract interface from `Game` (`build_game`, `play_turn`, `presenter`, `form_class`, `create_players`), and declares `label`/`permitted_turn_params`.
 3. Register it in `Game::TYPES` (`app/models/game.rb`) — the one line that wires it into the new-game form and both controllers via the `Game.playable`/`.from_type` registry. No other shared file needs to change.
 4. Add a `*Form` validator in `app/forms/`.
