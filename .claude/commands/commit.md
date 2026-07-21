@@ -14,7 +14,9 @@ Commit the changes **this session** made — and only those.
    skipping and why, so the user can decide.
 4. Stage the selected files explicitly by path (`git add <path> ...`) — never
    `git add -A` or `git add .`.
-5. Commit with a short, imperative description of what these changes add.
+5. Commit with a single-line, imperative header stating the change's intent,
+   not a literal description of the diff. No body unless the *why* is truly
+   non-obvious.
 
 End the commit message with:
 
