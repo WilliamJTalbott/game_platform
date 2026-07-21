@@ -1,24 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe CrazyEightsGame, type: :model do
-  describe "#play_turn" do
-    let(:winner) { create(:user) }
-    let(:opponent) { create(:user) }
-    let(:game) { create(:started_game, :crazy_eights, :has_participants, users: [ winner, opponent ]) }
-    let(:winning_player) { game.player_from_user(winner) }
-    let(:winning_card) { CrazyEights::Card.new("A", "Spades") }
-
-    before do
-      game.state.turn_index = game.state.players.index(winning_player)
-      winning_player.cards = [ winning_card ]
-      game.state.discard.active_card = CrazyEights::Card.new("2", "Spades")
-      game.save!
+  it_behaves_like "a platform game",
+    factory: :crazy_eights,
+    legal_turn: ->(game) do
+      state = game.state
+      playable = CrazyEights::Card.new("3", state.discard.active_card.suit)
+      state.active_player.cards.unshift(playable)
+      { card: playable.to_s }
+    end,
+    winning_turn: ->(game, winner) do
+      state = game.state
+      champion = state.players.find { |player| player.user_id == winner.id }
+      state.turn_index = state.players.index(champion)
+      winning_card = CrazyEights::Card.new("A", "Spades")
+      champion.cards = [ winning_card ]
+      state.discard.active_card = CrazyEights::Card.new("2", "Spades")
+      { card: winning_card.to_s }
     end
-
-    it "finishes the game and records the winner" do
-      game.play_turn(card: winning_card.to_s)
-      expect(game.reload.finished_at).to be_present
-      expect(game.participants.find_by(user: winner)).to be_winner
-    end
-  end
 end

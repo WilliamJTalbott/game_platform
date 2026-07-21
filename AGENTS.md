@@ -40,6 +40,7 @@ bin/ci                                              # full CI: setup, rubocop, b
 - **Use FactoryBot for test setup wherever possible** rather than hand-building records.
 - **Test at the lowest layer that can prove the behavior.** PORO game rules → `spec/models/{go_fish,crazy_eights}` (unit-tested exhaustively, no DB); persistence/`play_turn` glue → `spec/models/games`; per-user view data → `spec/presenters`; HTTP + authorization → `spec/requests`; live wiring only (Turbo broadcasts, JS) → `spec/system` (Playwright). Heuristic: a scenario that's still true with the browser off does **not** belong in a system spec — keep those few and coarse.
 - **Request specs authenticate via `sign_in(user)`** (`spec/support/request_auth_helpers.rb`), which logs in through the real session endpoint. Note `cookies.signed[:session_id]` does *not* work in Rack::Test request specs — that's why the helper posts to `session_path` instead.
+- **Every `Game` subclass shares one contract spec.** `spec/support/shared_examples/platform_game.rb` (`it_behaves_like "a platform game", …`) asserts the STI contract: `start` deals + persists, `play_turn` mutates and survives a reload (the jsonb round-trip guard), winning stamps the winner + `finished_at`, and `presenter`/`form_class` return the right types. A new game adds **one** `it_behaves_like` line with `legal_turn`/`winning_turn` lambdas that know how to make a legal move — not a reimplementation of the contract.
 
 ## Architecture (big picture)
 
