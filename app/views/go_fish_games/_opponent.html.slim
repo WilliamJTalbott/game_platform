@@ -1,9 +1,9 @@
-details class="player-dropdown accordion" id="opponent-partial"
+details class="player-dropdown accordion" id="opponent-partial" data-controller="hand" data-action="toggle->hand#updateOverlap"
   summary class="player-dropdown__summary"
-    div class="summery__name"
+    div class="player-dropdown__name"
       i class="ph ph-settings icon accordion__marker icon--small" caret-right
       p #{opponent.name}
-    div class="summery__details"
+    div class="player-dropdown__details"
       dl
         dt Cards:
         dd #{opponent.cards.length}
@@ -14,7 +14,9 @@ details class="player-dropdown accordion" id="opponent-partial"
   div class="player-dropdown__expanded"
     div class="expanded__hand"
       - opponent.cards.size.times do
-        img.playing-card.playing-card--medium src="src/dark_cards/card_back.svg"
+        div class="card-container" data-hand-target="card"
+          = image_tag("dark_cards/card_back.svg", class: "playing-card playing-card--medium")
 
     div class="expanded__books"
+      = render partial: "go_fish_games/book", collection: opponent.books, as: :book
 

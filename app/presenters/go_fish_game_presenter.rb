@@ -20,6 +20,10 @@ class GoFishGamePresenter < GamePresenter
     player&.cards
   end
 
+  def books
+    player&.books
+  end
+
   def ranks
     player.unique_cards.map(&:rank)
   end

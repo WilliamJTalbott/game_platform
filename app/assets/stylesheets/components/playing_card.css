@@ -1,12 +1,9 @@
 .card-container {
 
-  flex: 0 1 var(--gf-card-width-large);
-  min-width: var(--gf-card-width-min);
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: -20px;
+  margin-left: var(--gf-card-overlap, -20px);
 
   &:first-child {
     margin-left: 0;
@@ -14,11 +11,17 @@
 
 }
 
+.card-container--large {
+  flex: 0 0 auto;
+  height: 100%;
+  aspect-ratio: var(--gf-card-aspect-ratio);
+}
+
 
 .playing-card {
 
-  --_gf-playing-card-shadow: drop-shadow(0 3px 4px rgb(0 0 0 / 0.6));
-  --_gf-playing-card-shadow-hover: drop-shadow(0 6px 8px rgb(0 0 0 / 0.5));
+  --_gf-playing-card-shadow: drop-shadow(0 3px 4px var(--gf-color-shadow));
+  --_gf-playing-card-shadow-hover: drop-shadow(0 6px 8px var(--gf-color-overlay));
 
   width: 100%;
   height: auto;

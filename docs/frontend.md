@@ -144,3 +144,22 @@ as one component:
   file defeats the file-per-component convention.
 - Optics token names use scales like `--op-space-small … 3x-large` and
   `--op-font-small … 4x-large`; check Optics for the exact token before hard-coding.
+- **Optics color scale tokens (`--op-color-*-plus-N`/`-minus-N`) are `light-dark()` pairs,
+  not fixed colors.** `plus-N` = surface/background tokens (light in light mode, dark in
+  dark mode); `minus-N` = text/foreground tokens (the opposite). Moving to a lower `plus-N`
+  number is darker in light mode but *lighter* in dark mode (Material-style elevation: more
+  "elevated" surfaces get lighter in dark mode) — the two modes trade off in opposite
+  directions along the same scale, so "one token darker" doesn't mean darker in both
+  schemes simultaneously. Never substitute a raw hex/rgb for one of these tokens expecting
+  a fixed color — it will look wrong in the color scheme you didn't test. Always verify
+  both schemes (`page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }`
+  in a system spec) before shipping a color-token change.
+- **CSS custom properties can't be read inside `@media` conditions.** Breakpoint values
+  (e.g. `--gf-breakpoint-tablet` in `core/theme.css`) are documentation only — every
+  `@media (max-width: …)` query using that breakpoint must repeat the literal pixel value
+  and is kept in sync by hand.
+- **Watch for duplicate `.sidebar` class names.** `application.html.slim` wraps the sidebar
+  partial in a generic `div.sidebar`, and the partial's own root renders Optics'
+  `nav.sidebar.sidebar--drawer`. A bare `.sidebar {}` selector matches *both* nested
+  elements. To override an Optics `.sidebar--drawer`-scoped property, match
+  `.sidebar.sidebar--drawer` (same specificity, loads later) — see `components/sidebar.css`.

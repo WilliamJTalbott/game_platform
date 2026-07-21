@@ -17,4 +17,22 @@
   "board feed"
   "hand feed";
   }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto auto auto;
+
+    grid-template-areas:
+      "board"
+      "hand"
+      "books"
+      "feed";
+
+    &.game--crazy_eights {
+      grid-template-areas:
+        "board"
+        "hand"
+        "feed";
+    }
+  }
 }

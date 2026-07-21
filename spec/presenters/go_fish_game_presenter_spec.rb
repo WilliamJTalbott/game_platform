@@ -11,6 +11,13 @@ RSpec.describe GoFishGamePresenter do
     expect(presenter.score_label).to eq "Books"
   end
 
+  it "exposes the current player's books" do
+    winner_player = game.state.players.find { |player| player.user_id == winner.id }
+    winner_player.books = [ GoFish::Book.new("3"), GoFish::Book.new("7") ]
+
+    expect(presenter.books).to eq winner_player.books
+  end
+
   it "ranks players with the most books first" do
     winner_player = game.state.players.find { |player| player.user_id == winner.id }
     runner_up, third = (game.state.players - [ winner_player ]).first(2)
