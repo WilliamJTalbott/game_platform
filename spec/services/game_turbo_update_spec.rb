@@ -4,7 +4,7 @@ RSpec.describe GameTurboUpdate do
   let(:user) { create(:user) }
   let(:opponent) { create(:user) }
 
-  describe ".broadcast" do
+  describe "#broadcast" do
     let(:game_frame) { ActionView::RecordIdentifier.dom_id(game) }
     before { allow(Turbo::StreamsChannel).to receive(:broadcast_replace_to) }
 

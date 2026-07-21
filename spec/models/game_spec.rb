@@ -33,13 +33,13 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  context ".playable" do
+  context "#playable" do
     it "returns every registered game subclass" do
       expect(Game.playable).to match_array([ GoFishGame, CrazyEightsGame ])
     end
   end
 
-  context ".from_type" do
+  context "#from_type" do
     it "resolves a registered type name to its class" do
       expect(Game.from_type("GoFishGame")).to eq GoFishGame
     end
@@ -49,7 +49,7 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  context ".finished" do
+  context "#finished" do
     it "includes a game with both started_at and finished_at present" do
       finished_game = create(:finished_game, :many_participants).tap { |game| game.update!(finished_at: Time.current) }
       expect(Game.finished).to include finished_game
@@ -77,7 +77,7 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  context ".for_user" do
+  context "#for_user" do
     let(:user) { create(:user) }
 
     it "includes a finished game the given user participated in" do

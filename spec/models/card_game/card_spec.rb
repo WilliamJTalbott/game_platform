@@ -34,7 +34,7 @@ RSpec.describe CardGame::Card do
     end
   end
 
-  describe ".from_s" do
+  describe "#from_s" do
     it "parses a card back from its string form" do
       expect(described_class.from_s('10♦')).to eq described_class.new('10', 'Diamonds')
     end
