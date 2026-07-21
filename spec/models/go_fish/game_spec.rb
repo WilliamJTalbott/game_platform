@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GoFish::Game do
   let(:num_players) { 5 }
   let!(:players) { Array.new(num_players) { GoFish::Player.new } }
@@ -8,11 +10,11 @@ RSpec.describe GoFish::Game do
 
   let(:unshuffled_cards) {
     [
-      GoFish::Card.new("10", "Diamonds"),
-      GoFish::Card.new("J", "Diamonds"),
-      GoFish::Card.new("Q", "Diamonds"),
-      GoFish::Card.new("K", "Diamonds"),
-      GoFish::Card.new("A", "Diamonds")
+      CardGame::Card.new("10", "Diamonds"),
+      CardGame::Card.new("J", "Diamonds"),
+      CardGame::Card.new("Q", "Diamonds"),
+      CardGame::Card.new("K", "Diamonds"),
+      CardGame::Card.new("A", "Diamonds")
     ]
   }
 
@@ -43,7 +45,7 @@ RSpec.describe GoFish::Game do
 
   describe "#run_turn" do
     context "active player has 1 card" do
-      before { active_player.cards = [ GoFish::Card.new("A") ] }
+      before { active_player.cards = [ CardGame::Card.new("A") ] }
 
       context "and target has 0 matching cards" do
         context "deck has no cards" do
@@ -75,7 +77,7 @@ RSpec.describe GoFish::Game do
 
       context "and target has 1 matching card" do
         it "gives targets 'card' to player " do
-          card = GoFish::Card.new("A")
+          card = CardGame::Card.new("A")
           target_player.cards = [ card ]
           game.play_turn(target_player, "A")
           expect(active_player.cards).to include(card)
@@ -84,7 +86,7 @@ RSpec.describe GoFish::Game do
 
       context "and target has 2 matching cards" do
         it "gives target 'cards' to player" do
-          cards = [ GoFish::Card.new("A"), GoFish::Card.new("A") ]
+          cards = [ CardGame::Card.new("A"), CardGame::Card.new("A") ]
           target_player.cards = cards
           game.play_turn(target_player, "A")
           expect(active_player.cards).to include(*cards)
@@ -93,7 +95,7 @@ RSpec.describe GoFish::Game do
 
       context "and target has 3 matching cards" do
         it "active player creates a book" do
-          cards = [ GoFish::Card.new("A"), GoFish::Card.new("A"), GoFish::Card.new("A") ]
+          cards = [ CardGame::Card.new("A"), CardGame::Card.new("A"), CardGame::Card.new("A") ]
           book = GoFish::Book.new("A")
           target_player.cards = cards
           game.play_turn(target_player, "A")
@@ -146,9 +148,9 @@ RSpec.describe GoFish::Game do
 
     context "when a player is out of cards" do
       before do
-        player1.cards = [ GoFish::Card.new("3") ]
+        player1.cards = [ CardGame::Card.new("3") ]
         player2.cards = []
-        player3.cards = [ GoFish::Card.new("2") ]
+        player3.cards = [ CardGame::Card.new("2") ]
       end
       it "skips their turn" do
         game.play_turn(player2, "3")
@@ -158,8 +160,8 @@ RSpec.describe GoFish::Game do
 
     context "when a player runs out of cards mid turn and no cards in deck" do
       before do
-        player1.cards = [ GoFish::Card.new("3"), GoFish::Card.new("3"), GoFish::Card.new("3") ]
-        player2.cards = [ GoFish::Card.new("3"), GoFish::Card.new("5") ]
+        player1.cards = [ CardGame::Card.new("3"), CardGame::Card.new("3"), CardGame::Card.new("3") ]
+        player2.cards = [ CardGame::Card.new("3"), CardGame::Card.new("5") ]
       end
       it "skips their turn" do
         game.play_turn(player2, "3")

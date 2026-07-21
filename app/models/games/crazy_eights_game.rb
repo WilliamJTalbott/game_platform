@@ -25,7 +25,7 @@ class CrazyEightsGame < Game
   private
 
   def card_from_string(card)
-    CrazyEights::Card.from_s(card)
+    CardGame::Card.from_s(card)
   end
 
   def create_players

@@ -4,13 +4,13 @@ RSpec.describe CrazyEightsForm do
   let(:players) { Array.new(2) { CrazyEights::Player.new } }
   let(:game) { CrazyEights::Game.new(players) }
   let(:active_player) { game.active_player }
-  let(:card) { CrazyEights::Card.new("A", "Spades") }
+  let(:card) { CardGame::Card.new("A", "Spades") }
   let(:form) { described_class.new(game:, card: card.to_s, suit:) }
   let(:suit) { nil }
 
   before do
     active_player.cards << card
-    game.discard.active_card = CrazyEights::Card.new("2", "Spades")
+    game.discard.active_card = CardGame::Card.new("2", "Spades")
   end
 
   it "is valid when the card can be played" do
@@ -18,7 +18,7 @@ RSpec.describe CrazyEightsForm do
   end
 
   context "when the card cannot be legally played" do
-    before { game.discard.active_card = CrazyEights::Card.new("2", "Hearts") }
+    before { game.discard.active_card = CardGame::Card.new("2", "Hearts") }
 
     it "adds an error to card" do
       expect(form).not_to be_valid
@@ -36,7 +36,7 @@ RSpec.describe CrazyEightsForm do
   end
 
   context "when a wild card is played without a suit" do
-    let(:card) { CrazyEights::Card.new("8", "Spades") }
+    let(:card) { CardGame::Card.new("8", "Spades") }
 
     it "adds an error to suit" do
       expect(form).not_to be_valid
@@ -45,7 +45,7 @@ RSpec.describe CrazyEightsForm do
   end
 
   context "when a wild card is played with a valid suit" do
-    let(:card) { CrazyEights::Card.new("8", "Spades") }
+    let(:card) { CardGame::Card.new("8", "Spades") }
     let(:suit) { "Clubs" }
 
     it "is valid" do
@@ -54,7 +54,7 @@ RSpec.describe CrazyEightsForm do
   end
 
   context "when a wild card is played with an invalid suit" do
-    let(:card) { CrazyEights::Card.new("8", "Spades") }
+    let(:card) { CardGame::Card.new("8", "Spades") }
     let(:suit) { "invalid" }
 
     it "adds an error to suit" do

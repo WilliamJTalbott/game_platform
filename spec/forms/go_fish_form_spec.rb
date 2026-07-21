@@ -9,7 +9,7 @@ RSpec.describe GoFishForm do
   let(:form) { described_class.new(game:, player_name:, rank:) }
 
   before do
-    active_player.cards << GoFish::Card.new("A")
+    active_player.cards << CardGame::Card.new("A")
   end
 
   it "is valid when asking an opponent for a rank in the active player's hand" do

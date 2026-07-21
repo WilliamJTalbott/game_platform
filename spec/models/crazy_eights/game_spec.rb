@@ -1,4 +1,4 @@
-
+require 'rails_helper'
 
 RSpec.describe CrazyEights::Game do
   let!(:players) { Array.new(num_players) { CrazyEights::Player.new } }
@@ -9,11 +9,11 @@ RSpec.describe CrazyEights::Game do
 
   let(:unshuffled_cards) {
     [
-      Card.new("10", "Diamonds"),
-      Card.new("J", "Diamonds"),
-      Card.new("Q", "Diamonds"),
-      Card.new("K", "Diamonds"),
-      Card.new("A", "Diamonds")
+      CardGame::Card.new("10", "Diamonds"),
+      CardGame::Card.new("J", "Diamonds"),
+      CardGame::Card.new("Q", "Diamonds"),
+      CardGame::Card.new("K", "Diamonds"),
+      CardGame::Card.new("A", "Diamonds")
     ]
   }
 
@@ -29,7 +29,7 @@ RSpec.describe CrazyEights::Game do
     let(:restored) { described_class.load(json) }
 
     before do
-      game.discard.place(Card.new("8", "Spades"), "Hearts")
+      game.discard.place(CardGame::Card.new("8", "Spades"), "Hearts")
     end
 
     it "preserves round-trip state" do
@@ -51,10 +51,10 @@ RSpec.describe CrazyEights::Game do
 
   describe "#play_turn" do
     context "player plays a valid card" do
-      let(:card) { Card.new("A", "Spades") }
+      let(:card) { CardGame::Card.new("A", "Spades") }
       before do
         active_player.cards << card
-        game.discard.active_card = Card.new("2", "Spades")
+        game.discard.active_card = CardGame::Card.new("2", "Spades")
       end
 
       it "Adds card to active card" do
@@ -63,7 +63,7 @@ RSpec.describe CrazyEights::Game do
       end
 
       it "removes an equivalent submitted card from the player's hand" do
-        submitted_card = Card.new(card.rank, card.suit)
+        submitted_card = CardGame::Card.new(card.rank, card.suit)
 
         game.play_turn(submitted_card)
 
@@ -80,13 +80,13 @@ RSpec.describe CrazyEights::Game do
     end
 
     context "player plays a wild and specifies suit" do
-      let(:card) { Card.new("8", "Spades") }
+      let(:card) { CardGame::Card.new("8", "Spades") }
       let(:suit) { "Clubs" }
-      let(:outcome) { Card.new(card.rank, suit) }
+      let(:outcome) { CardGame::Card.new(card.rank, suit) }
 
       before do
         active_player.cards << card
-        game.discard.active_card = Card.new("2", "Hearts")
+        game.discard.active_card = CardGame::Card.new("2", "Hearts")
       end
 
       it "Adds card to active card" do
@@ -105,7 +105,7 @@ RSpec.describe CrazyEights::Game do
 
 
     context "turn without winner" do
-      let(:card) { Card.new("A", "Spades") }
+      let(:card) { CardGame::Card.new("A", "Spades") }
       let!(:next_player) { game.players[game.turn_index + 1] }
 
       before do
@@ -131,7 +131,7 @@ RSpec.describe CrazyEights::Game do
       end
 
       context "new user does not have playable card" do
-        let(:unplayable_card) { Card.new("6", "Hearts") }
+        let(:unplayable_card) { CardGame::Card.new("6", "Hearts") }
 
         before do
           next_player.cards = [ unplayable_card ]
@@ -145,7 +145,7 @@ RSpec.describe CrazyEights::Game do
     end
 
     context "player runs out of cards" do
-      let(:card) { Card.new("A", "Spades") }
+      let(:card) { CardGame::Card.new("A", "Spades") }
 
       before do
         game.players.map { |player| player.cards = [] }
@@ -167,16 +167,16 @@ RSpec.describe CrazyEights::Game do
     end
 
     context "the deck is empty" do
-      let(:card) { Card.new("A", "Spades") }
-      let(:recycled_card) { Card.new("A", "Hearts") }
+      let(:card) { CardGame::Card.new("A", "Spades") }
+      let(:recycled_card) { CardGame::Card.new("A", "Hearts") }
       let(:next_player) { game.players[1] }
 
       before do
-        active_player.cards = [ card, Card.new("3", "Clubs") ]
-        next_player.cards = [ Card.new("6", "Hearts") ]
+        active_player.cards = [ card, CardGame::Card.new("3", "Clubs") ]
+        next_player.cards = [ CardGame::Card.new("6", "Hearts") ]
         game.deck.cards = []
         game.discard.cards = [ recycled_card ]
-        game.discard.active_card = Card.new("2", "Spades")
+        game.discard.active_card = CardGame::Card.new("2", "Spades")
       end
 
       it "recycles the discard pile so the next player can draw" do

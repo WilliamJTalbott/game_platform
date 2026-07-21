@@ -4,7 +4,7 @@ module GoFish
 
     def initialize(players)
       @players = players
-      @deck = Deck.new
+      @deck = CardGame::Deck.new
       @turn_index = 0
       @results = []
     end
@@ -17,7 +17,7 @@ module GoFish
 
     def deal
       deck.shuffle
-      players.each { |player| deck.deal(player, hand_amount) }
+      players.each { |player| player.receive(deck.deal(hand_amount)) }
     end
 
     def play_turn(target, rank)
@@ -47,7 +47,7 @@ module GoFish
     def self.from_json(hash)
       players = hash["players"].map { |player_hash| Player.load(player_hash) }
       game = self.new(players)
-      game.deck = Deck.load(hash["deck"])
+      game.deck = CardGame::Deck.load(hash["deck"])
       game.turn_index = hash["turn_index"]
       game
     end
@@ -77,7 +77,7 @@ module GoFish
 
     def handle_book_tie(tied_players)
       tied_players.max_by do |player|
-        Card::RANKS.index(player.highest_book.rank)
+        CardGame::Card::RANKS.index(player.highest_book.rank)
       end
     end
 
@@ -125,7 +125,8 @@ module GoFish
 
     def draw_from_deck(player)
       return if deck.depleted?
-      card = deck.draw(player)
+      card = deck.draw
+      player.receive(card)
       turn_result.drew_card(card)
       card
     end

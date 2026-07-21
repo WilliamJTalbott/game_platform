@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe GoFish::TurnResult do
   let!(:players) { [ GoFish::Player.new(nil, "Bob"), GoFish::Player.new(nil, "Tom"), GoFish::Player.new(nil, "Jerry") ] }
   let!(:current_player) { players.first }
@@ -13,7 +15,7 @@ RSpec.describe GoFish::TurnResult do
 
     context "when a player askes and gets cards" do
       before do
-        target_player.cards = [ GoFish::Card.new("A"), GoFish::Card.new("A") ]
+        target_player.cards = [ CardGame::Card.new("A"), CardGame::Card.new("A") ]
         turn_result.got_cards(2)
       end
       it "lists the amount of cards recieved" do

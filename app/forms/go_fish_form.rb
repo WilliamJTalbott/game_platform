@@ -28,7 +28,7 @@ class GoFishForm
 
   def rank_is_valid
     return if rank.blank?
-    return if GoFish::Card::RANKS.include?(rank)
+    return if CardGame::Card::RANKS.include?(rank)
 
     errors.add(:rank, "is not valid")
   end

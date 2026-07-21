@@ -1,20 +1,26 @@
 module CrazyEights
-  class Discard < Pile
+  class Discard < CardGame::Pile
     attr_accessor :active_card
+
+    WILD_RANK = "8"
 
     def initialize
       super
       @active_card = nil
     end
 
+    def wild?(card)
+      card.rank == WILD_RANK
+    end
+
     def valid_play?(card)
-      return true if card.wild?
+      return true if wild?(card)
       card.rank == active_card.rank || card.suit == active_card.suit
     end
 
     def place(card, suit = nil)
-      if card.wild? && suit
-        self.active_card = Card.new(card.rank, suit)
+      if wild?(card) && suit
+        self.active_card = CardGame::Card.new(card.rank, suit)
       else
         self.active_card = card
       end
@@ -28,7 +34,7 @@ module CrazyEights
 
     def self.load(hash)
       discard = super
-      discard.active_card = Card.load(hash["active_card"]) if hash["active_card"]
+      discard.active_card = CardGame::Card.load(hash["active_card"]) if hash["active_card"]
       discard
     end
 
@@ -38,7 +44,5 @@ module CrazyEights
       self.cards = [ top_card ]
       recyclable_cards
     end
-
-    private
   end
 end

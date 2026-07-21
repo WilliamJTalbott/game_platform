@@ -16,7 +16,7 @@ module GoFish
     end
 
     def <=>(other)
-      Card::RANKS.index(rank) <=> Card::RANKS.index(other.rank)
+      CardGame::Card::RANKS.index(rank) <=> CardGame::Card::RANKS.index(other.rank)
     end
   end
 end

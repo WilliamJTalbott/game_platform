@@ -1,5 +1,7 @@
 module GoFish
   class Player
+    include Messageable
+
     attr_accessor :user_id, :cards, :books, :name, :messages
 
     def initialize(id = nil, name = "unset")
@@ -40,25 +42,12 @@ module GoFish
       player.empty?
     end
 
-    def add_normal_message(text)
-      messages << Message.new(:normal, text)
-    end
-
-    def add_action_message(text)
-      messages << Message.new(:action, text)
-    end
-
-    def add_alert_message(text)
-      messages << Message.new(:alert, text)
-    end
-
-
     def self.load(hash)
       player = new(hash["user_id"], hash["name"])
 
-      player.cards = hash.fetch("cards", []).map { |card| Card.load(card) }
+      player.cards = hash.fetch("cards", []).map { |card| CardGame::Card.load(card) }
       player.books = hash.fetch("books", []).map { |book| Book.load(book) }
-      player.messages = hash.fetch("messages", []).map { |message| Message.load(message) }
+      player.messages = hash.fetch("messages", []).map { |message| CardGame::Message.load(message) }
 
       player
     end

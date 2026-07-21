@@ -6,7 +6,7 @@ module CrazyEights
       @players = players
       @turn_index = 0
 
-      @deck = Deck.new
+      @deck = CardGame::Deck.new
       @discard = Discard.new
       @results = []
     end
@@ -28,7 +28,7 @@ module CrazyEights
       active_player.remove(card)
       discard.place(card, suit)
       new_turn_result(played_by, card)
-      turn_result.suit_changed(suit) if card.wild?
+      turn_result.suit_changed(suit) if discard.wild?(card)
 
       if wins?
         turn_result.winner
@@ -60,7 +60,7 @@ module CrazyEights
       players = hash["players"].map { |player_hash| Player.load(player_hash) }
 
       game = self.new(players)
-      game.deck = Deck.load(hash["deck"])
+      game.deck = CardGame::Deck.load(hash["deck"])
       game.discard = Discard.load(hash.fetch("discard", {}))
       game.turn_index = hash["turn_index"]
       game

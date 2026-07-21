@@ -1,5 +1,7 @@
 module CrazyEights
   class Player
+    include Messageable
+
     attr_accessor :user_id, :cards, :name, :messages
 
     def initialize(id = nil, name = "unset")
@@ -13,18 +15,6 @@ module CrazyEights
       cards.empty?
     end
 
-    def add_normal_message(text)
-      messages << Message.new(:normal, text)
-    end
-
-    def add_action_message(text)
-      messages << Message.new(:action, text)
-    end
-
-    def add_alert_message(text)
-      messages << Message.new(:alert, text)
-    end
-
     def remove(card)
       cards.delete(card)
     end
@@ -36,8 +26,8 @@ module CrazyEights
     def self.load(hash)
       player = new(hash["user_id"], hash["name"])
 
-      player.cards = hash.fetch("cards", []).map { |card| Card.load(card) }
-      player.messages = hash.fetch("messages", []).map { |message| Message.load(message) }
+      player.cards = hash.fetch("cards", []).map { |card| CardGame::Card.load(card) }
+      player.messages = hash.fetch("messages", []).map { |message| CardGame::Message.load(message) }
 
       player
     end

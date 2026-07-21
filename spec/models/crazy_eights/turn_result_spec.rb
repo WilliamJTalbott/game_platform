@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 RSpec.describe CrazyEights::TurnResult do
   let(:players) do
     [
@@ -6,7 +8,7 @@ RSpec.describe CrazyEights::TurnResult do
     ]
   end
   let(:current_player) { players.first }
-  let(:card) { CrazyEights::Card.new("8", "Hearts") }
+  let(:card) { CardGame::Card.new("8", "Hearts") }
   let(:turn_result) { described_class.new(players, current_player, card) }
 
   it "tells every player which card was played" do

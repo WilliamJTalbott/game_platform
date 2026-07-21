@@ -24,7 +24,7 @@ RSpec.describe "Turns", type: :request do
       let(:game) { create(:started_game, :crazy_eights, :users_turn, :many_participants, user: user) }
 
       it "drops a foreign param belonging to another game, rather than raising" do
-        playable = CrazyEights::Card.new("3", game.state.discard.active_card.suit)
+        playable = CardGame::Card.new("3", game.state.discard.active_card.suit)
         game.state.active_player.cards.unshift(playable)
         game.save!
 

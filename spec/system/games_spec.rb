@@ -136,10 +136,10 @@ RSpec.describe 'Games', type: :system do
       before do
         player = game.player_from_user(user)
         player.cards = [
-          CrazyEights::Card.new("A", "Spades"),
-          CrazyEights::Card.new("3", "Clubs")
+          CardGame::Card.new("A", "Spades"),
+          CardGame::Card.new("3", "Clubs")
         ]
-        game.state.discard.active_card = CrazyEights::Card.new("2", "Spades")
+        game.state.discard.active_card = CardGame::Card.new("2", "Spades")
         game.save!
       end
 

@@ -1,11 +1,11 @@
-module CrazyEights
+module CardGame
   class Card
+    include Serializable
+
     attr_reader :rank, :suit, :value
 
     RANKS = %w[ 2 3 4 5 6 7 8 9 10 J Q K A ]
     SUITS = %w[ Hearts Spades Clubs Diamonds ]
-
-    WILD = "8"
 
     SUIT_SYMBOLS = {
       "Hearts" => "♥",
@@ -25,16 +25,7 @@ module CrazyEights
       @suit = suit
     end
 
-    def self.load(hash)
-      new(hash["rank"], hash["suit"])
-    end
-
-    def as_json
-      {
-        "rank" => rank,
-        "suit" => suit
-      }
-    end
+    serializes :rank, :suit
 
     def ==(other)
       rank == other.rank && suit == other.suit
@@ -46,10 +37,6 @@ module CrazyEights
 
     def self.from_s(str)
       new(str[0...-1], SUIT_SYMBOLS.key(str[-1]))
-    end
-
-    def wild?
-      rank == WILD
     end
 
     private
