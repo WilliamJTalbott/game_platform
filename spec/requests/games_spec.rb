@@ -4,6 +4,33 @@ RSpec.describe "Games", type: :request do
   let(:user) { create(:user) }
   before { sign_in(user) }
 
+  describe "POST create" do
+    context "with a registered game type" do
+      it "creates a Go Fish game" do
+        post games_path, params: { game: { name: "My Game", type: "GoFishGame" } }
+        expect(Game.last).to be_a GoFishGame
+      end
+
+      it "creates a Crazy Eights game" do
+        post games_path, params: { game: { name: "My Game", type: "CrazyEightsGame" } }
+        expect(Game.last).to be_a CrazyEightsGame
+      end
+    end
+
+    context "with an unregistered game type" do
+      it "does not create a game" do
+        expect do
+          post games_path, params: { game: { name: "My Game", type: "DeleteAllUsers" } }
+        end.to_not change { Game.count }
+      end
+
+      it "renders the new form again" do
+        post games_path, params: { game: { name: "My Game", type: "DeleteAllUsers" } }
+        expect(response).to have_http_status(:unprocessable_content)
+      end
+    end
+  end
+
   describe "GET a game's show page" do
     context "when the game is finished" do
       let(:game) { create(:finished_game, :go_fish, :user_won, :many_participants, user: user) }

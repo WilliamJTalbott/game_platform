@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe CrazyEightsGame, type: :model do
+  it "labels itself for the new-game form" do
+    expect(CrazyEightsGame.label).to eq "Crazy Eights"
+  end
+
+  it "permits only its own turn params" do
+    expect(CrazyEightsGame.permitted_turn_params).to match_array([ :card, :suit ])
+  end
+
   it_behaves_like "a platform game",
     factory: :crazy_eights,
     legal_turn: ->(game) do

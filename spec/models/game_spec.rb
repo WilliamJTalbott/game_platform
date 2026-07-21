@@ -32,4 +32,20 @@ RSpec.describe Game, type: :model do
       expect(empty_game.can_start?).to be false
     end
   end
+
+  context ".playable" do
+    it "returns every registered game subclass" do
+      expect(Game.playable).to match_array([ GoFishGame, CrazyEightsGame ])
+    end
+  end
+
+  context ".from_type" do
+    it "resolves a registered type name to its class" do
+      expect(Game.from_type("GoFishGame")).to eq GoFishGame
+    end
+
+    it "returns nil for an unregistered type name" do
+      expect(Game.from_type("NotAGame")).to be_nil
+    end
+  end
 end

@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe GoFishGame, type: :model do
+  it "labels itself for the new-game form" do
+    expect(GoFishGame.label).to eq "Go Fish"
+  end
+
+  it "permits only its own turn params" do
+    expect(GoFishGame.permitted_turn_params).to match_array([ :player_name, :rank ])
+  end
+
   it_behaves_like "a platform game",
     factory: :go_fish,
     legal_turn: ->(game) do
