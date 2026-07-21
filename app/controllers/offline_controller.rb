@@ -1,0 +1,2 @@
+class OfflineController < ApplicationController
+end
