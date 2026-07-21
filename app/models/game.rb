@@ -6,6 +6,9 @@ class Game < ApplicationRecord
   has_many :participants
   has_many :users, through: :participants
 
+  scope :finished, -> { where.not(started_at: nil).where.not(finished_at: nil).order(finished_at: :desc) }
+  scope :for_user, ->(user) { joins(:participants).where(participants: { user_id: user.id }) }
+
   def self.playable = TYPES.map(&:constantize)
   def self.from_type(name) = playable.find { it.name == name }
   def self.label = name.delete_suffix("Game").titleize
