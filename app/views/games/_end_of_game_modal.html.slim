@@ -1,6 +1,6 @@
-.end-of-game-modal-wrapper.end-of-game-modal-wrapper--active
-  .end-of-game-modal-wrapper__backdrop
-  .end-of-game-modal
+.end-of-game-modal.end-of-game-modal--active
+  .end-of-game-modal__backdrop
+  .end-of-game-modal__dialog
     .end-of-game-modal__header
       - if game_info.won?
         h1 You win!
@@ -18,7 +18,7 @@
             th Player
             th = game_info.score_label
         tbody
-          - game_info.scoreboard.sort_by(&:rank).each do |entry|
+          - game_info.scoreboard.each do |entry|
             tr class=("scoreboard__row--winner" if entry.winner?)
               td = entry.rank
               td
