@@ -19,10 +19,10 @@ a field can't exist in one without the other.
 ## Usage
 
 ```ruby
-class GoFish::Player
+class CardGame::Player
   include Serializable
 
-  serializes :user_id, :name, cards: [ CardGame::Card ], books: [ GoFish::Book ], messages: [ CardGame::Message ]
+  serializes :user_id, :name, cards: [ CardGame::Card ], messages: [ CardGame::Message ]
 end
 ```
 
@@ -38,7 +38,11 @@ This generates:
   nested values.
 
 A subclass with no `serializes` call of its own inherits its parent's schema
-(used by `CrazyEights::Deck < CardGame::Pile`, etc.) — see `serialized_scalars`/
+(used by `CrazyEights::Deck < CardGame::Pile`, `CrazyEights::Player < CardGame::Player`,
+etc.). A subclass that *does* call `serializes` layers its own fields on top of
+the parent's rather than replacing them — e.g. `GoFish::Player < CardGame::Player`
+adds `serializes books: [ GoFish::Book ]` and still serializes the base's
+`user_id`/`name`/`cards`/`messages` too. See `serialized_scalars`/
 `serialized_nested` in the concern for how that inheritance is resolved.
 
 ## Gotchas

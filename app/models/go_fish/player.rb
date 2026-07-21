@@ -1,19 +1,13 @@
 module GoFish
-  class Player
-    include Serializable
-    include Messageable
-
-    attr_accessor :user_id, :cards, :books, :name, :messages
+  class Player < CardGame::Player
+    attr_accessor :books
 
     def initialize(id = nil, name = "unset")
-      @name = name
-      @user_id = id
-      @cards = []
+      super
       @books = []
-      @messages = []
     end
 
-    serializes :user_id, :name, cards: [ CardGame::Card ], books: [ Book ], messages: [ CardGame::Message ]
+    serializes books: [ Book ]
 
     def remove_cards(cards)
       self.cards -= Array(cards)
@@ -39,14 +33,6 @@ module GoFish
 
     def cards_of_rank(rank)
       cards.select { |card| card.rank == rank }
-    end
-
-    def out_of_cards?
-      player.empty?
-    end
-
-    def receive(cards)
-      Array(cards).each { |card| process_card(card) }
     end
 
     private
