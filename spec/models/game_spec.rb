@@ -76,18 +76,4 @@ RSpec.describe Game, type: :model do
       expect(Game.finished).to eq [ newer, older ]
     end
   end
-
-  context "#for_user" do
-    let(:user) { create(:user) }
-
-    it "includes a finished game the given user participated in" do
-      game = create(:finished_game, :many_participants, :user_won, user: user)
-      expect(Game.for_user(user)).to include game
-    end
-
-    it "excludes a finished game the given user did not participate in" do
-      other_game = create(:finished_game, :many_participants)
-      expect(Game.for_user(user)).to_not include other_game
-    end
-  end
 end

@@ -1,5 +1,5 @@
 class HistoryController < ApplicationController
   def index
-    @games = Game.finished.for_user(current_user).includes(participants: :user).map { |game| HistoryPresenter.new(game) }
+    @games = current_user.games.finished.includes(participants: :user).map { |game| HistoryPresenter.new(game) }
   end
 end
