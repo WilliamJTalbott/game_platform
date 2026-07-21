@@ -1,8 +1,15 @@
 class Game < ApplicationRecord
+  TYPES = %w[GoFishGame CrazyEightsGame].freeze
+
   after_create_commit -> { broadcast_refresh_to "games" }
 
   has_many :participants
   has_many :users, through: :participants
+
+  def self.playable = TYPES.map(&:constantize)
+  def self.from_type(name) = playable.find { it.name == name }
+  def self.label = name.delete_suffix("Game").titleize
+  def self.permitted_turn_params = []
 
   def start
     return false unless can_start?

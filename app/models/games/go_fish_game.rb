@@ -1,6 +1,8 @@
 class GoFishGame < Game
   serialize :state, coder: GoFish::Game
 
+  def self.permitted_turn_params = %i[player_name rank]
+
   def build_game
     GoFish::Game.new(create_players)
   end

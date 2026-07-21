@@ -1,6 +1,8 @@
 class CrazyEightsGame < Game
   serialize :state, coder: CrazyEights::Game
 
+  def self.permitted_turn_params = %i[card suit]
+
   def play_turn(card:, suit: nil)
     winner = state.play_turn(card_from_string(card), suit)
     end_game(winner) if winner

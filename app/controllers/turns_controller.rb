@@ -21,7 +21,7 @@ class TurnsController < ApplicationController
   end
 
   def game_params
-    params.require(:turn).permit(:player_name, :rank, :card, :suit).to_h.symbolize_keys
+    params.require(:turn).permit(*@game.class.permitted_turn_params).to_h.symbolize_keys
   end
 
   private
