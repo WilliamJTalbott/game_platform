@@ -16,5 +16,11 @@ application.register("hello", HelloController)
 import LocationSelectionController from "./location_selection_controller"
 application.register("location-selection", LocationSelectionController)
 
+import OfflineAlertController from "./offline_alert_controller"
+application.register("offline-alert", OfflineAlertController)
+
+import ServiceWorkerController from "./service_worker_controller"
+application.register("service-worker", ServiceWorkerController)
+
 import TurnTimerController from "./turn_timer_controller"
 application.register("turn-timer", TurnTimerController)
