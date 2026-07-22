@@ -76,9 +76,10 @@ _Sourced from a `/rails-audit` pass and a `/improve-codebase-architecture` pass 
 - **R1** — GoodJob dashboard mounted at `/good_job` with no auth constraint (`config/routes.rb:9`). _High / security._
 - **R2** — Non-participants viewing a game 500 (`GoFishGamePresenter#messages/ranks/opponents` call `player` with no safe-nav; `games#show` has no participant check).
 - **R4** — `turn_timer_controller.js` `setInterval` in `connect()` with no `disconnect()` → timer leak.
-- **R5** — `TurnsController#check_user_turn` renders `@game.errors.full_messages` (always empty) on an authz reject.
-- **R6** — `GamesController#build_and_save_game` guards on `save!` (raises) → dead `else`; inconsistent indentation.
+- **R5** — ✅ done. `TurnsController#check_user_turn` now renders a real `"It's not your turn"` message (was always-empty `@game.errors.full_messages`); `check_user_turn`/`game_params` moved below `private`.
+- **R6** — ✅ done. `GamesController#build_and_save_game` uses non-bang `save` with `:unprocessable_content`; indentation fixed. Also SQL-ified the lobby query and gave `CardGame::Card` `hash`/`eql?` + dropped its dead `:value` reader.
 - **R7** — no unique index on `participants (game_id, user_id)`; a user can join a game twice.
-- **A3** — lift trivial per-user accessors into `GamePresenter`; kills `player` vs `player&.` drift (hardens R2).
+- **A3** — ✅ done. Trivial per-user accessors (`name`/`player`/`user_turn?`/`messages`/`cards`) now live on `GamePresenter` with safe-nav. (R2 still open for `games#show`'s missing participant check and GF-specific `ranks`/`opponents`.)
+- **CD-5** — extract a shared `CardGame::TurnResult` base for the per-perspective message loop (the one remaining real duplication; `go_fish/turn_result.rb` and `crazy_eights/turn_result.rb` each reimplement it). Also fix stray indentation in `go_fish/turn_result.rb:28,58`.
 - **A5** — give the rules PORO a legality predicate so Forms stop reaching through the seam; drop redundant `wild? ||`.
 - **A6** — consolidate the end-of-game modal broadcast duplicated in `TurnsController#render_finished_game` and `GameTurboUpdate`.

@@ -16,6 +16,18 @@ RSpec.describe CardGame::Card do
     expect(card1).to_not eq card2
   end
 
+  it 'is not equal to a non-card' do
+    expect(described_class.new('A', 'Clubs')).to_not eq 'A♣'
+  end
+
+  it 'treats equal cards as one in a Set' do
+    card1 = described_class.new('A', 'Clubs')
+    card2 = described_class.new('A', 'Clubs')
+
+    expect(card1.hash).to eq card2.hash
+    expect(Set.new([ card1, card2 ]).size).to eq 1
+  end
+
   it 'rejects an invalid rank' do
     expect do
       described_class.new('15', 'Clubs')

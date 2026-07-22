@@ -22,8 +22,8 @@ the source of truth.
 (`View` for your games, `Join` for others).
 
 **Rough edges to fix along the way:**
-1. `@other_games = Game.where(...) - @user_games` — Ruby array subtraction pulls
-   every record into memory. Replace with SQL (`where.not`).
+1. ✅ Done — `@other_games` now uses `where.not(id: Current.games.select(:id))`
+   (SQL) instead of Ruby array subtraction. Pinned by a `GET /games` request spec.
 2. `button_to "View", ..., method: :get` — a `<form>` masquerading as a link →
    `link_to`.
 3. **N+1** rendering participants per row → `includes(:participants, :users)`.

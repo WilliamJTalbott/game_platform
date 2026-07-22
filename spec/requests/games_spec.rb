@@ -31,6 +31,22 @@ RSpec.describe "Games", type: :request do
     end
   end
 
+  describe "GET the lobby" do
+    let(:open_games) { Nokogiri::HTML(response.body).at_css("#games").text }
+
+    it "lists only waiting games the user has not joined under All Games" do
+      create(:game, :has_user, user: user, name: "Joined Game")
+      create(:game, name: "Open Game")
+      create(:deleted_game, name: "Deleted Game")
+
+      get games_path
+
+      expect(open_games).to include("Open Game")
+      expect(open_games).to_not include("Joined Game")
+      expect(open_games).to_not include("Deleted Game")
+    end
+  end
+
   describe "GET a game's show page" do
     context "when the game is finished" do
       let(:game) { create(:finished_game, :go_fish, :user_won, :many_participants, user: user) }
