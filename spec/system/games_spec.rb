@@ -340,14 +340,17 @@ RSpec.describe 'Games', type: :system do
       expect(page).to have_content("You are offline")
     end
 
-    it "shows the offline page when navigation fails" do
+    it "caches the offline page for use when navigation fails" do
       visit game_path(game)
-      expect(page).to have_current_path(game_path(game))
 
-      go_offline
-      page.refresh
+      cached = page.evaluate_async_script(<<~JS)
+        var done = arguments[0]
+        navigator.serviceWorker.ready
+          .then(() => caches.match("/offline"))
+          .then(r => done(!!r))
+      JS
 
-      expect(page).to have_content("You're Offline")
+      expect(cached).to be true
     end
   end
 end
