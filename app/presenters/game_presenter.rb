@@ -1,5 +1,5 @@
 class GamePresenter
-  attr_reader :game, :user, :form, :wait_time
+  attr_reader :game, :user, :form
   delegate :to_partial_path, to: :game
 
   class_attribute :wait_time, default: 30

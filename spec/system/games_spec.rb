@@ -27,7 +27,7 @@ RSpec.describe 'Games', type: :system do
       expect(last_game).to be_an_instance_of(GoFishGame)
     end
 
-  it "lets user create go_fish type" do
+    it "lets user create crazy_eights type" do
       click_on "New Game"
       select "Crazy Eights", from: "Type"
 
@@ -103,10 +103,15 @@ RSpec.describe 'Games', type: :system do
   context "[ Turn ]" do
     context "go_fish game" do
       let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
-      let(:wait_time) { 0.1 }
+
+      around do |example|
+        original = GamePresenter.wait_time
+        example.run
+        GamePresenter.wait_time = original
+      end
 
       it "automatically takes a turn when the timer expires", :js do
-        GamePresenter.wait_time = wait_time
+        GamePresenter.wait_time = 0.1
 
         visit game_path(game)
         expect(page).to have_css(".message", text: "asked")
