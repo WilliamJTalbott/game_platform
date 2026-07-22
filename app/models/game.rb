@@ -1,10 +1,14 @@
 class Game < ApplicationRecord
   TYPES = %w[GoFishGame CrazyEightsGame].freeze
 
+  class_attribute :game_class, :player_class
+
   after_create_commit -> { broadcast_refresh_to "games" }
 
   has_many :participants
   has_many :users, through: :participants
+
+  scope :finished, -> { where.not(started_at: nil).where.not(finished_at: nil).order(finished_at: :desc) }
 
   def self.playable = TYPES.map(&:constantize)
   def self.from_type(name) = playable.find { it.name == name }
@@ -20,12 +24,15 @@ class Game < ApplicationRecord
     save
   end
 
-  def play_turn(...)
-    raise NotImplementedError, "#{self.class} must implement #play_turn"
+  def play_turn(**params)
+    winner = state.play_turn(*turn_target(**params))
+    end_game(winner) if winner
+
+    save!
   end
 
   def build_game
-    raise NotImplementedError, "#{self.class} must implement #build_game"
+    game_class.new(create_players)
   end
 
   def can_start?
@@ -68,16 +75,28 @@ class Game < ApplicationRecord
   end
 
   def presenter(user, form = nil)
-    raise NotImplementedError, "#{self.class} must implement #presenter"
+    presenter_class.new(self, user, form)
   end
 
   def form_class
-    raise NotImplementedError, "#{self.class} must implement #form_class"
+    "#{base_name}Form".constantize
   end
 
   private
 
   def create_players
-    raise NotImplementedError, "#{self.class} must implement #create_players"
+    users.map { |user| player_class.new(user.id, user.name) }
+  end
+
+  def turn_target(**params)
+    raise NotImplementedError, "#{self.class} must implement #turn_target"
+  end
+
+  def presenter_class
+    "#{base_name}GamePresenter".constantize
+  end
+
+  def base_name
+    self.class.name.delete_suffix("Game")
   end
 end

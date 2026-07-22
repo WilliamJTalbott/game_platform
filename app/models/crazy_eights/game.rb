@@ -1,29 +1,16 @@
 module CrazyEights
-  class Game
-    include Serializable
-
-    attr_accessor :players, :deck, :discard, :turn_index, :results
+  class Game < CardGame::Game
+    attr_accessor :discard
 
     def initialize(players)
-      @players = players
-      @turn_index = 0
-
-      @deck = CardGame::Deck.new
+      super
       @discard = Discard.new
-      @results = []
     end
 
-    serializes :turn_index, players: [ Player ], deck: CardGame::Deck, discard: Discard
-
-    SMALL_HAND = 5
-    LARGE_HAND = 7
-    MIN_PLAYERS_SMALL_HAND = 4
-
-    def active_player = players[turn_index]
+    serializes players: [ Player ], discard: Discard
 
     def deal
-      deck.shuffle
-      players.each { |player| player.receive(deck.deal(hand_amount)) }
+      super
       discard.place(deck.draw)
     end
 
@@ -34,24 +21,12 @@ module CrazyEights
       new_turn_result(played_by, card)
       turn_result.suit_changed(suit) if discard.wild?(card)
 
-      if wins?
+      if game_over?
         turn_result.winner
         return played_by
       end
 
       switch_turn
-    end
-
-    def self.dump(obj)
-      obj.as_json
-    end
-
-    def self.load(hash)
-      super&.tap { |game| game.results = [] }
-    end
-
-    def hand_amount
-      players.size < MIN_PLAYERS_SMALL_HAND ? LARGE_HAND : SMALL_HAND
     end
 
     private
@@ -84,7 +59,7 @@ module CrazyEights
       false
     end
 
-    def wins?
+    def game_over?
       active_player.cards.empty?
     end
 

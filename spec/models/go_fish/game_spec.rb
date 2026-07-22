@@ -48,32 +48,36 @@ RSpec.describe GoFish::Game do
       before { active_player.cards = [ CardGame::Card.new("A") ] }
 
       context "and target has 0 matching cards" do
-        context "deck has no cards" do
-          it "player receives no new cards" do
+        before { target_player.cards = [ CardGame::Card.new("K") ] }
+
+        context "and the deck is empty" do
+          before { game.deck.cards = [] }
+
+          it "leaves the active player's hand unchanged" do
             before_cards = active_player.cards.dup
-            game.deck.cards = []
             game.play_turn(target_player, "A")
             expect(active_player.cards).to eq before_cards
           end
         end
 
-        context "deck has at least 1 card" do
-          context "when player fishes same rank"
-            it "keeps active_player turn" do
-              deck_top_card = game.deck.cards.last.dup
-              game.play_turn(target_player, "A")
-              expect(active_player.cards).to include(deck_top_card)
-            end
-          end
+        context "and the drawn card matches the asked rank" do
+          before { game.deck.cards = [ CardGame::Card.new("A", "Hearts") ] }
 
-          context "when player fishes different rank" do
-            it "ends active_player turn" do
-              deck_top_card = game.deck.cards.last.dup
-              game.play_turn(target_player, "A")
-              expect(active_player.cards).to include(deck_top_card)
-            end
+          it "keeps the active player's turn" do
+            game.play_turn(target_player, "A")
+            expect(game.active_player).to eq active_player
           end
         end
+
+        context "and the drawn card is a different rank" do
+          before { game.deck.cards = [ CardGame::Card.new("K", "Hearts") ] }
+
+          it "ends the active player's turn" do
+            game.play_turn(target_player, "A")
+            expect(game.active_player).to_not eq active_player
+          end
+        end
+      end
 
       context "and target has 1 matching card" do
         it "gives targets 'card' to player " do

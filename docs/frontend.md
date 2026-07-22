@@ -67,7 +67,7 @@ Tokens are CSS custom properties. There are three tiers:
 | Prefix     | Meaning                          | Defined where                     | Example |
 |------------|----------------------------------|-----------------------------------|---------|
 | `--op-*`   | Optics tokens                    | Optics CDN (some overridden below)| `--op-color-primary-base`, `--op-space-large`, `--op-radius-2x-large` |
-| `--gf-*`   | Project tokens, shared/reusable  | `core/theme.css` (or a block)     | `--gf-card-height-large`, `--gf-navbar-height` |
+| `--gf-*`   | Project tokens, shared/reusable  | `core/theme.css` (or a block)     | `--gf-card-aspect-ratio`, `--gf-navbar-height` |
 | `--_gf-*`  | Component-**private** tokens      | inside the block that uses them   | `--_gf-playing-card-shadow` |
 
 **Rule of thumb (per project convention):** prefer an Optics `--op-*` token. When Optics
@@ -85,7 +85,7 @@ from primary:
   --op-color-primary-s: 79%;
   --op-color-primary-l: 38%;
 
-  --gf-card-height-large: 250px;      /* project token */
+  --gf-card-hover-lift: 50px;         /* project token */
   --gf-card-aspect-ratio: 5 / 7;
 }
 ```
@@ -144,3 +144,32 @@ as one component:
   file defeats the file-per-component convention.
 - Optics token names use scales like `--op-space-small … 3x-large` and
   `--op-font-small … 4x-large`; check Optics for the exact token before hard-coding.
+- **Optics color scale tokens (`--op-color-*-plus-N`/`-minus-N`) are `light-dark()` pairs,
+  not fixed colors.** `plus-N` = surface/background tokens (light in light mode, dark in
+  dark mode); `minus-N` = text/foreground tokens (the opposite). Moving to a lower `plus-N`
+  number is darker in light mode but *lighter* in dark mode (Material-style elevation: more
+  "elevated" surfaces get lighter in dark mode) — the two modes trade off in opposite
+  directions along the same scale, so "one token darker" doesn't mean darker in both
+  schemes simultaneously. Never substitute a raw hex/rgb for one of these tokens expecting
+  a fixed color — it will look wrong in the color scheme you didn't test. Always verify
+  both schemes (`page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }`
+  in a system spec) before shipping a color-token change.
+- **CSS custom properties can't be read inside `@media` conditions.** Breakpoint values
+  (e.g. `--gf-breakpoint-tablet` in `core/theme.css`) are documentation only — every
+  `@media (max-width: …)` query using that breakpoint must repeat the literal pixel value
+  and is kept in sync by hand.
+- **Watch for duplicate `.sidebar` class names.** `application.html.slim` wraps the sidebar
+  partial in a generic `div.sidebar`, and the partial's own root renders Optics'
+  `nav.sidebar.sidebar--drawer`. A bare `.sidebar {}` selector matches *both* nested
+  elements. To override an Optics `.sidebar--drawer`-scoped property, match
+  `.sidebar.sidebar--drawer` (same specificity, loads later) — see `components/sidebar.css`.
+- **The hand row never scrolls, and that's load-bearing.** `hand_controller.js`
+  (Stimulus, `data-controller="hand"`) measures rendered card width via
+  `ResizeObserver` and sets `--gf-card-overlap` (consumed by `.card-container`'s
+  `margin-left` in `playing_card.css`) so cards overlap *more* than the 40% default
+  whenever the hand is too wide to fit — never scroll, never shrink cards. This is why
+  `.panel--hand .panel__body` is `overflow: visible`: the CSS Overflow spec forces
+  `overflow-y` to compute as `auto` (clipping) whenever `overflow-x` is anything but
+  `visible`, which would clip the `.playing-card--playable:hover` lift at the row
+  instead of letting it rise over the header. Don't reintroduce `overflow-x: auto`
+  here without re-solving that clip.

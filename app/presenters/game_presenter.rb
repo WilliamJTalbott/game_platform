@@ -1,5 +1,5 @@
 class GamePresenter
-  attr_reader :game, :user, :form, :wait_time
+  attr_reader :game, :user, :form
   delegate :to_partial_path, to: :game
 
   class_attribute :wait_time, default: 30
@@ -9,6 +9,12 @@ class GamePresenter
     @user = user
     @form = form || game.form_class.new(game: game.state)
   end
+
+  def name = game.name
+  def player = game.player_from_user(user)
+  def user_turn? = game.user_turn?(user)
+  def messages = player&.messages&.reverse
+  def cards = player&.cards
 
   def finished? = game.finished_at.present?
   def won? = winner == user

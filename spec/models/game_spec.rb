@@ -33,19 +33,47 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  context ".playable" do
+  context "#playable" do
     it "returns every registered game subclass" do
       expect(Game.playable).to match_array([ GoFishGame, CrazyEightsGame ])
     end
   end
 
-  context ".from_type" do
+  context "#from_type" do
     it "resolves a registered type name to its class" do
       expect(Game.from_type("GoFishGame")).to eq GoFishGame
     end
 
     it "returns nil for an unregistered type name" do
       expect(Game.from_type("NotAGame")).to be_nil
+    end
+  end
+
+  context "#finished" do
+    it "includes a game with both started_at and finished_at present" do
+      finished_game = create(:finished_game, :many_participants).tap { |game| game.update!(finished_at: Time.current) }
+      expect(Game.finished).to include finished_game
+    end
+
+    it "excludes a waiting game" do
+      waiting_game = create(:game)
+      expect(Game.finished).to_not include waiting_game
+    end
+
+    it "excludes a started-but-not-finished game" do
+      started_game = create(:started_game, :many_participants)
+      expect(Game.finished).to_not include started_game
+    end
+
+    it "includes a finished game that has since been soft-deleted" do
+      finished_game = create(:finished_game, :many_participants).tap { |game| game.update!(finished_at: Time.current, deleted_at: Time.current) }
+      expect(Game.finished).to include finished_game
+    end
+
+    it "orders most-recently-finished first" do
+      older = create(:finished_game, :many_participants).tap { |game| game.update!(finished_at: 2.days.ago) }
+      newer = create(:finished_game, :many_participants).tap { |game| game.update!(finished_at: 1.day.ago) }
+      expect(Game.finished).to eq [ newer, older ]
     end
   end
 end

@@ -13,6 +13,18 @@ RSpec.describe GoFish::Player do
     end
   end
 
+  describe "#out_of_cards?" do
+    it "is true when the player has no cards" do
+      player.cards = []
+      expect(player.out_of_cards?).to eq true
+    end
+
+    it "is false when the player holds cards" do
+      player.cards = [ CardGame::Card.new("A") ]
+      expect(player.out_of_cards?).to eq false
+    end
+  end
+
   describe "#receive" do
     context "player hand no cards" do
       it "it adds a number of cards" do

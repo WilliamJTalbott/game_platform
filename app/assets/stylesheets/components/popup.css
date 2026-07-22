@@ -11,7 +11,7 @@
   padding: var(--op-space-medium);
   border-radius: var(--op-radius-large);
   font-weight: var(--op-font-weight-semi-bold);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--op-shadow-medium);
 
 
   transition: all 0.4s ease-in-out;

@@ -2,7 +2,7 @@ module CardGame
   class Card
     include Serializable
 
-    attr_reader :rank, :suit, :value
+    attr_reader :rank, :suit
 
     RANKS = %w[ 2 3 4 5 6 7 8 9 10 J Q K A ]
     SUITS = %w[ Hearts Spades Clubs Diamonds ]
@@ -28,8 +28,11 @@ module CardGame
     serializes :rank, :suit
 
     def ==(other)
-      rank == other.rank && suit == other.suit
+      other.is_a?(CardGame::Card) && rank == other.rank && suit == other.suit
     end
+    alias_method :eql?, :==
+
+    def hash = [ rank, suit ].hash
 
     def to_s
       "#{rank}#{suit_symbol}"

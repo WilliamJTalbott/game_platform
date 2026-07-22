@@ -10,6 +10,9 @@ application.register("dialog", DialogController)
 import GameFormController from "./game_form_controller"
 application.register("game-form", GameFormController)
 
+import HandController from "./hand_controller"
+application.register("hand", HandController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 

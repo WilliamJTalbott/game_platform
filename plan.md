@@ -11,11 +11,6 @@
     Add turn-state awareness UI. 
     Fix Books display
     Fix End State UI
-    Add shared game engine to reduce code duplication
-    
-# End of Game
+    ~~Add shared game engine to reduce code duplication~~ (done: CardGame::Game + CardGame::Player extractions)
 
-    Finish partial displayed ontop of game page using stimulus.
-    For now jsut shows the winner and the losers listed scroeboard style
-    Button to return to menu, view your post game stats, or create a new game.
-    Need to ensure that game page is no longer usable.
+# Messages Refactor

@@ -1,13 +1,4 @@
 class GoFishGamePresenter < GamePresenter
-  def name = game.name
-  def player = game.player_from_user(user)
-
-  def user_turn? = game.user_turn?(user)
-
-  def messages
-    player.messages.reverse
-  end
-
   def opponents
     game.state.players - [ player ]
   end
@@ -16,8 +7,8 @@ class GoFishGamePresenter < GamePresenter
     opponents.map(&:name)
   end
 
-  def cards
-    player&.cards
+  def books
+    player&.books
   end
 
   def ranks

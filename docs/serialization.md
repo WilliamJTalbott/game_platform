@@ -19,10 +19,10 @@ a field can't exist in one without the other.
 ## Usage
 
 ```ruby
-class GoFish::Player
+class CardGame::Player
   include Serializable
 
-  serializes :user_id, :name, cards: [ CardGame::Card ], books: [ GoFish::Book ], messages: [ CardGame::Message ]
+  serializes :user_id, :name, cards: [ CardGame::Card ], messages: [ CardGame::Message ]
 end
 ```
 
@@ -38,7 +38,11 @@ This generates:
   nested values.
 
 A subclass with no `serializes` call of its own inherits its parent's schema
-(used by `CrazyEights::Deck < CardGame::Pile`, etc.) — see `serialized_scalars`/
+(used by `CrazyEights::Deck < CardGame::Pile`, `CrazyEights::Player < CardGame::Player`,
+etc.). A subclass that *does* call `serializes` layers its own fields on top of
+the parent's rather than replacing them — e.g. `GoFish::Player < CardGame::Player`
+adds `serializes books: [ GoFish::Book ]` and still serializes the base's
+`user_id`/`name`/`cards`/`messages` too. See `serialized_scalars`/
 `serialized_nested` in the concern for how that inheritance is resolved.
 
 ## Gotchas
@@ -47,9 +51,10 @@ A subclass with no `serializes` call of its own inherits its parent's schema
   so the same mechanism works whether a class's constructor takes required
   positional args (`CardGame::Card.new(rank, suit)`) or none. The consequence:
   **any ivar set by `initialize` but not listed in `serializes` comes back `nil`
-  after a reload, not its `initialize` default.** `GoFish::Game`/`CrazyEights::Game`
-  both hit this for `results` (the ephemeral per-turn narration list, never
-  persisted) and carry a thin override to compensate:
+  after a reload, not its `initialize` default.** `CardGame::Game` hits this for
+  `results` (the ephemeral per-turn narration list, never persisted) and carries
+  a thin override to compensate, shared by both `GoFish::Game` and
+  `CrazyEights::Game`:
   ```ruby
   def self.load(hash)
     super&.tap { |game| game.results = [] }
@@ -76,7 +81,8 @@ A subclass with no `serializes` call of its own inherits its parent's schema
 
 The AR bridge itself (`serialize :state, coder: GoFish::Game`) expects the coder
 to respond to `.dump(obj)` and `.load(hash)`. `Serializable` only generates
-`.load`; each top-level `*::Game` PORO still defines its own one-line `self.dump`:
+`.load`; `CardGame::Game` defines the one-line `self.dump` that both
+`GoFish::Game` and `CrazyEights::Game` inherit:
 
 ```ruby
 def self.dump(obj)

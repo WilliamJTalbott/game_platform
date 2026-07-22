@@ -11,20 +11,20 @@ class TurnsController < ApplicationController
     end
   end
 
+  private
+
   def check_user_turn
     @game = Game.find(params[:game_id])
     return render_finished_game if @game.status == "finished"
 
     unless @game.status == "started" && @game.user_turn?(current_user)
-      render json: { errors: @game.errors.full_messages }, status: :unprocessable_content
+      render json: { errors: [ "It's not your turn" ] }, status: :unprocessable_content
     end
   end
 
   def game_params
     params.require(:turn).permit(*@game.class.permitted_turn_params).to_h.symbolize_keys
   end
-
-  private
 
   def play_turn
     @game.play_turn(**game_params)
