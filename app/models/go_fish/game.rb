@@ -1,24 +1,12 @@
 module GoFish
   class Game < CardGame::Game
-    def initialize(players)
-      @players = players
-      @deck = CardGame::Deck.new
-      @turn_index = 0
-      @results = []
-    end
-
     serializes players: [ Player ]
-
-    def deal
-      deck.shuffle
-      players.each { |player| player.receive(deck.deal(hand_amount)) }
-    end
 
     def play_turn(target, rank)
       new_turn_result(target, rank)
       handle_turn(target, rank)
 
-      get_winner if is_winner?
+      get_winner if game_over?
     end
 
     private
@@ -100,7 +88,7 @@ module GoFish
       card
     end
 
-    def is_winner? = players.none? { |player| !player.cards.empty? }
+    def game_over? = players.none? { |player| !player.cards.empty? }
 
     def get_winner
       player = decide_winner

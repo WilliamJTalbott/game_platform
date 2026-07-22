@@ -1,34 +1,18 @@
 class CrazyEightsGame < Game
+  self.game_class = CrazyEights::Game
+  self.player_class = CrazyEights::Player
+
   serialize :state, coder: CrazyEights::Game
 
   def self.permitted_turn_params = %i[card suit]
 
-  def play_turn(card:, suit: nil)
-    winner = state.play_turn(card_from_string(card), suit)
-    end_game(winner) if winner
-
-    save!
-  end
-
-  def build_game
-    CrazyEights::Game.new(create_players)
-  end
-
-  def presenter(user, form = nil)
-    CrazyEightsGamePresenter.new(self, user, form)
-  end
-
-  def form_class
-    CrazyEightsForm
-  end
-
   private
+
+  def turn_target(card:, suit: nil)
+    [ card_from_string(card), suit ]
+  end
 
   def card_from_string(card)
     CardGame::Card.from_s(card)
-  end
-
-  def create_players
-    users.map { |user| CrazyEights::Player.new(user.id, user.name) }
   end
 end

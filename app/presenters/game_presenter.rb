@@ -10,6 +10,12 @@ class GamePresenter
     @form = form || game.form_class.new(game: game.state)
   end
 
+  def name = game.name
+  def player = game.player_from_user(user)
+  def user_turn? = game.user_turn?(user)
+  def messages = player&.messages&.reverse
+  def cards = player&.cards
+
   def finished? = game.finished_at.present?
   def won? = winner == user
   def winner = game.participants.find_by(winner: true)&.user
