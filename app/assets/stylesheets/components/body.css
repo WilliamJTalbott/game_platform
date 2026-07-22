@@ -8,7 +8,7 @@
     "left main right";
 
     h2 {
-       color: var(--op-color-primary-minus-seven);
+       color: var(--gf-color-accent-text);
        font-weight: var(--op-font-weight-medium);
     }
 

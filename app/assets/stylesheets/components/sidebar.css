@@ -1,3 +1,11 @@
+/* Brand wordmark is coral accent text (accent-text token: contrast-safe in both
+   schemes). Covers the anchor and its inner heading. */
+.sidebar .sidebar__brand {
+  &, h1 {
+    color: var(--gf-color-accent-text);
+  }
+}
+
 @media (max-width: 768px) {
   .sidebar {
     --__op-sidebar-width: var(--_op-sidebar-rail-width);

@@ -1,8 +1,23 @@
 :root {
 
-    --op-color-primary-h: 0;
-    --op-color-primary-s: 79%;
-    --op-color-primary-l: 38%;
+    /* Primary = GREEN. Green is the genuine Optics primary, so its whole ramp (base,
+       hover/active, plus-N surface tints, minus-N accent text) derives natively — we no
+       longer override any Optics primitive. The coral CTA accent is a *project* token
+       (--gf-color-accent, below), applied explicitly by the components that want it
+       (buttons + accent text) rather than by hijacking primary-base. Legacy pages only;
+       the Rummy page will get its own page-scoped tokens matching the mockup later. */
+    --op-color-primary-h: 150;   /* green-blue, felt family */
+    --op-color-primary-s: 42%;
+    --op-color-primary-l: 40%;
+
+    /* Chrome — warm slate. Optics' neutral scale drives background/border/surface
+       colors, and its hue tracks primary by default; we decouple it to a subtle warm
+       (yellow) tinge at low saturation rather than inheriting the copper hue. Both
+       light and dark re-skin from these knobs (the plus/minus tokens are light-dark()
+       pairs) — verify both schemes after changing them. Leave neutral-l inheriting
+       primary-l (its default). */
+    --op-color-neutral-h: 42;
+    --op-color-neutral-s: 8%;
 
     --op-border-width: 1.8px;
     --op-border-width-large: 3px;
@@ -14,6 +29,24 @@
 
     --gf-color-overlay: rgb(0 0 0 / 0.5);
     --gf-color-shadow: rgb(0 0 0 / 0.6);
+
+    /* Coral — the CTA accent. NOT an Optics concept (Optics has only primary + neutral
+       hues), so it's a project token applied explicitly to buttons + accent text.
+       - --gf-color-accent: flat bright coral for FILLS (buttons); paired with dark
+         --gf-color-on-accent ink because coral is light (white-on-coral fails contrast).
+       - --gf-color-accent-text: a light-dark() pair so accent TEXT/links stay legible
+         on both light and dark page backgrounds (a single bright coral would fail on
+         white). Still one hue (16°) — coral never becomes a ramp / muddy copper. */
+    --gf-color-accent: hsl(16 85% 62%);
+    --gf-color-on-accent: hsl(20 35% 14%);
+    --gf-color-accent-text: light-dark(hsl(16 90% 42%), hsl(16 85% 66%));
+
+    /* Board — green felt, independent of the Optics re-skin above (the felt is a
+       game concern, not an Optics color). Consumed by the board/table component —
+       apply `background: var(--gf-felt)` there. light-dark() yields the muted
+       light-mode felt and the deep dark-mode felt from one token. */
+    --gf-felt: light-dark(#bfd2c6, #1b2a22);
+    --gf-felt-bright: light-dark(#e6f5ea, #274035);
 
     /* CSS custom properties can't be read inside @media conditions, so these are
        documentation only — keep any `@media (max-width: …)` query in sync by hand. */

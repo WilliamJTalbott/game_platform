@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rummy Mockup — Final (copper accent, warm slate chrome, green board)</title>
+<style>
+  /* ---- theme tokens: light is the default, [data-theme="dark"] overrides ---- */
+  :root, :root[data-theme="light"] {
+    --line: #5c584a; --line-soft: #cbc8bb; --fill: #ecebe2; --fill-2: #e0ded1;
+    --accent: #c2410c; --accent-ink: #9a3412; --ink: #26241d; --muted: #6a6656;
+    --felt: #bfd2c6; --felt-bright: #e6f5ea;
+    --page-bg: #dedcd3;
+    --app-bg: #f6f5ef; --app-border: 2px solid var(--line);
+    --surface: #f6f5ef;
+    --card-face: #fbfaf5; --card-ink: #26241d; --card-border: 2px solid var(--line);
+    --card-back: repeating-linear-gradient(45deg,#e0ded1,#e0ded1 5px,#d4d1c1 5px,#d4d1c1 10px);
+    --accent-tint: #fbe0d1; --sel-ink: #2b1c14;
+    --sel-ring: rgba(194,65,12,.28); --hot-ring: rgba(194,65,12,.40);
+    --meld-chip: rgba(255,255,255,.55); --zone-top-highlight: rgba(255,255,255,.65);
+    --felt-border: 1px solid rgba(60,84,66,.16);
+    --felt-inset-shadow: inset 0 1px 3px rgba(30,50,35,.10);
+    --zone-shadow: inset 0 1px 0 var(--zone-top-highlight), 0 1px 3px rgba(30,50,35,.12);
+    --overlay-shadow: 0 2px 6px rgba(0,0,0,.12);
+    --pop-shadow: 0 6px 16px rgba(0,0,0,.16);
+  }
+  :root[data-theme="dark"] {
+    --line: #7a7460; --line-soft: #383527; --fill: #1b1a13; --fill-2: #2a2819;
+    --accent: #f2825a; --accent-ink: #ffcdb6; --ink: #eeeade; --muted: #a39c86;
+    --felt: #1b2a22; --felt-bright: #274035;
+    --page-bg: #100f0a;
+    --app-bg: #17150e; --app-border: 1px solid var(--line-soft);
+    --surface: #221f16;
+    --card-face: #242014; --card-ink: #ece7d6; --card-border: 1px solid var(--line);
+    --card-back: repeating-linear-gradient(45deg,#2d2a1c,#2d2a1c 5px,#232013 5px,#232013 10px);
+    --accent-tint: rgba(242,130,90,.20); --sel-ink: #ffece2;
+    --sel-ring: rgba(242,130,90,.48); --hot-ring: rgba(242,130,90,.58);
+    --meld-chip: rgba(255,255,255,.05); --zone-top-highlight: rgba(255,255,255,.08);
+    --felt-inset-shadow: inset 0 1px 3px rgba(0,0,0,.35);
+    --zone-shadow: inset 0 1px 0 var(--zone-top-highlight), 0 2px 6px rgba(0,0,0,.35);
+    --overlay-shadow: 0 4px 10px rgba(0,0,0,.45);
+    --pop-shadow: 0 8px 20px rgba(0,0,0,.55);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--page-bg); padding: 20px; transition: background .2s, color .2s; }
+  h1.page-title { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+  p.note { margin: 0 0 12px; color: var(--muted); font-size: 12px; max-width: 940px; }
+
+  /* theme toggle — lives outside the mockup */
+  .toolbar { max-width: 1024px; margin: 0 auto 12px; display: flex; justify-content: flex-end; }
+  .theme-toggle { font: inherit; font-size: 12px; cursor: pointer; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line-soft); background: var(--surface); color: var(--ink); box-shadow: var(--overlay-shadow); }
+
+  /* constrained to a standard laptop-ish canvas rather than full-bleed */
+  .app { display: grid; grid-template-columns: 140px 1fr; width: 100%; max-width: 1024px; height: 720px; margin: 0 auto; border: var(--app-border); background: var(--app-bg); border-radius: 8px; overflow: hidden; }
+  .sidebar { border-right: 2px dashed var(--line-soft); padding: 14px 10px; background: var(--fill); display: flex; flex-direction: column; gap: 8px; }
+  .sidebar .brand { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+  .sidebar .nav { border: 1px dashed var(--line-soft); border-radius: 5px; padding: 6px 8px; font-size: 11px; color: var(--muted); }
+  .sidebar .spacer { flex: 1; }
+
+  .stage { display: grid; grid-template-rows: auto 1fr auto; position: relative; }
+
+  /* ---- opponents strip ---- */
+  .opp-strip { display: flex; justify-content: center; gap: 12px; padding: 12px; border-bottom: 2px dashed var(--line-soft); }
+  .opp { border: 2px solid var(--line); border-radius: 6px; padding: 6px 10px; background: var(--fill); text-align: center; min-width: 112px; }
+  .opp.turn { border-color: var(--accent); background: var(--accent-tint); }
+  .opp .name { font-size: 12px; font-weight: 600; }
+  .opp .meta { font-size: 10px; color: var(--muted); }
+  .opp .facedown { display: flex; gap: 2px; justify-content: center; margin-top: 4px; }
+  .cardmini { width: 12px; height: 18px; border: 1px solid var(--line); border-radius: 2px; background: var(--fill-2); }
+
+  /* ---- floating message bubble (pinned below the header, top-right) ---- */
+  .bubble-stack { position: absolute; top: 24px; right: 14px; width: 232px; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; z-index: 8; pointer-events: none; }
+  .bubble { max-width: 100%; border-radius: 12px 12px 12px 4px; padding: 8px 12px; font-size: 11px; line-height: 1.3; background: var(--surface); border: 1px solid var(--line-soft); color: var(--ink); box-shadow: var(--overlay-shadow); }
+  .bubble--ghost { opacity: .28; transform: translateY(-2px) scale(.96); }
+  .bubble--fade  { opacity: .55; }
+  .bubble--directive { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; display: flex; align-items: center; gap: 7px; box-shadow: 0 4px 12px rgba(194,65,12,.45); border-radius: 12px 12px 4px 12px; }
+  .bubble--directive::before { content: "➜"; font-size: 14px; }
+  .bubble-hint { font-size: 9px; color: var(--muted); font-style: italic; }
+
+  /* ---- felt: muted parent surface holding two raised, brighter zones ---- */
+  .felt {
+    position: relative; margin: 12px; border-radius: 20px; background: var(--felt);
+    border: var(--felt-border); padding: 16px; display: flex; gap: 16px; overflow: hidden;
+    box-shadow: var(--felt-inset-shadow);
+  }
+  .zone {
+    background: var(--felt-bright); border-radius: 16px; padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 10px; box-shadow: var(--zone-shadow);
+  }
+  .zone__label { font-size: 9px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .zone--piles { flex: 0 0 auto; }
+  .zone--piles .zone__body { flex: 1; display: flex; align-items: center; gap: 14px; }
+  .zone--melds { flex: 1; }
+  .zone--melds .zone__body { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 14px; }
+
+  /* generic card face */
+  .card { width: 46px; height: 64px; border: var(--card-border); border-radius: 5px; background: var(--card-face); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--card-ink); }
+  .card.back { background: var(--card-back); }
+
+  /* everything interactive is a <button> */
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .pile-btn, .meld-btn, .hand-card { background: none; border: 0; padding: 0; margin: 0; }
+
+  .pile-btn { text-align: center; border-radius: 8px; padding: 6px; transition: box-shadow .1s; }
+  .pile-btn .card { width: 62px; height: 86px; font-size: 13px; }   /* piles enlarged — bigger click target */
+  .pile-btn .cap { font-size: 10px; color: var(--muted); margin-top: 6px; }
+  .pile-btn.hot { box-shadow: 0 0 0 3px var(--hot-ring); border-radius: 8px; }
+  .meld-btn.sel { box-shadow: 0 0 0 2px var(--accent); }   /* slight blue outline, only when selected */
+
+  .meld-btn { display: inline-flex; flex-direction: column; gap: 3px; padding: 7px; border-radius: 8px; background: var(--meld-chip); }
+  .meld-btn .t { font-size: 9px; color: var(--muted); }
+  .meld-btn .owner { font-size: 9px; color: var(--accent); }
+  .meld-btn .cards { display: flex; gap: 3px; }
+  .meld-btn .card { width: 30px; height: 42px; font-size: 9px; }
+  .meld-btn .head { display: flex; justify-content: space-between; gap: 10px; }
+
+  /* ---- hand dock ---- */
+  .hand-dock { border-top: 2px dashed var(--line-soft); padding: 10px 14px 14px; background: var(--fill); position: relative; }
+  .dock-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 12px; }
+  .phase { display: flex; gap: 4px; }
+  .step { font-size: 10px; padding: 4px 10px; border: 1px solid var(--line-soft); border-radius: 20px; color: var(--muted); background: var(--surface); }
+  .step.active { border-color: var(--accent); color: var(--accent-ink); font-weight: 700; background: var(--accent-tint); }
+  .dock-right { display: flex; align-items: center; gap: 14px; }
+  .timer { font-size: 11px; color: var(--muted); }
+  .timer b { color: var(--ink); }
+  .hand-count { font-size: 11px; color: var(--muted); }
+
+  .hand-wrap { position: relative; }
+  .hand-fan { display: flex; align-items: flex-end; gap: 5px; justify-content: flex-start; min-height: 74px; }
+  .hand-card { width: 46px; height: 64px; border: var(--card-border); border-radius: 5px; background: var(--card-face); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--card-ink); }
+  .hand-card.sel { border-color: var(--accent); box-shadow: 0 0 0 2px var(--sel-ring); transform: translateY(-10px); background: var(--accent-tint); color: var(--sel-ink); }
+
+  /* contextual confirm popup — appears right above the selected cards */
+  .confirm-pop { position: absolute; left: 130px; transform: translateX(-50%); bottom: 78px; background: var(--surface); border: 2px solid var(--accent); border-radius: 10px; padding: 8px 10px; display: flex; align-items: center; gap: 10px; box-shadow: var(--pop-shadow); z-index: 9; }
+  .confirm-pop::after { content: ""; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: var(--surface); border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); rotate: 45deg; }
+  .confirm-pop .txt { font-size: 11px; }
+  .confirm-pop .txt small { display: block; color: var(--muted); font-size: 9px; }
+  .confirm-pop .go { border: 2px solid var(--accent); color: #fff; background: var(--accent); border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <h1 class="page-title">Rummy — Final theme: warm slate-black chrome, copper/terracotta accent, green board. Toggle switches light/dark.</h1>
+  <p class="note">
+    One continuous felt: <b>stock &amp; discard piles on the left, shared melds on the right</b>. Every card, pile, and meld is a
+    <code>&lt;button&gt;</code> — interaction is driven by clicking them, and the <b>current turn phase</b> decides what a click does
+    (draw phase → piles are the targets; meld phase → hand cards toggle-select and melds accept lay-offs; discard phase → a hand
+    card click discards). A small <b>confirm popup appears right above the cards</b> when an action needs confirming — shown here
+    mid-meld with 3 cards picked. The feed is the floating bubble below the header, top-right. Melds sit flat by default — a meld
+    shows a <b>slight blue outline only when selected</b> (Alice's set of 9s, a lay-off target). Use the toggle to switch themes.
+  </p>
+
+  <div class="toolbar">
+    <button id="theme-toggle" class="theme-toggle" type="button"></button>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Game Platform</div>
+      <div class="nav">Games</div><div class="nav">Stats</div>
+      <div class="nav">Rules</div><div class="nav">History</div>
+      <div class="spacer"></div>
+      <div class="nav">Profile</div><div class="nav">Logout</div>
+    </aside>
+
+    <section class="stage">
+      <!-- OPPONENTS -->
+      <div class="opp-strip">
+        <div class="opp"><div class="name">Alice</div><div class="meta">7 cards · 2 melds</div><div class="facedown"><i class="cardmini"></i><i class="cardmini"></i><i class="cardmini"></i></div></div>
+        <div class="opp turn"><div class="name">Carol ← turn</div><div class="meta">6 cards · 3 melds</div><div class="facedown"><i class="cardmini"></i><i class="cardmini"></i><i class="cardmini"></i></div></div>
+        <div class="opp"><div class="name">Bob</div><div class="meta">9 cards · 1 meld</div><div class="facedown"><i class="cardmini"></i><i class="cardmini"></i><i class="cardmini"></i></div></div>
+      </div>
+
+      <!-- floating message bubble — pinned just below the opponents header, in the empty top-right space -->
+      <div class="bubble-stack">
+        <div class="bubble bubble--ghost">Alice melded a set of 9s.</div>
+        <div class="bubble bubble--fade">You drew 3♦ from the stock.</div>
+        <div class="bubble bubble--directive">Meld, lay off, or discard</div>
+        <div class="bubble-hint">↑ older slides up &amp; offscreen · directive = accent</div>
+      </div>
+
+      <!-- FELT: muted parent green holding two raised, brighter-green zones -->
+      <div class="felt">
+        <!-- piles zone (buttons; not the hot targets during meld phase) -->
+        <div class="zone zone--piles">
+          <span class="zone__label">Piles</span>
+          <div class="zone__body">
+            <button class="pile-btn"><div class="card back"></div><div class="cap">Stock<br>(draw)</div></button>
+            <button class="pile-btn"><div class="card">7♣</div><div class="cap">Discard<br>(top)</div></button>
+          </div>
+        </div>
+
+        <!-- melds zone (buttons; a meld gets a blue outline only when selected) -->
+        <div class="zone zone--melds">
+          <span class="zone__label">Shared melds — click a meld to lay off onto it</span>
+          <div class="zone__body">
+            <button class="meld-btn"><span class="head"><span class="t">run ♥</span><span class="owner">you</span></span><span class="cards"><i class="card">4♥</i><i class="card">5♥</i><i class="card">6♥</i></span></button>
+            <button class="meld-btn sel"><span class="head"><span class="t">set 9</span><span class="owner">Alice</span></span><span class="cards"><i class="card">9♠</i><i class="card">9♦</i><i class="card">9♣</i></span></button>
+            <button class="meld-btn"><span class="head"><span class="t">run ♠</span><span class="owner">Carol</span></span><span class="cards"><i class="card">J♠</i><i class="card">Q♠</i><i class="card">K♠</i></span></button>
+            <button class="meld-btn"><span class="head"><span class="t">set 2</span><span class="owner">Bob</span></span><span class="cards"><i class="card">2♥</i><i class="card">2♠</i><i class="card">2♣</i></span></button>
+            <button class="meld-btn"><span class="head"><span class="t">run ♦</span><span class="owner">Carol</span></span><span class="cards"><i class="card">7♦</i><i class="card">8♦</i><i class="card">9♦</i><i class="card">10♦</i></span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HAND DOCK -->
+      <div class="hand-dock">
+        <div class="dock-top">
+          <div class="phase">
+            <span class="step">1 · Draw</span>
+            <span class="step active">2 · Meld / Lay off</span>
+            <span class="step">3 · Discard</span>
+          </div>
+          <div class="dock-right">
+            <span class="hand-count">Your hand · 8 cards</span>
+            <span class="timer">Your turn — <b>0:22</b></span>
+          </div>
+        </div>
+
+        <div class="hand-wrap">
+          <!-- contextual confirm popup, above the selected cards -->
+          <div class="confirm-pop">
+            <span class="txt">Create a meld with these 3 cards?<small>keep selecting to add more, or…</small></span>
+            <button class="go">Create meld ✓</button>
+          </div>
+
+          <div class="hand-fan">
+            <button class="hand-card">A♦</button>
+            <button class="hand-card sel">3♦</button>
+            <button class="hand-card sel">4♦</button>
+            <button class="hand-card sel">5♦</button>
+            <button class="hand-card">8♣</button>
+            <button class="hand-card">10♥</button>
+            <button class="hand-card">Q♦</button>
+            <button class="hand-card">K♥</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('theme-toggle');
+      function apply(theme) {
+        root.dataset.theme = theme;
+        btn.textContent = theme === 'dark' ? '☀︎ Switch to light' : '☾ Switch to dark';
+      }
+      btn.addEventListener('click', function () {
+        apply(root.dataset.theme === 'dark' ? 'light' : 'dark');
+      });
+      apply(root.dataset.theme || 'dark');
+    })();
+  </script>
+</body>
+</html>

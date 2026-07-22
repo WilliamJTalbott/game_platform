@@ -75,20 +75,36 @@ doesn't cover something and the value is shared across features, define a projec
 (`--gf-…`) in `core/theme.css`. The leading underscore (`--_gf-…`) marks a token as
 **local to one component** — do not reference it from another file.
 
-`core/theme.css` also **re-skins Optics** by overriding Optics' primitive tokens. For
-example, setting the primary hue/saturation/lightness remaps every color Optics derives
-from primary:
+`core/theme.css` also **re-skins Optics** by overriding Optics' primitive tokens.
+Optics derives every color from just **two** hue scales — `--op-color-primary-*`
+(accent) and `--op-color-neutral-*` (chrome/surfaces); there is no built-in
+secondary/accent scale. `--op-color-neutral-h` tracks `primary-h` by default, so set
+it explicitly to decouple the chrome hue from the accent.
 
-```css
-:root {
-  --op-color-primary-h: 0;
-  --op-color-primary-s: 79%;
-  --op-color-primary-l: 38%;
+The current theme is a **two-color model** (see the annotated `core/theme.css`):
 
-  --gf-card-hover-lift: 50px;         /* project token */
-  --gf-card-aspect-ratio: 5 / 7;
-}
-```
+- **Green is the genuine Optics primary** — `--op-color-primary-h/s` are green, so the
+  whole ramp (base, hover/active, `plus-N` surface tints, `minus-N` accent text) derives
+  natively. No Optics primitive is overridden; the ramp does the "colorful lifting."
+- **Coral is a project token**, not an Optics primary. Since Optics has no secondary
+  hue, coral lives as `--gf-color-*` and is applied *explicitly* to the things that
+  should be coral (primary buttons in `components/button.css`; accent text/headings/
+  brand in `body`/`info_card`/`profile`/`sidebar`). Two variants exist because coral is
+  light: `--gf-color-accent` (flat bright fill) + `--gf-color-on-accent` (dark ink on
+  it), and `--gf-color-accent-text` (a `light-dark()` pair, contrast-safe for text on
+  either page background). Everything *not* explicitly painted coral stays green.
+- `--gf-felt`/`--gf-felt-bright` are the game-board felt (green), also independent of
+  Optics.
+
+**Two Optics gotchas that shaped this** (learned the hard way — they're *why* coral is a
+project token rather than a re-skin of primary):
+- `--op-color-primary-l` is **nearly inert** — the scale hardcodes a lightness ramp per
+  step, so the `-l` knob barely does anything. You cannot lighten/flatten the accent
+  through it.
+- `--op-color-primary-base` is a `light-dark()` pair fixed at ~40%/38% lightness — Optics
+  **keeps the accent mid-dark in both schemes** and never lifts it to a light tone in
+  dark mode. (An earlier attempt overrode `base` to a coral; it worked but hijacked a
+  token many Optics components read — hence the cleaner project-token approach.)
 
 Tokens may also be scoped to a block rather than `:root` when only that block needs them
 (e.g. `--gf-navbar-height` is declared on `.panel`, `--gf-feed-background` on

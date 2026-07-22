@@ -6,7 +6,7 @@
   gap: var(--op-space-large);
 
   h1 {
-    color: var(--op-color-primary-minus-seven);
+    color: var(--gf-color-accent-text);
   }
 
   btn {

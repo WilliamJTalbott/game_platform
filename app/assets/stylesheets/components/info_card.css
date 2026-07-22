@@ -10,7 +10,7 @@
     border-radius: var(--op-radius-large);
 
     .info-card__label {
-        color: var(--op-color-primary-minus-four);
+        color: var(--gf-color-accent-text);
     }
 
     .info-card__value {
