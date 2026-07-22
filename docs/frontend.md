@@ -67,7 +67,7 @@ Tokens are CSS custom properties. There are three tiers:
 | Prefix     | Meaning                          | Defined where                     | Example |
 |------------|----------------------------------|-----------------------------------|---------|
 | `--op-*`   | Optics tokens                    | Optics CDN (some overridden below)| `--op-color-primary-base`, `--op-space-large`, `--op-radius-2x-large` |
-| `--gf-*`   | Project tokens, shared/reusable  | `core/theme.css` (or a block)     | `--gf-card-height-large`, `--gf-navbar-height` |
+| `--gf-*`   | Project tokens, shared/reusable  | `core/theme.css` (or a block)     | `--gf-card-aspect-ratio`, `--gf-navbar-height` |
 | `--_gf-*`  | Component-**private** tokens      | inside the block that uses them   | `--_gf-playing-card-shadow` |
 
 **Rule of thumb (per project convention):** prefer an Optics `--op-*` token. When Optics
@@ -85,7 +85,7 @@ from primary:
   --op-color-primary-s: 79%;
   --op-color-primary-l: 38%;
 
-  --gf-card-height-large: 250px;      /* project token */
+  --gf-card-hover-lift: 50px;         /* project token */
   --gf-card-aspect-ratio: 5 / 7;
 }
 ```
@@ -163,3 +163,13 @@ as one component:
   `nav.sidebar.sidebar--drawer`. A bare `.sidebar {}` selector matches *both* nested
   elements. To override an Optics `.sidebar--drawer`-scoped property, match
   `.sidebar.sidebar--drawer` (same specificity, loads later) — see `components/sidebar.css`.
+- **The hand row never scrolls, and that's load-bearing.** `hand_controller.js`
+  (Stimulus, `data-controller="hand"`) measures rendered card width via
+  `ResizeObserver` and sets `--gf-card-overlap` (consumed by `.card-container`'s
+  `margin-left` in `playing_card.css`) so cards overlap *more* than the 40% default
+  whenever the hand is too wide to fit — never scroll, never shrink cards. This is why
+  `.panel--hand .panel__body` is `overflow: visible`: the CSS Overflow spec forces
+  `overflow-y` to compute as `auto` (clipping) whenever `overflow-x` is anything but
+  `visible`, which would clip the `.playing-card--playable:hover` lift at the row
+  instead of letting it rise over the header. Don't reintroduce `overflow-x: auto`
+  here without re-solving that clip.

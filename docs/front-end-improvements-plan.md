@@ -60,7 +60,7 @@ On a narrow viewport the side/base columns crush the board and hand, and the fix
 
 - Define breakpoints as tokens (project prefix, e.g. `--gf-breakpoint-*`) so they're consistent and not magic numbers.
 - **App shell (`.op-page`/`.sidebar`):** below a tablet breakpoint, drop the sidebar rails so main content gets full width; move the sidebar to a top bar or an off-canvas drawer (`_sidebar.html.slim`). (Optics has no built-in collapse, so this is a project override.)
-- **Game screen (`game.css`):** below the breakpoint, restack the grid areas into a single column — board → hand → feed (with books folded into the board or hand area). The hand should scroll horizontally rather than shrink cards below a legible size (`components/playing_card.css` already has `--gf-card-width-min`).
+- **Game screen (`game.css`):** below the breakpoint, restack the grid areas into a single column — board → hand → feed (with books folded into the board or hand area). The hand never scrolls or shrinks cards — `hand_controller.js` tightens card overlap so any hand width fits the row (see `docs/frontend.md`).
 - Verify tap targets: the move form's `<select>`s and the Start/Ask buttons must stay comfortably tappable.
 
 **Testing**

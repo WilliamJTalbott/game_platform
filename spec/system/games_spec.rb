@@ -221,7 +221,7 @@ RSpec.describe 'Games', type: :system do
         end
       end
 
-      it "lets the hand scroll horizontally instead of clipping cards", :js do
+      it "keeps the hand un-clipped so a hovered card can lift past the row", :js do
         resize_page(375, 700) do
           visit game_path(game)
 
@@ -229,7 +229,7 @@ RSpec.describe 'Games', type: :system do
             "getComputedStyle(document.querySelector('.panel--hand .panel__body')).overflowX"
           )
 
-          expect(overflow_x).to eq "auto"
+          expect(overflow_x).to eq "visible"
         end
       end
     end
@@ -247,8 +247,8 @@ RSpec.describe 'Games', type: :system do
         expect(offset["gap"]).to be_within(2).of(offset["width"] * 0.6)
       end
 
-      it "keeps that ratio consistent on a narrow viewport, instead of a fixed offset", :js do
-        resize_page(375, 700) do
+      it "keeps that ratio consistent on a narrower viewport, instead of a fixed offset", :js do
+        resize_page(700, 700) do
           visit game_path(game)
 
           offset = card_pair_offset(".panel--hand .card-container")
@@ -277,24 +277,35 @@ RSpec.describe 'Games', type: :system do
         expect(dims["width"] / dims["height"]).to be_within(0.05).of(5.0 / 7.0)
       end
 
-      it "scrolls the hand horizontally instead of shrinking cards or growing the page vertically", :js do
+      it "tightens overlap so a large hand fits the row without scrolling", :js do
         large_hand_game = create(:started_game, :go_fish, :users_turn, :many_participants,
                                   user: user, users_count: 2)
 
-        visit game_path(large_hand_game)
+        resize_page(375, 700) do
+          visit game_path(large_hand_game)
 
-        overflow = page.evaluate_script(<<~JS)
-          (function() {
-            var row = document.querySelector(".panel--hand .panel__body");
-            return {
-              rowScrollsHorizontally: row.scrollWidth > row.clientWidth,
-              pageHasNoVerticalOverflow: document.documentElement.scrollHeight <= window.innerHeight + 1
-            };
-          })()
-        JS
+          fit = page.evaluate_script(<<~JS)
+            (function() {
+              var row = document.querySelector(".panel--hand .panel__body");
+              return { fitsWithoutScroll: row.scrollWidth <= row.clientWidth + 1 };
+            })()
+          JS
 
-        expect(overflow["rowScrollsHorizontally"]).to be true
-        expect(overflow["pageHasNoVerticalOverflow"]).to be true
+          expect(fit["fitsWithoutScroll"]).to be true
+        end
+      end
+
+      it "tightens the overlap below 40% when the hand is too wide for 40%", :js do
+        large_hand_game = create(:started_game, :go_fish, :users_turn, :many_participants,
+                                  user: user, users_count: 2)
+
+        resize_page(375, 700) do
+          visit game_path(large_hand_game)
+
+          offset = card_pair_offset(".panel--hand .card-container")
+
+          expect(offset["gap"]).to be < offset["width"] * 0.6
+        end
       end
     end
   end
@@ -324,7 +335,7 @@ RSpec.describe 'Games', type: :system do
       expect(page).to have_content("You are offline")
     end
 
-    fit "shows the offline page when navigation fails" do
+    it "shows the offline page when navigation fails" do
       visit game_path(game)
       expect(page).to have_current_path(game_path(game))
 

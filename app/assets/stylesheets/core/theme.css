@@ -10,10 +10,7 @@
     --op-radius-x-large: 12px;
 
     --gf-card-hover-lift: 50px;
-    --gf-card-height-large: 250px;
     --gf-card-aspect-ratio: 5 / 7;
-    --gf-card-width-large: calc(var(--gf-card-height-large) * 5 / 7);
-    --gf-card-width-min: 56px;
 
     --gf-color-overlay: rgb(0 0 0 / 0.5);
     --gf-color-shadow: rgb(0 0 0 / 0.6);

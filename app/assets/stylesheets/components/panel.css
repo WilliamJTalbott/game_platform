@@ -110,7 +110,7 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    overflow-x: auto;
+    overflow: visible;
 
     padding: var(--op-space-medium);
   }
