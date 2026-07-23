@@ -7,7 +7,8 @@ RSpec.describe RummyForm do
   let(:game) { Rummy::Game.new([ active_player, opponent ]) }
   let(:action) { "draw_stock" }
   let(:card) { nil }
-  let(:form) { described_class.new(game:, action:, card:) }
+  let(:meld_index) { nil }
+  let(:form) { described_class.new(game:, action:, card:, meld_index:) }
 
   before { active_player.cards << hand_card }
 
@@ -130,6 +131,92 @@ RSpec.describe RummyForm do
     it "adds an error to base" do
       expect(form).not_to be_valid
       expect(form.errors[:base]).to include("select 3 or more cards that form a run or set")
+    end
+  end
+
+  context "when laying off during the draw phase" do
+    let(:action) { "lay_off" }
+
+    it "rejects it" do
+      expect(form).not_to be_valid
+      expect(form.errors[:action]).to include("is not allowed during the draw phase")
+    end
+  end
+
+  context "when laying off a legal card during the meld phase" do
+    let(:action) { "lay_off" }
+    let(:meld_index) { "0" }
+    let(:existing_meld) do
+      Rummy::Meld.new(
+        kind: "run", owner: opponent.user_id,
+        cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+      )
+    end
+
+    before do
+      game.phase = "meld"
+      game.melds = [ existing_meld ]
+      active_player.cards << CardGame::Card.new("7", "Hearts")
+      active_player.selected = [ CardGame::Card.new("7", "Hearts") ]
+    end
+
+    it "is valid" do
+      expect(form).to be_valid
+    end
+  end
+
+  context "when laying off without selecting a card" do
+    let(:action) { "lay_off" }
+    let(:meld_index) { "0" }
+
+    before do
+      game.phase = "meld"
+      game.melds = [
+        Rummy::Meld.new(
+          kind: "run", owner: opponent.user_id,
+          cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+        )
+      ]
+    end
+
+    it "adds an error to base" do
+      expect(form).not_to be_valid
+      expect(form.errors[:base]).to include("select cards that extend that meld legally")
+    end
+  end
+
+  context "when laying off onto a meld the selection doesn't fit" do
+    let(:action) { "lay_off" }
+    let(:meld_index) { "0" }
+
+    before do
+      game.phase = "meld"
+      game.melds = [
+        Rummy::Meld.new(
+          kind: "run", owner: opponent.user_id,
+          cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+        )
+      ]
+      active_player.selected = [ hand_card ]
+    end
+
+    it "adds an error to base" do
+      expect(form).not_to be_valid
+      expect(form.errors[:base]).to include("select cards that extend that meld legally")
+    end
+  end
+
+  context "when laying off with no meld index" do
+    let(:action) { "lay_off" }
+
+    before do
+      game.phase = "meld"
+      active_player.selected = [ hand_card ]
+    end
+
+    it "adds an error to meld_index" do
+      expect(form).not_to be_valid
+      expect(form.errors[:meld_index]).to include("must reference an existing meld")
     end
   end
 

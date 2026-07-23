@@ -153,14 +153,27 @@ becomes shared, public state on the felt.*
 
 *Goal: extend any player's existing meld with cards from your hand.*
 
-- [ ] Rules: a lay-off is legal iff the target meld stays valid after adding the
-      card(s) (extends a run at either end, or adds to a set).
-- [ ] `play_turn` **lay-off action**: validate against the chosen meld, move cards from
-      hand onto it.
-- [ ] `RummyForm` validates the lay-off.
-- [ ] **Mockup UX**: with cards selected, **clicking a meld** (the `.sel` outline) lays
-      them off onto it. Confirm popup adapts its copy to the lay-off case.
-- [ ] System spec: lay a card off onto an opponent's meld; it renders on that meld live.
+**Done.** One deviation from the plan, agreed before implementation: clicking a
+meld with cards selected submits the lay-off immediately (like the piles in
+Milestone 1) rather than routing through the confirm-pop — so there's no
+lay-off copy variant to add there. Instead, melds that the current selection
+*can't* legally extend render faded (`.meld--faded`) rather than getting a hot/
+selected outline on the legal ones.
+
+- [x] Rules: `Rummy::Meld#can_add?`/`#add` — legal iff the combined cards still
+      form the *same* kind (run stays a same-suit consecutive run extendable at
+      either end or both at once; set stays same-rank with unique suits, capped at
+      4 by suit uniqueness). Reuses the existing `kind_for` logic instead of
+      duplicating it.
+- [x] `play_turn` **lay-off action**: `"lay_off"` + a `meld_index` (position in the
+      serialized `melds` array — melds have no persisted id) validates against the
+      target, moves the selected cards from hand onto it, stays in the meld phase.
+- [x] `RummyForm` validates `meld_index` resolves to a real meld and the current
+      selection legally extends it.
+- [x] **Mockup UX**: with cards selected, clicking a meld immediately lays them
+      off; melds the selection can't legally join render faded via presenter-computed
+      `can_lay_off`/`faded` flags on `MeldView`.
+- [x] System spec: lay a card off onto an opponent's meld; it renders on that meld live.
 
 ---
 

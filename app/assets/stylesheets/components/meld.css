@@ -5,7 +5,6 @@
   padding: var(--op-space-x-small);
   border-radius: var(--op-radius-medium);
   background-color: var(--gf-felt-brighter);
-  border: var(--op-border-width) solid var(--gf-color-muted);
 
   .meld__header {
     display: flex;
@@ -27,6 +26,10 @@
     display: flex;
     gap: var(--op-space-3x-small);
 
+    /* Cards sit edge-to-edge, not fanned/overlapped — that's a hand-only affordance
+       (--gf-card-overlap defaults to -20px on .card-container for the hand fan). */
+    --gf-card-overlap: 0px;
+
     /* Meld cards sit flat against the chip's own surface — no drop-shadow (that's
        reserved for hand cards, which need to read as "lifted" off the felt). */
     .playing-card {
@@ -34,8 +37,14 @@
     }
   }
 
+  /* Selected meld — a lay-off target — gets only a slight accent outline, no border. */
   &.meld--selected {
-    border-color: var(--gf-color-accent);
     box-shadow: 0 0 0 var(--op-border-width-large) var(--gf-color-accent);
+  }
+
+  /* A meld the current selection can't legally lay off onto, shown dimmed rather
+     than hidden — it stays visible as "not this one" instead of disappearing. */
+  &.meld--faded {
+    opacity: 0.4;
   }
 }

@@ -26,6 +26,16 @@ module Rummy
 
     def self.valid?(cards) = kind_for(cards).present?
 
+    def can_add?(new_cards)
+      return false if new_cards.blank?
+
+      self.class.build(cards: cards + new_cards, owner: owner)&.kind == kind
+    end
+
+    def add(new_cards)
+      self.class.build(cards: cards + new_cards, owner: owner)
+    end
+
     class << self
       private
 

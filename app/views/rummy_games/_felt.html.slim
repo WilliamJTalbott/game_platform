@@ -14,7 +14,8 @@
     span.felt-zone__label Shared melds
 
     .felt-zone__body
-      = render partial: "rummy_games/meld", collection: melds, as: :meld
+      - melds.each_with_index do |meld, index|
+        = render "rummy_games/meld", meld: meld, index: index
 
   = render "rummy_games/confirm_pop",
           selected_count: selected_count,

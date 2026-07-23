@@ -51,6 +51,32 @@ RSpec.describe "Rummy turns", type: :request do
     end
   end
 
+  context "when the active player lays a card off onto an opponent's meld" do
+    let(:existing_meld) do
+      Rummy::Meld.new(
+        kind: "run", owner: waiting_user.id,
+        cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+      )
+    end
+
+    before do
+      sign_in(active_user)
+      game.state.melds = [ existing_meld ]
+      game.state.active_player.cards << CardGame::Card.new("7", "Hearts")
+      game.save!
+    end
+
+    it "extends the meld and stays in the meld phase" do
+      post game_turns_path(game), params: { turn: { action: "draw_stock" } }
+      post game_turns_path(game), params: { turn: { action: "toggle_select", card: "7-Hearts" } }
+      post game_turns_path(game), params: { turn: { action: "lay_off", meld_index: "0" } }
+
+      expect(response).to have_http_status(:no_content)
+      expect(game.reload.state.melds.first.cards).to include(CardGame::Card.new("7", "Hearts"))
+      expect(game.state.phase).to eq "meld"
+    end
+  end
+
   context "when it is not the active player's turn" do
     before { sign_in(waiting_user) }
 

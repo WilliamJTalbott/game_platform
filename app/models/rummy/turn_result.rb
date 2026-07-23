@@ -21,6 +21,11 @@ module Rummy
       broadcast("You melded a #{meld.kind}.", "#{actor.name} melded a #{meld.kind}.")
     end
 
+    def laid_off(cards, meld)
+      card_list = cards.join(", ")
+      broadcast("You laid off #{card_list} onto a #{meld.kind}.", "#{actor.name} laid off #{card_list} onto a #{meld.kind}.")
+    end
+
     def winner
       broadcast("You emptied your hand and won!", "#{actor.name} emptied their hand and won!")
     end

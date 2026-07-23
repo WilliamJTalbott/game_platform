@@ -9587,25 +9587,35 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
   draw({ params: { action } }) {
     this.actionTarget.value = action;
     this.cardTarget.value = "";
+    this.meldIndexTarget.value = "";
     this.element.requestSubmit();
   }
   toggleSelect({ params: { card } }) {
     this.actionTarget.value = "toggle_select";
     this.cardTarget.value = card;
+    this.meldIndexTarget.value = "";
     this.element.requestSubmit();
   }
   meld() {
     this.actionTarget.value = "meld";
     this.cardTarget.value = "";
+    this.meldIndexTarget.value = "";
+    this.element.requestSubmit();
+  }
+  layOff({ params: { meldIndex } }) {
+    this.actionTarget.value = "lay_off";
+    this.cardTarget.value = "";
+    this.meldIndexTarget.value = meldIndex;
     this.element.requestSubmit();
   }
   discardSelected() {
     this.actionTarget.value = "discard";
     this.cardTarget.value = "";
+    this.meldIndexTarget.value = "";
     this.element.requestSubmit();
   }
 }
-__publicField(rummy_turn_controller_default, "targets", ["action", "card"]);
+__publicField(rummy_turn_controller_default, "targets", ["action", "card", "meldIndex"]);
 
 
 /***/ },

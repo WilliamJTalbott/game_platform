@@ -6,7 +6,7 @@ RSpec.describe RummyGame, type: :model do
   end
 
   it "permits only its own turn params" do
-    expect(RummyGame.permitted_turn_params).to match_array([ :action, :card ])
+    expect(RummyGame.permitted_turn_params).to match_array([ :action, :card, :meld_index ])
   end
 
   describe "#start" do

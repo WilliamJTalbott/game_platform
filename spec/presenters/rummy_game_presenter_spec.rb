@@ -120,5 +120,41 @@ RSpec.describe RummyGamePresenter do
 
       expect(presenter.melds.first.owner).to eq "you"
     end
+
+    describe "lay-off targeting" do
+      let(:run) do
+        Rummy::Meld.build(
+          cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ],
+          owner: waiting_user.id
+        )
+      end
+
+      before do
+        game.state.melds = [ run ]
+        game.state.phase = "meld"
+      end
+
+      it "is not a lay-off candidate and not faded when nothing is selected" do
+        meld_view = presenter.melds.first
+        expect(meld_view.can_lay_off).to be false
+        expect(meld_view.faded).to be false
+      end
+
+      it "can be laid off onto when the selection legally extends it" do
+        game.state.active_player.selected = [ CardGame::Card.new("7", "Hearts") ]
+
+        meld_view = presenter.melds.first
+        expect(meld_view.can_lay_off).to be true
+        expect(meld_view.faded).to be false
+      end
+
+      it "is faded when the selection doesn't legally extend it" do
+        game.state.active_player.selected = [ CardGame::Card.new("2", "Diamonds") ]
+
+        meld_view = presenter.melds.first
+        expect(meld_view.can_lay_off).to be false
+        expect(meld_view.faded).to be true
+      end
+    end
   end
 end

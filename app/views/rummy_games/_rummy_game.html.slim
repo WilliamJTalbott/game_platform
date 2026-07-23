@@ -8,6 +8,7 @@
 
       = f.hidden_field :action, data: { "rummy-turn-target": "action" }
       = f.hidden_field :card, data: { "rummy-turn-target": "card" }
+      = f.hidden_field :meld_index, data: { "rummy-turn-target": "meldIndex" }
 
       / Board — opponents strip + the felt (piles & shared melds)
       .panel.panel--board

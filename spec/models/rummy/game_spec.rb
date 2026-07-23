@@ -171,6 +171,53 @@ RSpec.describe Rummy::Game do
       end
     end
 
+    context "laying off" do
+      let(:existing_meld) do
+        Rummy::Meld.new(
+          kind: "run", owner: players.last.user_id,
+          cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+        )
+      end
+      let(:layoff_card) { CardGame::Card.new("7", "Hearts") }
+
+      before do
+        game.phase = "meld"
+        game.melds = [ existing_meld ]
+        game.active_player.cards = [ layoff_card, CardGame::Card.new("2", "Diamonds") ]
+        game.active_player.selected = [ layoff_card ]
+      end
+
+      it "extends the target meld with the selected card" do
+        game.play_turn("lay_off", nil, 0)
+        expect(game.melds.first.cards).to match_array(existing_meld.cards + [ layoff_card ])
+      end
+
+      it "removes the laid-off card from the active player's hand" do
+        game.play_turn("lay_off", nil, 0)
+        expect(game.active_player.cards).to eq [ CardGame::Card.new("2", "Diamonds") ]
+      end
+
+      it "clears the selection" do
+        game.play_turn("lay_off", nil, 0)
+        expect(game.active_player.selected).to eq []
+      end
+
+      it "stays in the meld phase without advancing the turn" do
+        game.play_turn("lay_off", nil, 0)
+        expect(game.phase).to eq "meld"
+        expect(game.turn_index).to eq 0
+      end
+
+      context "when the selection does not legally extend the target meld" do
+        before { game.active_player.selected = [ CardGame::Card.new("2", "Diamonds") ] }
+
+        it "leaves the hand and meld untouched" do
+          expect { game.play_turn("lay_off", nil, 0) }.not_to change { game.active_player.cards }
+          expect(game.melds.first.cards).to eq existing_meld.cards
+        end
+      end
+    end
+
     context "discarding" do
       let(:discarded_card) { CardGame::Card.new("A", "Spades") }
 
