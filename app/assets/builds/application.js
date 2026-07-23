@@ -9589,9 +9589,19 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
     this.cardTarget.value = "";
     this.element.requestSubmit();
   }
-  discard({ params: { card } }) {
-    this.actionTarget.value = "discard";
+  toggleSelect({ params: { card } }) {
+    this.actionTarget.value = "toggle_select";
     this.cardTarget.value = card;
+    this.element.requestSubmit();
+  }
+  meld() {
+    this.actionTarget.value = "meld";
+    this.cardTarget.value = "";
+    this.element.requestSubmit();
+  }
+  discardSelected() {
+    this.actionTarget.value = "discard";
+    this.cardTarget.value = "";
     this.element.requestSubmit();
   }
 }

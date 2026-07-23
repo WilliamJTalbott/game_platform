@@ -30,6 +30,14 @@ RSpec.describe RummyGamePresenter do
     expect(presenter.hand_cards).to all have_attributes(selected: false)
   end
 
+  it "flags hand cards the player has toggled as selected" do
+    selected_card = game.state.active_player.cards.first
+    game.state.active_player.selected = [ selected_card ]
+
+    hand_card = presenter.hand_cards.find { |view| view.card == selected_card }
+    expect(hand_card.selected).to be true
+  end
+
   it "exposes the current phase" do
     expect(presenter.phase).to eq "draw"
   end
@@ -44,14 +52,73 @@ RSpec.describe RummyGamePresenter do
     end
   end
 
+  describe "#selected_count" do
+    it "counts the active player's selected cards" do
+      game.state.active_player.selected = game.state.active_player.cards.first(2)
+      expect(presenter.selected_count).to eq 2
+    end
+  end
+
+  describe "#can_meld?" do
+    it "is false during the draw phase" do
+      expect(presenter.can_meld?).to be false
+    end
+
+    it "is true once a valid set or run is selected during the meld phase" do
+      game.state.phase = "meld"
+      game.state.active_player.selected = [
+        CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs")
+      ]
+
+      expect(presenter.can_meld?).to be true
+    end
+
+    it "is false when the selection isn't a valid meld" do
+      game.state.phase = "meld"
+      game.state.active_player.selected = [ CardGame::Card.new("9", "Hearts") ]
+
+      expect(presenter.can_meld?).to be false
+    end
+  end
+
   describe "#can_discard?" do
     it "is false during the draw phase" do
       expect(presenter.can_discard?).to be false
     end
 
-    it "is true for the active player once in the discard phase" do
-      game.state.phase = "discard"
+    it "is true once exactly one card is selected during the meld phase" do
+      game.state.phase = "meld"
+      game.state.active_player.selected = [ game.state.active_player.cards.first ]
+
       expect(presenter.can_discard?).to be true
+    end
+
+    it "is false when nothing is selected" do
+      game.state.phase = "meld"
+      expect(presenter.can_discard?).to be false
+    end
+  end
+
+  describe "#melds" do
+    it "resolves the owning player's name, labeling the viewer's own melds \"you\"" do
+      opponent_meld = Rummy::Meld.build(
+        cards: [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ],
+        owner: game.state.players.last.user_id
+      )
+      game.state.melds = [ opponent_meld ]
+
+      meld_view = presenter.melds.first
+      expect(meld_view).to have_attributes(kind: "set", owner: game.state.players.last.name, cards: opponent_meld.cards)
+    end
+
+    it "labels the viewer's own meld \"you\"" do
+      own_meld = Rummy::Meld.build(
+        cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ],
+        owner: active_user.id
+      )
+      game.state.melds = [ own_meld ]
+
+      expect(presenter.melds.first.owner).to eq "you"
     end
   end
 end

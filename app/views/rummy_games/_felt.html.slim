@@ -16,4 +16,7 @@
     .felt-zone__body
       = render partial: "rummy_games/meld", collection: melds, as: :meld
 
-  = render "rummy_games/confirm_pop"
+  = render "rummy_games/confirm_pop",
+          selected_count: selected_count,
+          can_meld: can_meld,
+          can_discard: can_discard

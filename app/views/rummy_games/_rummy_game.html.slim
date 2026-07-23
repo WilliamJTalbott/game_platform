@@ -18,7 +18,10 @@
           = render "rummy_games/felt",
                   discard_top: game_info.discard_top,
                   melds: game_info.melds,
-                  can_draw: game_info.can_draw?
+                  can_draw: game_info.can_draw?,
+                  selected_count: game_info.selected_count,
+                  can_meld: game_info.can_meld?,
+                  can_discard: game_info.can_discard?
 
       / Feed — floating message bubbles, pinned over the top-right of the board
       = render "rummy_games/bubble_stack",
@@ -31,7 +34,7 @@
         = render "rummy_games/hand_dock",
                 hand_cards: game_info.hand_cards,
                 phase: game_info.phase,
-                can_discard: game_info.can_discard?
+                can_select: game_info.can_select?
   - else
     .overlay.card
       h1 Waiting for players...

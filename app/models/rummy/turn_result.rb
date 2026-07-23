@@ -17,6 +17,10 @@ module Rummy
       broadcast("You discarded #{card}.", "#{actor.name} discarded #{card}.")
     end
 
+    def melded(meld)
+      broadcast("You melded a #{meld.kind}.", "#{actor.name} melded a #{meld.kind}.")
+    end
+
     def winner
       broadcast("You emptied your hand and won!", "#{actor.name} emptied their hand and won!")
     end

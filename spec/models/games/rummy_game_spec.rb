@@ -28,13 +28,13 @@ RSpec.describe RummyGame, type: :model do
   describe "#play_turn" do
     let(:game) { create(:started_game, :rummy, :has_participants, users: create_list(:user, 2)) }
 
-    it "resolves a discard's card key to the active player's actual card" do
+    it "resolves a toggle_select card key to the active player's actual card" do
       target_card = game.state.active_player.cards.first
-      game.state.phase = "discard"
+      game.state.phase = "meld"
 
-      game.play_turn(action: "discard", card: "#{target_card.rank}-#{target_card.suit}")
+      game.play_turn(action: "toggle_select", card: "#{target_card.rank}-#{target_card.suit}")
 
-      expect(game.state.discard.top).to eq target_card
+      expect(game.state.active_player.selected).to eq [ target_card ]
     end
   end
 
@@ -46,8 +46,9 @@ RSpec.describe RummyGame, type: :model do
       champion = state.players.find { |player| player.user_id == winner.id }
       last_card = champion.cards.first
       champion.cards = [ last_card ]
+      champion.selected = [ last_card ]
       state.turn_index = state.players.index(champion)
-      state.phase = "discard"
-      { action: "discard", card: "#{last_card.rank}-#{last_card.suit}" }
+      state.phase = "meld"
+      { action: "discard" }
     end
 end

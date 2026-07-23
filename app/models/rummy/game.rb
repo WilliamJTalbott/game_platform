@@ -4,7 +4,7 @@ module Rummy
 
     HAND_SIZE = 10
 
-    serializes :melds, :phase, players: [ Player ], discard: Discard
+    serializes :phase, players: [ Player ], discard: Discard, melds: [ Meld ]
 
     def initialize(players)
       super
@@ -25,7 +25,9 @@ module Rummy
       case action
       when "draw_stock" then draw_from_stock(turn_result)
       when "draw_discard" then draw_from_discard(turn_result)
-      when "discard" then discard_card(card, turn_result)
+      when "toggle_select" then toggle_select(card)
+      when "meld" then meld(turn_result)
+      when "discard" then discard_card(turn_result)
       end
     end
 
@@ -36,7 +38,7 @@ module Rummy
       card = deck.draw
       active_player.receive([ card ])
       turn_result.drew_from_stock(card)
-      self.phase = "discard"
+      self.phase = "meld"
       nil
     end
 
@@ -44,12 +46,31 @@ module Rummy
       card = discard.take
       active_player.receive([ card ])
       turn_result.drew_from_discard(card)
-      self.phase = "discard"
+      self.phase = "meld"
       nil
     end
 
-    def discard_card(card, turn_result)
+    def toggle_select(card)
+      selected = active_player.selected
+      active_player.selected = selected.include?(card) ? selected - [ card ] : selected + [ card ]
+      nil
+    end
+
+    def meld(turn_result)
+      new_meld = Meld.build(cards: active_player.selected, owner: active_player.user_id)
+      return nil unless new_meld
+
+      active_player.cards -= new_meld.cards
+      self.melds = melds + [ new_meld ]
+      active_player.selected = []
+      turn_result.melded(new_meld)
+      nil
+    end
+
+    def discard_card(turn_result)
+      card = active_player.selected.first
       active_player.cards -= [ card ]
+      active_player.selected = []
       discard.place(card)
       turn_result.discarded(card)
       return declare_winner(turn_result) if active_player.out_of_cards?

@@ -14,3 +14,7 @@
     ~~Add shared game engine to reduce code duplication~~ (done: CardGame::Game + CardGame::Player extractions)
 
 # Messages Refactor
+
+# Opponent details on hover
+
+# Redesign Popup options

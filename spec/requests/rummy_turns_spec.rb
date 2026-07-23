@@ -10,21 +10,44 @@ RSpec.describe "Rummy turns", type: :request do
   context "when the active player draws then discards" do
     before { sign_in(active_user) }
 
-    it "draws from the stock and moves to the discard phase" do
+    it "draws from the stock and moves to the meld phase" do
       post game_turns_path(game), params: { turn: { action: "draw_stock" } }
 
       expect(response).to have_http_status(:no_content)
-      expect(game.reload.state.phase).to eq "discard"
+      expect(game.reload.state.phase).to eq "meld"
     end
 
-    it "discards and advances the turn back to the draw phase" do
+    it "discards the selected card and advances the turn back to the draw phase" do
       post game_turns_path(game), params: { turn: { action: "draw_stock" } }
       card = game.reload.state.active_player.cards.first
 
-      post game_turns_path(game), params: { turn: { action: "discard", card: "#{card.rank}-#{card.suit}" } }
+      post game_turns_path(game), params: { turn: { action: "toggle_select", card: "#{card.rank}-#{card.suit}" } }
+      post game_turns_path(game), params: { turn: { action: "discard" } }
 
       expect(response).to have_http_status(:no_content)
       expect(game.reload.state.phase).to eq "draw"
+    end
+  end
+
+  context "when the active player melds a valid set" do
+    before do
+      sign_in(active_user)
+      game.state.active_player.cards =
+        [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ] +
+        game.state.active_player.cards
+      game.save!
+    end
+
+    it "creates a shared meld and stays in the meld phase" do
+      post game_turns_path(game), params: { turn: { action: "draw_stock" } }
+      %w[Hearts Spades Clubs].each do |suit|
+        post game_turns_path(game), params: { turn: { action: "toggle_select", card: "9-#{suit}" } }
+      end
+      post game_turns_path(game), params: { turn: { action: "meld" } }
+
+      expect(response).to have_http_status(:no_content)
+      expect(game.reload.state.melds.size).to eq 1
+      expect(game.state.phase).to eq "meld"
     end
   end
 
@@ -54,10 +77,7 @@ RSpec.describe "Rummy turns", type: :request do
     before { sign_in(active_user) }
 
     it "rejects the discard" do
-      card = game.state.active_player.cards.first
-
-      post game_turns_path(game), params: { turn: { action: "discard", card: "#{card.rank}-#{card.suit}" } }
-
+      post game_turns_path(game), params: { turn: { action: "discard" } }
       expect(response).to have_http_status(:unprocessable_content)
     end
   end

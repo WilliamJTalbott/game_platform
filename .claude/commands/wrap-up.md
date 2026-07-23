@@ -5,40 +5,66 @@ allowed-tools: Bash(git status:*), Bash(git diff:*), Bash(git log:*), Bash(wc:*)
 
 Run this at the end of a session to leave the project's memory better than you
 found it. The point isn't to write more — it's to make sure the next agent starts
-from something true. Work through these in order; keep every reply to the user
-short and skimmable (bullets, not paragraphs).
+from something true. The deliverable is a short report built from exactly 3 fixed,
+emoji-tagged sections, in this order. Work through them in that order too, since
+each step's investigation feeds the next.
 
-## 1. Check for stale docs first
+**Only include a section if it has real content.** Sections 1-2 are omitted
+entirely when nothing relevant happened this session — no "nothing to report"
+placeholder, just skip straight to the next section. Section 3 always appears.
+This applies everywhere in the report, not just at the section level: don't
+explain *why* a section was skipped, note that you checked and found nothing,
+or otherwise reference an omitted section from within Status or anywhere else.
+An omission should be silent — the reader shouldn't be able to tell whether you
+checked and found nothing or forgot to check.
+
+**Every section that does appear must be extremely brief.** A few bullets, not
+paragraphs — a future agent (or you, next session) should be able to read the
+whole report in a few seconds. Do the investigating and thinking silently;
+report only the conclusion. If a section is tempted to run long, that's a sign
+to cut it down, not a sign the content deserves the space.
+
+## 📄 Stale Docs
 
 Before adding anything, find what's now *wrong*. Skim `AGENTS.md` and `docs/`
 against what actually changed this session (a quick `git diff`/`git log` helps).
-Flag lines that the code, tests, or file layout no longer match. A stale line
-costs a future agent more than a missing one, so fixing or deleting these is the
-highest-value part of wrap-up — do it before you consider new additions.
+Flag lines that the code, tests, or file layout no longer match — a stale line
+costs a future agent more than a missing one, so this is the highest-value part
+of wrap-up. List what should be updated. If a doc looks like it should be
+*deleted* outright (rare — e.g. it describes something fully removed this
+session), name it and ask permission before deleting; don't delete unilaterally.
+Omit this section if docs still hold up.
 
-## 2. Update docs & AGENTS.md
+## 📌 AGENTS.md Updates
 
-Add only what a future agent would genuinely need and *couldn't* infer from the
-code, tests, or git history — non-obvious conventions, gotchas, or decisions.
-Prefer editing or removing a stale line over appending a new one. Put durable
-project knowledge in the right place: architecture/convention notes in `docs/`
-or `AGENTS.md`, game rules in `docs/games/`.
+Propose only what a future agent would genuinely need and *couldn't* infer from
+the code, tests, or git history — non-obvious conventions, gotchas, or decisions.
+List out each proposed addition/change explicitly and ask for permission before
+making it — don't edit AGENTS.md until the user confirms. Prefer editing or
+removing a stale line over appending a new one.
 
 **AGENTS.md hard cap: 200 lines.** It's a curated index a future agent reads
 top-to-bottom, not a changelog — bloat makes it stop being read. Check with
-`wc -l AGENTS.md`. If an addition would push it over, cut or tighten something
-lower-value first so it stays under budget.
+`wc -l AGENTS.md`. If a proposed addition would push it over, name what you'd
+cut or tighten lower down to stay under budget. Omit this section if there's
+nothing worth proposing.
 
-## 3. Report what you learned
+## 🟢 Status
 
-Give the user a short bulleted list of what you learned this session that's worth
-persisting, and where you put it (or where you'd put it, if you want their nod
-first). This is the moment for them to veto or redirect — keep it tight so it's
-easy to react to.
+Always include this section, headed with a circle emoji — 🟢, 🟡, or 🔴 — rating
+how good a place this session is at to stop. Favor 🟢: reserve 🟡 for a loose
+end that's worth naming but not blocking, and 🔴 for something genuinely unresolved
+that's a real reason not to wrap up yet (a broken test, a half-applied refactor,
+a contradiction you introduced and haven't reconciled). **Uncommitted changes are
+never on their own a reason to downgrade from 🟢** — that's normal end-of-session
+state.
 
-## 4. Surface uncaptured future plans
+Summarize what was accomplished this session and name the likely next step, so
+anyone picking this up — including future-you — can reorient in a few seconds
+without replaying the whole conversation. If the rating is 🟡 or 🔴, lead with
+what's unresolved before the summary.
 
-Before the session ends, list any planned, deferred, or "we should eventually…"
-work that came up but isn't written down anywhere (`docs/plans/`, an issue, a
-TODO). These evaporate when the session closes, so naming them — and offering to
-jot them into `docs/plans/` — is how they survive.
+Also use this moment to surface any planned, deferred, or "we should
+eventually…" work that came up but isn't written down anywhere (`docs/plans/`,
+an issue, a TODO) — these evaporate when the session closes. Fold that into
+this section, and offer to jot it into `docs/plans/` if it isn't already.
