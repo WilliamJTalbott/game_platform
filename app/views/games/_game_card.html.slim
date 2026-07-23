@@ -1,0 +1,18 @@
+.game-card
+  div
+    .game-card__name
+      = row.title
+      - if row.your_turn?
+        span.game-card__turn-badge
+          span.game-card__turn-dot
+          | Your turn
+    .game-card__type = row.type_label
+  .game-card__meta
+    span.game-card__count = row.player_count
+    - case row.cta
+    - when :view
+      = link_to "View", game_path(row), class: "game-card__cta game-card__cta--view"
+    - when :join
+      = button_to "Join", game_participants_path(row), form_class: "game-card__action", class: "game-card__cta game-card__cta--join"
+    - when :full
+      span.game-card__cta.game-card__cta--full Full

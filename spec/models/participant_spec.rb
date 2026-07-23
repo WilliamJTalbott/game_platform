@@ -27,4 +27,13 @@ RSpec.describe "Participant", type: :model do
       expect(participant).not_to be_valid
     end
   end
+
+  context "When the game is already full" do
+    let(:full_game) { create(:game, :crazy_eights) }
+    before { create_list(:participant, CrazyEightsGame::MAX_PLAYERS, game: full_game) }
+
+    it "is invalid" do
+      expect(build(:participant, game: full_game, user: user)).to be_invalid
+    end
+  end
 end

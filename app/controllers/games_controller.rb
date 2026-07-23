@@ -4,8 +4,7 @@ class GamesController < ApplicationController
   end
 
   def index
-    @user_games = Current.games.where(finished_at: nil).where(deleted_at: nil)
-    @other_games = Game.where(started_at: nil, deleted_at: nil).where.not(id: Current.games.select(:id))
+    @dashboard = GamesDashboardPresenter.new(Current.user)
   end
 
   def new

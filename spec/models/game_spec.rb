@@ -21,6 +21,49 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  context "#max_players" do
+    it "reads the subclass's MAX_PLAYERS constant" do
+      expect(create(:game, :go_fish).max_players).to eq GoFishGame::MAX_PLAYERS
+    end
+  end
+
+  context "#full?" do
+    let(:game) { create(:game, :crazy_eights) }
+
+    it "is false below the player cap" do
+      expect(game.full?).to be false
+    end
+
+    it "is true once participants reach the cap" do
+      create_list(:participant, CrazyEightsGame::MAX_PLAYERS, game: game)
+      expect(game.reload.full?).to be true
+    end
+  end
+
+  context "#waiting" do
+    it "includes an unstarted, undeleted game" do
+      expect(Game.waiting).to include create(:game)
+    end
+
+    it "excludes started and soft-deleted games" do
+      started = create(:started_game, :many_participants)
+      deleted = create(:deleted_game)
+      expect(Game.waiting).to_not include(started, deleted)
+    end
+  end
+
+  context "#active" do
+    it "includes a started, unfinished game" do
+      expect(Game.active).to include create(:started_game, :many_participants)
+    end
+
+    it "excludes waiting and finished games" do
+      waiting = create(:game)
+      finished = create(:finished_game, :many_participants).tap { |g| g.update!(finished_at: Time.current) }
+      expect(Game.active).to_not include(waiting, finished)
+    end
+  end
+
   context "#can_start?" do
     let(:empty_game) { create(:game) }
 

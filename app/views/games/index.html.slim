@@ -1,19 +1,41 @@
-.container.container--sm.container--md-padding
+- your_games = @dashboard.your_games
+- open_games = @dashboard.open_games
+
+.lobby
   = turbo_stream_from 'games'
-  .contents
-    .collection
-      .game-bar.game-bar--header
-        h1 Your Games
-        = link_to new_game_path, class: "btn btn--primary" do
-          i.ph.ph-settings.icon.icon--weight-semi-bold plus
-          | New Game
 
-      .collection
-        = render partial: 'games/game_bar', collection: @user_games, locals: { user_game: true, }, as: :game
+  .lobby__head
+    div
+      h1.lobby__greeting Welcome back, #{@dashboard.greeting_name}
+      p.lobby__stats = @dashboard.stats_line
+    = link_to new_game_path, class: "btn btn--primary lobby__new-game" do
+      span.lobby__spade ♠
+      | New Game
 
-    .collection
-      .game-bar.game-bar--header
-        h1 All Games
+  .lobby__tray
+    .lobby__section-head
+      span.lobby__section-label
+        span.lobby__spade ♠
+        | Your Games
+      span.lobby__section-count = "#{your_games.size} active"
+    - if your_games.any?
+      .lobby__cards
+        = render partial: "games/game_card", collection: your_games, as: :row
+    - else
+      p.lobby__empty No active games.
 
-      .collection id="games"
-        = render partial: 'games/game_bar', collection: @other_games, locals: { user_game: false, }, as: :game
+    hr.lobby__divider
+
+    .lobby__section-head
+      span.lobby__section-label
+        span.lobby__spade ♠
+        | Open Games to Join
+      span.lobby__section-count = "#{open_games.size} open"
+    - if open_games.any?
+      .lobby__cards#games
+        = render partial: "games/game_card", collection: open_games, as: :row
+    - else
+      p.lobby__empty#games No open games.
+
+  .lobby__foot
+    = link_to "View History →", history_index_path, class: "lobby__history"

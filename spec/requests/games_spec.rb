@@ -38,13 +38,41 @@ RSpec.describe "Games", type: :request do
       create(:game, :has_user, user: user, name: "Joined Game")
       create(:game, name: "Open Game")
       create(:deleted_game, name: "Deleted Game")
+      create(:started_game, :many_participants, name: "Started Game")
       get games_path
     end
 
-    it "lists only waiting games the user has not joined under All Games" do
+    it "greets the signed-in user" do
+      expect(response.body).to include("Welcome back, #{user.name}")
+    end
+
+    it "lists only waiting games the user has not joined as open" do
       expect(open_games).to include("Open Game")
-      expect(open_games).to_not include("Joined Game")
-      expect(open_games).to_not include("Deleted Game")
+      expect(open_games).to_not include("Joined Game", "Deleted Game", "Started Game")
+    end
+  end
+
+  describe "the Your turn badge" do
+    context "when it is the viewer's turn in their started game" do
+      before do
+        create(:started_game, :go_fish, :users_turn, :many_participants, user: user)
+        get games_path
+      end
+
+      it "renders the badge" do
+        expect(response.body).to include("Your turn")
+      end
+    end
+  end
+
+  describe "POST join a full game" do
+    let(:game) { create(:game, :crazy_eights) }
+    before { create_list(:participant, CrazyEightsGame::MAX_PLAYERS, game: game) }
+
+    it "does not add the user" do
+      expect do
+        post game_participants_path(game)
+      end.to_not change { game.participants.count }
     end
   end
 

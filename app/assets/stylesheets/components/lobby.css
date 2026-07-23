@@ -1,0 +1,116 @@
+/* The games-index home dashboard. Two-layer elevation from the mockup: a recessed
+   warm-neutral tray (--lobby__tray, inset shadow) holds the raised game bars
+   (.game-card, its own file). The tray tone is Optics neutral chrome; only the bars
+   carry the blue zone accent. Coral (--gf-color-accent*) carries every action here —
+   New Game, the History link, the section-label spade. */
+.lobby {
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-large);
+  flex: 1;
+  width: 100%;
+  padding: var(--op-space-x-large) var(--op-space-2x-large);
+
+  .lobby__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--op-space-medium);
+  }
+
+  .lobby__greeting {
+    margin: 0;
+    font-size: var(--op-font-2x-large);
+    font-weight: var(--op-font-weight-bold);
+  }
+
+  .lobby__stats {
+    margin: var(--op-space-3x-small) 0 0;
+    color: var(--gf-color-muted);
+    font-size: var(--op-font-small);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lobby__new-game {
+    white-space: nowrap;
+
+    .lobby__spade {
+      color: inherit;
+    }
+  }
+
+  .lobby__tray {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--op-space-x-small);
+    padding: var(--op-space-medium) var(--op-space-large);
+    border-radius: var(--op-radius-2x-large);
+    background-color: var(--op-color-neutral-plus-seven);
+    box-shadow: var(--gf-lobby-tray-shadow);
+  }
+
+  .lobby__cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--op-space-x-small);
+  }
+
+  .lobby__section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--op-space-small);
+    padding: var(--op-space-2x-small) var(--op-space-2x-small) 0;
+  }
+
+  .lobby__section-label {
+    display: flex;
+    align-items: center;
+    gap: var(--op-space-2x-small);
+    font-size: var(--op-font-x-small);
+    font-weight: var(--op-font-weight-bold);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gf-color-muted);
+
+    .lobby__spade {
+      color: var(--gf-color-accent-text);
+    }
+  }
+
+  .lobby__section-count {
+    font-size: var(--op-font-x-small);
+    color: var(--gf-color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lobby__divider {
+    width: 100%;
+    border: none;
+    border-top: var(--op-border-width) solid var(--op-color-border);
+    margin: var(--op-space-x-small) 0 var(--op-space-2x-small);
+  }
+
+  .lobby__empty {
+    margin: 0;
+    padding: var(--op-space-x-small) var(--op-space-2x-small);
+    color: var(--gf-color-muted);
+    font-size: var(--op-font-small);
+  }
+
+  .lobby__foot {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .lobby__history {
+    color: var(--gf-color-accent-text);
+    font-weight: var(--op-font-weight-semi-bold);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

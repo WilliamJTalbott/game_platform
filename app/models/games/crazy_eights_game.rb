@@ -1,4 +1,6 @@
 class CrazyEightsGame < Game
+  MAX_PLAYERS = 7
+
   self.game_class = CrazyEights::Game
   self.player_class = CrazyEights::Player
 

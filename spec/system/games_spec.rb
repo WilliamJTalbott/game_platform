@@ -68,6 +68,18 @@ RSpec.describe 'Games', type: :system do
     end
   end
 
+  context "[ Live updates ]" do
+    let!(:open_game) { create(:game, :go_fish, name: "Live Game") }
+
+    it "morphs the lobby when another player joins", :js do
+      visit games_path
+      expect(page).to have_css(".game-card", text: "0/#{GoFishGame::MAX_PLAYERS}")
+
+      create(:participant, game: open_game)
+      expect(page).to have_css(".game-card", text: "1/#{GoFishGame::MAX_PLAYERS}")
+    end
+  end
+
   context "[ Start ]" do
     context "go_fish game" do
       let!(:game) { create(:game, :go_fish, :has_user, :many_participants, user: user) }
@@ -280,7 +292,8 @@ RSpec.describe 'Games', type: :system do
 
     it "shows no deleted games" do
       visit games_path
-      expect(page).to_not have_content("Join")
+      expect(page).to_not have_css(".game-card")
+      expect(page).to have_content("No open games.")
     end
   end
 

@@ -1,4 +1,6 @@
 class GoFishGame < Game
+  MAX_PLAYERS = 6
+
   self.game_class = GoFish::Game
   self.player_class = GoFish::Player
 

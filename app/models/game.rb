@@ -4,16 +4,22 @@ class Game < ApplicationRecord
   class_attribute :game_class, :player_class
 
   after_create_commit -> { broadcast_refresh_to "games" }
+  after_update_commit -> { broadcast_refresh_to "games" }, if: :saved_change_to_started_at?
 
   has_many :participants
   has_many :users, through: :participants
 
   scope :finished, -> { where.not(started_at: nil).where.not(finished_at: nil).order(finished_at: :desc) }
+  scope :waiting, -> { where(started_at: nil, deleted_at: nil) }
+  scope :active, -> { where.not(started_at: nil).where(finished_at: nil, deleted_at: nil) }
 
   def self.playable = TYPES.map(&:constantize)
   def self.from_type(name) = playable.find { it.name == name }
   def self.label = name.delete_suffix("Game").titleize
   def self.permitted_turn_params = []
+
+  def max_players = self.class::MAX_PLAYERS
+  def full? = participants.count >= max_players
 
   def start
     return false unless can_start?

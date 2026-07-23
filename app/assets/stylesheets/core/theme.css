@@ -91,13 +91,26 @@
     --gf-felt-bright: light-dark(#e6f5ea, #274035);
 
     /* Lobby — blue-gray: the games-index's hand-picked ZONE accent, the sibling of the
-       felt above. NOT YET CONSUMED — added ahead of the games-index rebuild so the
-       colors are ready and named. In that page's mockup (docs/mockups/games-index-final.html)
-       the tray stays warm-neutral chrome and only the raised game bars carry this blue,
-       deliberately a softer pop than the green table so the felt still out-pops it.
-       --gf-lobby-bar is the raised bar surface (mockup --felt-bright); blue lives ONLY
-       in the lobby, never on chrome or the game table. */
+       felt above. Consumed by components/game_card.css (the raised game bars). The tray
+       (components/lobby.css) stays warm-neutral chrome and only the raised bars carry
+       this blue, deliberately a softer pop than the green table so the felt still
+       out-pops it. --gf-lobby-bar is the raised bar surface (mockup --felt-bright); blue
+       lives ONLY in the lobby, never on chrome or the game table. */
     --gf-lobby-bar: light-dark(#eef1f5, #262b32);
+
+    /* The lobby's two-layer elevation grammar (from the mockup's felt): a recessed
+       warm-neutral tray (inset shadow) holding raised bars (drop shadow). The tray
+       tone stays Optics neutral chrome — only --gf-lobby-bar above carries blue. This
+       pair is deliberately a softer pop than the green board's shadows so gameplay
+       still out-pops the lobby. light-dark() gives each its light/dark value. */
+    --gf-lobby-tray-shadow: light-dark(
+      inset 0 2px 5px rgb(70 62 40 / 0.12),
+      inset 0 2px 7px rgb(0 0 0 / 0.4)
+    );
+    --gf-lobby-bar-shadow: light-dark(
+      0 2px 6px rgb(70 62 40 / 0.13),
+      0 2px 8px rgb(0 0 0 / 0.34)
+    );
 
     /* Popup surface (confirm-pop) — needs its own light-dark() pair rather than
        an Optics --op-color-neutral-plus-* step: those all trend toward the page's

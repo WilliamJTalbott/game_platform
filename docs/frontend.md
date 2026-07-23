@@ -18,7 +18,7 @@ There are exactly two kinds of color:
    handful of **hand-picked shades** (`--gf-color-accent*`), *not* a derived ramp.
 2. **Zone accents — one hand-picked color owned by a single context.** Green is the
    game **felt** (`--gf-felt*`); blue is the games-index **lobby** (`--gf-lobby-bar`,
-   defined but not yet consumed — it's waiting for that page's rebuild). A zone accent is
+   consumed by the raised game bars in `components/game_card.css`). A zone accent is
    applied only inside its zone and never leaks out — green appears *only* on the card
    table, never on chrome.
 
@@ -141,8 +141,9 @@ How each color in the model maps to tokens (see the annotated `core/theme.css`):
 - **Green is the felt zone accent.** `--gf-felt`/`--gf-felt-bright`/`--gf-felt-brighter`
   (`light-dark()` pairs) paint the card table only. Green appears nowhere else.
 - **Blue is the lobby zone accent.** `--gf-lobby-bar` (`light-dark()` pair) is the
-  games-index's raised game-bar surface — defined ahead of that page's rebuild, not yet
-  consumed. Its tray stays warm-neutral chrome; only the bars carry blue.
+  games-index's raised game-bar surface, consumed by `components/game_card.css`. Its tray
+  (`components/lobby.css`) stays warm-neutral chrome; only the bars carry blue. The
+  recessed-tray/raised-bar elevation pair is `--gf-lobby-tray-shadow`/`--gf-lobby-bar-shadow`.
 - **The Optics primary hue is pointed at coral** — solely so Optics' own internal chrome
   (focus rings, focused inputs) reads coral. Our CSS never reads `--op-color-primary-*`.
 

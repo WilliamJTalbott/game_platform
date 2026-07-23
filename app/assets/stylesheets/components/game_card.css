@@ -1,0 +1,106 @@
+/* A single raised game bar on the lobby tray (see lobby.css). Blue-gray surface
+   (--gf-lobby-bar) + drop shadow reads as raised over the recessed tray. The name
+   leads; the type is subtle beneath it; the count + CTA cluster sits right. The CTA
+   is tri-state: --view (solid coral, primary), --join (coral tint + outline,
+   secondary), --full (inert muted chip, not an action) — all sharing one min-width so
+   rows stay aligned whichever renders. */
+.game-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--op-space-medium);
+  padding: var(--op-space-small) var(--op-space-medium);
+  border-radius: var(--op-radius-large);
+  background-color: var(--gf-lobby-bar);
+  box-shadow: var(--gf-lobby-bar-shadow);
+
+  .game-card__name {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--op-space-x-small);
+    font-size: var(--op-font-medium);
+    font-weight: var(--op-font-weight-semi-bold);
+  }
+
+  .game-card__type {
+    margin-top: var(--op-space-3x-small);
+    color: var(--gf-color-muted);
+    font-size: var(--op-font-small);
+  }
+
+  .game-card__turn-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--op-space-3x-small);
+    padding: var(--op-space-3x-small) var(--op-space-x-small);
+    border: var(--op-border-width) solid var(--gf-color-accent);
+    border-radius: var(--op-radius-pill);
+    background-color: var(--gf-color-accent-secondary);
+    color: var(--gf-color-accent-text);
+    font-size: var(--op-font-2x-small);
+    font-weight: var(--op-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+
+    .game-card__turn-dot {
+      width: 0.45em;
+      height: 0.45em;
+      border-radius: var(--op-radius-pill);
+      background-color: currentColor;
+    }
+  }
+
+  .game-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--op-space-medium);
+    white-space: nowrap;
+  }
+
+  .game-card__count {
+    color: var(--gf-color-muted);
+    font-size: var(--op-font-small);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* button_to wraps its <button> in a form; keep it out of the flex row so the
+     button aligns exactly like the View anchor beside it. */
+  .game-card__action {
+    display: contents;
+  }
+
+  .game-card__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.5rem;
+    padding: var(--op-space-x-small) var(--op-space-small);
+    border: var(--op-border-width) solid transparent;
+    border-radius: var(--op-radius-small);
+    font-size: var(--op-font-small);
+    font-weight: var(--op-font-weight-semi-bold);
+    text-decoration: none;
+    cursor: pointer;
+
+    &.game-card__cta--view {
+      background-color: var(--gf-color-accent);
+      border-color: var(--gf-color-accent);
+      color: var(--gf-color-on-accent);
+      font-weight: var(--op-font-weight-bold);
+    }
+
+    &.game-card__cta--join {
+      background-color: var(--gf-color-accent-secondary);
+      border-color: var(--gf-color-accent);
+      color: var(--gf-color-accent-text);
+    }
+
+    &.game-card__cta--full {
+      background-color: transparent;
+      border-color: var(--op-color-border);
+      color: var(--gf-color-muted);
+      cursor: default;
+    }
+  }
+}
