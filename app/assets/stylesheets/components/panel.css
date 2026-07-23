@@ -65,15 +65,15 @@
 }
 
 .panel--feed {
-  --gf-feed-background: var(--op-color-primary-plus-max);
+  --gf-feed-background: var(--op-color-neutral-plus-max);
 
   grid-area: feed;
   background-color: var(--gf-feed-background);
 
   .panel__header {
     border-bottom: none;
-    background-color: var(--op-color-primary-plus-seven);
-    color: var(--op-color-primary-on-plus-eight-alt);
+    background-color: var(--op-color-neutral-plus-seven);
+    color: var(--op-color-neutral-on-plus-eight-alt);
     justify-content: space-between;
 
     .badge {

@@ -1,14 +1,25 @@
 :root {
 
-    /* Primary = GREEN. Green is the genuine Optics primary, so its whole ramp (base,
-       hover/active, plus-N surface tints, minus-N accent text) derives natively — we no
-       longer override any Optics primitive. The coral CTA accent is a *project* token
-       (--gf-color-accent, below), applied explicitly by the components that want it
-       (buttons + accent text) rather than by hijacking primary-base. Legacy pages only;
-       the Rummy page will get its own page-scoped tokens matching the mockup later. */
-    --op-color-primary-h: 150;   /* green-blue, felt family */
-    --op-color-primary-s: 42%;
-    --op-color-primary-l: 40%;
+    /* THE COLOR MODEL (read docs/frontend.md first): Optics contributes ONLY the
+       neutral chrome. Every actual *color* on the site is hand-picked and applied
+       explicitly — none of our components derive color from the Optics primary ramp.
+       There are exactly two kinds of color:
+         1. Coral — the one brand accent, everywhere (CTAs, links, focus, brand). A few
+            hand-picked shades live below as --gf-color-accent*; NOT a derived ramp.
+         2. Zone accents — one hand-picked color owned by a single context: green for
+            the game felt (--gf-felt*, below), blue for the games-index lobby (added
+            when that page is built). A zone accent never leaks outside its zone.
+
+       Primary is pointed at CORAL's hue so Optics' OWN internal chrome (focus rings,
+       focused Simple Form inputs, any .op-* accent state we don't override) reads as
+       coral rather than a stray green or Optics default. This is the *only* reason the
+       primary knobs are set — our own CSS never reads --op-color-primary-*. Note the
+       fixed mid-dark base lightness means these internals render a MUTED coral; the
+       bright CTA coral stays the project token below. Do not re-point our components
+       at this ramp to get coral — use --gf-color-accent* instead. */
+    --op-color-primary-h: 16;    /* coral, matches --gf-color-accent */
+    --op-color-primary-s: 70%;
+    --op-color-primary-l: 40%;   /* nearly inert — Optics hardcodes the base lightness */
 
     /* Chrome — warm slate. Optics' neutral scale drives background/border/surface
        colors, and its hue tracks primary by default; we decouple it to a subtle warm
@@ -55,8 +66,8 @@
        against the warm card face and page chrome. */
     --gf-card-outline-playable: rgb(192 190 186 / 0.45);
 
-    /* Coral — the CTA accent. NOT an Optics concept (Optics has only primary + neutral
-       hues), so it's a project token applied explicitly to buttons + accent text.
+    /* Coral — THE brand accent. A few hand-picked shades, applied explicitly to
+       buttons + accent text; not a derived ramp (Optics never generates these).
        - --gf-color-accent: flat bright coral for FILLS (buttons, the directive
          feed bubble); paired with white --gf-color-on-accent ink.
        - --gf-color-accent-text: a light-dark() pair so accent TEXT/links stay legible
@@ -71,12 +82,22 @@
        page surface rather than a fixed hex so it stays correct in both themes. */
     --gf-color-accent-secondary: color-mix(in srgb, var(--gf-color-accent) 20%, var(--op-color-neutral-plus-max));
 
-    /* Board — green felt, independent of the Optics re-skin above (the felt is a
-       game concern, not an Optics color). Consumed by the board/table component —
-       apply `background: var(--gf-felt)` there. light-dark() yields the muted
-       light-mode felt and the deep dark-mode felt from one token. */
+    /* Board — green felt: the game table's hand-picked ZONE accent. Green lives ONLY
+       here; it never appears on chrome (chrome is warm-neutral from Optics). Consumed
+       by the board/table component — apply `background: var(--gf-felt)` there.
+       light-dark() yields the muted light-mode felt and the deep dark-mode felt from
+       one token. (The games-index lobby will add a blue zone accent the same way.) */
     --gf-felt: light-dark(#bfd2c6, #1b2a22);
     --gf-felt-bright: light-dark(#e6f5ea, #274035);
+
+    /* Lobby — blue-gray: the games-index's hand-picked ZONE accent, the sibling of the
+       felt above. NOT YET CONSUMED — added ahead of the games-index rebuild so the
+       colors are ready and named. In that page's mockup (docs/mockups/games-index-final.html)
+       the tray stays warm-neutral chrome and only the raised game bars carry this blue,
+       deliberately a softer pop than the green table so the felt still out-pops it.
+       --gf-lobby-bar is the raised bar surface (mockup --felt-bright); blue lives ONLY
+       in the lobby, never on chrome or the game table. */
+    --gf-lobby-bar: light-dark(#eef1f5, #262b32);
 
     /* Popup surface (confirm-pop) — needs its own light-dark() pair rather than
        an Optics --op-color-neutral-plus-* step: those all trend toward the page's

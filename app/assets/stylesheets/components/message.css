@@ -11,8 +11,8 @@
       padding: var(--op-space-small);
       border-radius: var(--op-radius-x-large);
       
-      color: var(--op-color-primary-on-plus-five-alt);
-      background-color: var(--op-color-primary-plus-five);
+      color: var(--op-color-neutral-on-plus-five-alt);
+      background-color: var(--op-color-neutral-plus-five);
   }
 
   &.message--action {
@@ -26,7 +26,7 @@
 
     p {
       flex: 1;
-      color: var(--op-color-primary-on-plus-max);
+      color: var(--op-color-neutral-on-plus-max);
       border: var(--op-border-width) solid var(--op-color-neutral-plus-five);
       background-color: var(--op-color-neutral-plus-eight);
 
@@ -35,7 +35,7 @@
     }
 
     .response__icon {
-      color: var(--op-color-primary-on-plus-eight-alt);
+      color: var(--op-color-neutral-on-plus-eight-alt);
       font-weight: bolder;
     }
 

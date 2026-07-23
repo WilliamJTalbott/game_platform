@@ -16,8 +16,8 @@
   }
 
   .scoreboard__row--winner {
-    background-color: var(--op-color-primary-plus-seven);
-    color: var(--op-color-primary-on-plus-seven);
+    background-color: var(--op-color-neutral-plus-seven);
+    color: var(--op-color-neutral-on-plus-seven);
   }
 
   .scoreboard__crown {
