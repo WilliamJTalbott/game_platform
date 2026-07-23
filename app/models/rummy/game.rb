@@ -19,16 +19,15 @@ module Rummy
       discard.place(deck.draw)
     end
 
-    def play_turn(action, card = nil, meld_index = nil)
+    def play_turn(action, cards = [], meld_index = nil)
       turn_result = TurnResult.new(players, active_player)
 
       case action
       when "draw_stock" then draw_from_stock(turn_result)
       when "draw_discard" then draw_from_discard(turn_result)
-      when "toggle_select" then toggle_select(card)
-      when "meld" then meld(turn_result)
-      when "lay_off" then lay_off(turn_result, meld_index)
-      when "discard" then discard_card(turn_result)
+      when "meld" then meld(turn_result, cards)
+      when "lay_off" then lay_off(turn_result, cards, meld_index)
+      when "discard" then discard_card(turn_result, cards)
       end
     end
 
@@ -51,39 +50,29 @@ module Rummy
       nil
     end
 
-    def toggle_select(card)
-      selected = active_player.selected
-      active_player.selected = selected.include?(card) ? selected - [ card ] : selected + [ card ]
-      nil
-    end
-
-    def meld(turn_result)
-      new_meld = Meld.build(cards: active_player.selected, owner: active_player.user_id)
+    def meld(turn_result, cards)
+      new_meld = Meld.build(cards: cards, owner: active_player.user_id)
       return nil unless new_meld
 
       active_player.cards -= new_meld.cards
       self.melds = melds + [ new_meld ]
-      active_player.selected = []
       turn_result.melded(new_meld)
       nil
     end
 
-    def lay_off(turn_result, meld_index)
+    def lay_off(turn_result, cards, meld_index)
       target = melds[meld_index]
-      return nil unless target&.can_add?(active_player.selected)
+      return nil unless target&.can_add?(cards)
 
-      laid_off_cards = active_player.selected
-      active_player.cards -= laid_off_cards
-      melds[meld_index] = target.add(laid_off_cards)
-      active_player.selected = []
-      turn_result.laid_off(laid_off_cards, target)
+      active_player.cards -= cards
+      melds[meld_index] = target.add(cards)
+      turn_result.laid_off(cards, target)
       nil
     end
 
-    def discard_card(turn_result)
-      card = active_player.selected.first
+    def discard_card(turn_result, cards)
+      card = cards.first
       active_player.cards -= [ card ]
-      active_player.selected = []
       discard.place(card)
       turn_result.discarded(card)
       return declare_winner(turn_result) if active_player.out_of_cards?
