@@ -118,6 +118,16 @@ RSpec.describe "Playing Rummy", type: :system do
     end
   end
 
+  it "keeps meld-phase state after reloading the page mid-turn", :js do
+    draw_from_stock!
+    key = drawn_card_key
+
+    visit game_path(game)
+
+    expect(hand_card_input(key)).to be_present
+    expect(page).to have_css(".pile[disabled]", match: :first)
+  end
+
   context "when it is not the user's turn" do
     before do
       game.state.turn_index = 1

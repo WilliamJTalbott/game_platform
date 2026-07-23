@@ -2,7 +2,7 @@ module Rummy
   class Game < CardGame::Game
     attr_accessor :discard, :melds, :phase
 
-    HAND_SIZE = 10
+    HAND_SIZE = 10 # Needs to be 7 for more than 2 players?
 
     serializes :phase, players: [ Player ], discard: Discard, melds: [ Meld ]
 

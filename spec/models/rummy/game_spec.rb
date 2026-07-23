@@ -16,6 +16,7 @@ RSpec.describe Rummy::Game do
     end
 
     it "removes the dealt and flipped cards from the deck" do
+      # Remove magic numbers. 52 should be full_deck_count
       game.deal
       expect(game.deck.remaining).to eq 52 - (10 * players.size) - 1
     end
@@ -136,6 +137,15 @@ RSpec.describe Rummy::Game do
           expect(game.melds).to be_empty
         end
       end
+
+      context "when it empties the active player's hand" do
+        before { game.active_player.cards = set_cards }
+
+        it "returns the active player as the winner" do
+          winner = game.active_player
+          expect(game.play_turn("meld", set_cards)).to eq winner
+        end
+      end
     end
 
     context "laying off" do
@@ -174,6 +184,15 @@ RSpec.describe Rummy::Game do
           expect { game.play_turn("lay_off", [ CardGame::Card.new("2", "Diamonds") ], 0) }
             .not_to change { game.active_player.cards }
           expect(game.melds.first.cards).to eq existing_meld.cards
+        end
+      end
+
+      context "when it empties the active player's hand" do
+        before { game.active_player.cards = [ layoff_card ] }
+
+        it "returns the active player as the winner" do
+          winner = game.active_player
+          expect(game.play_turn("lay_off", [ layoff_card ], 0)).to eq winner
         end
       end
     end

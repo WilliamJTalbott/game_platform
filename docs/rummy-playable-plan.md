@@ -182,26 +182,43 @@ selected outline on the legal ones.
 *Goal: a player can go out; the round ends, a winner is stamped, everyone sees the
 end-of-game state.*
 
-- [ ] Rules: **going out** — hand empty after a legal discard (all remaining cards
-      melded/laid off). `play_turn` returns the winning `Player` so the base
-      `Game#end_game` stamps the winning `Participant` + `finished_at`.
-- [ ] Scoring model: deadwood/round score for the scoreboard (decide the exact scheme;
-      keep it in the presenter's `score_for` like the other games).
-- [ ] `RummyGamePresenter#score_label` / `score_for` / `score_order`.
-- [ ] Reuse the shared **end-of-game modal** (`games/_end_of_game_modal`).
-- [ ] System spec: drive a game to a win; assert the modal + winner.
-- [ ] Tighten the `winning_turn` lambda in the contract spec to a real going-out move.
+**Done.** Two deviations from the plan, both agreed before implementation:
+
+- **Going out fires as soon as the hand is empty, via any action** — not only after a
+  discard. `meld` and `lay_off` now check `active_player.out_of_cards?` the same way
+  `discard_card` already did (shared via a `finish_if_out` helper), so laying off or
+  melding your last cards wins immediately without needing a trailing discard.
+- **Scoring stays simple win/loss** — no deadwood/point tally. The existing
+  `score_label = "Cards left"` / `score_for = player.cards.size` (already in place
+  since Milestone 0) is correct as-is: the winner naturally has 0 cards and sorts
+  first under ascending order. Real deadwood scoring was considered and explicitly
+  deferred, not an oversight.
+
+- [x] Rules: **going out** — hand empty after melding, laying off, or discarding.
+      `play_turn` returns the winning `Player` so the base `Game#end_game` stamps the
+      winning `Participant` + `finished_at`.
+- [x] Scoring model: kept as simple win/loss (card count), decided against deadwood scoring.
+- [x] `RummyGamePresenter#score_label` / `score_for` / `score_order` — unchanged, already correct.
+- [x] Reuse the shared **end-of-game modal** (`games/_end_of_game_modal`) — fully generic, no changes needed.
+- [x] System spec: drive a game to a win via a real meld that empties the hand; assert the modal + winner.
+- [x] Tightened the `winning_turn` lambda in the contract spec to a real going-out
+      move — arranges a legally meldable run and melds it away rather than
+      force-shrinking the hand and discarding.
 
 ---
 
 ## Milestone 5 — Docs & hardening
 
-- [ ] `docs/games/rummy.md` — rules + how `Rummy::Game` implements them (mirror the
+**Done.**
+
+- [x] `docs/games/rummy.md` — rules + how `Rummy::Game` implements them (mirrors the
       go-fish / crazy-eights docs).
-- [ ] Note Rummy in `AGENTS.md` "two card games" → three, and anywhere `Game::TYPES` is
-      described.
-- [ ] Edge cases: empty stock recycle, no legal meld, disconnect/reload mid-turn
-      (jsonb reload), 3–4 player games.
+- [x] Noted Rummy in `AGENTS.md`'s STI/PORO layer examples and added a Key context
+      link to `docs/games/rummy.md`.
+- [x] Edge cases: empty stock recycle, no-legal-meld rejection, and 3–4 player games
+      were already covered by existing specs (the system spec suite defaults to
+      `:many_participants`, i.e. 4 players). Added one new spec confirming
+      meld-phase state (drawn card, phase) survives a full page reload mid-turn.
 
 ---
 

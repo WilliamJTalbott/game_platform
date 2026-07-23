@@ -47,7 +47,7 @@ bin/ci                                              # full CI: setup, rubocop, b
 
 ## Architecture (big picture)
 
-Two layers **both contain a class named `Game`** — do not conflate them. The persistence layer is ActiveRecord (`Game` STI base → `GoFishGame` / `CrazyEightsGame`, joined to `User` through `Participant`). The game-logic layer is plain Ruby (`GoFish::Game`, `CrazyEights::Game`, and their `Player`/`Deck`/`Card`/`TurnResult`), holding the rules and mutable state with no DB awareness.
+Two layers **both contain a class named `Game`** — do not conflate them. The persistence layer is ActiveRecord (`Game` STI base → `GoFishGame` / `CrazyEightsGame` / `RummyGame`, joined to `User` through `Participant`). The game-logic layer is plain Ruby (`GoFish::Game`, `CrazyEights::Game`, `Rummy::Game`, and their `Player`/`Deck`/`Card`/`TurnResult`), holding the rules and mutable state with no DB awareness.
 
 The bridge is the **`state` jsonb column**: each `*Game` subclass `serialize`s its PORO game into `state` via custom `dump`/`load` (`as_json` / `from_json`). A turn = load PORO from jsonb → mutate → `save!` → re-render per-user through a presenter → broadcast over Turbo Streams.
 
@@ -72,3 +72,4 @@ These are things you would *not* infer from a quick read:
 - **[docs/frontend.md](docs/frontend.md)** — how CSS loads (Propshaft `:app`, no bundler), Optics, design tokens, and BEM conventions.
 - **[docs/games/go-fish.md](docs/games/go-fish.md)** — Go Fish rules and how `GoFish::Game` implements them.
 - **[docs/games/crazy-eights.md](docs/games/crazy-eights.md)** — Crazy Eights rules and how `CrazyEights::Game` implements them.
+- **[docs/games/rummy.md](docs/games/rummy.md)** — Rummy rules and how `Rummy::Game` implements them.

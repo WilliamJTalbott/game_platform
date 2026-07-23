@@ -44,10 +44,10 @@ RSpec.describe RummyGame, type: :model do
     winning_turn: ->(game, winner) do
       state = game.state
       champion = state.players.find { |player| player.user_id == winner.id }
-      last_card = champion.cards.first
-      champion.cards = [ last_card ]
+      run = [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+      champion.cards = run
       state.turn_index = state.players.index(champion)
       state.phase = "meld"
-      { action: "discard", cards: [ "#{last_card.rank}-#{last_card.suit}" ] }
+      { action: "meld", cards: run.map { |card| "#{card.rank}-#{card.suit}" } }
     end
 end
