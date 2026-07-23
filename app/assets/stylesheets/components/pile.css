@@ -8,6 +8,22 @@
   background: none;
   border: 0;
 
+  &:disabled {
+    opacity: 0.75;
+    filter: saturate(0.55);
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled) .playing-card {
+    outline: calc(var(--op-border-width-large) - 1px) solid var(--gf-card-outline-playable);
+    outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
+  }
+
+  &:not(:disabled):hover .playing-card,
+  &:not(:disabled):focus-visible .playing-card {
+    outline-color: var(--gf-color-accent);
+  }
+
   .pile__caption {
     font-size: var(--op-font-x-small);
     color: var(--gf-color-muted);

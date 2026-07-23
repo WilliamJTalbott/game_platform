@@ -1,19 +1,37 @@
 .game.game--rummy id=dom_id(game_info.game)
   - if game_info.started?
-    / Board — opponents strip + the felt (piles & shared melds)
-    .panel.panel--board
-      .panel__body
-        .opponent-strip
-          = render partial: "rummy_games/opponent", collection: game_info.opponents, as: :opponent
+    = simple_form_for game_info.form,
+            as: :turn,
+            url: game_turns_path(game_info.game),
+            data: { controller: "rummy-turn" },
+            html: { class: "rummy-turn-form" } do |f|
 
-        = render "rummy_games/felt", discard_top: game_info.discard_top, melds: game_info.melds
+      = f.hidden_field :action, data: { "rummy-turn-target": "action" }
+      = f.hidden_field :card, data: { "rummy-turn-target": "card" }
 
-    / Feed — floating message bubbles, pinned over the top-right of the board
-    = render "rummy_games/bubble_stack"
+      / Board — opponents strip + the felt (piles & shared melds)
+      .panel.panel--board
+        .panel__body
+          .opponent-strip
+            = render partial: "rummy_games/opponent", collection: game_info.players_in_turn_order, as: :opponent
 
-    / Hand — turn-phase stepper, your cards, and the contextual confirm popup
-    .panel.panel--hand.panel--base
-      = render "rummy_games/hand_dock", hand_cards: game_info.hand_cards
+          = render "rummy_games/felt",
+                  discard_top: game_info.discard_top,
+                  melds: game_info.melds,
+                  can_draw: game_info.can_draw?
+
+      / Feed — floating message bubbles, pinned over the top-right of the board
+      = render "rummy_games/bubble_stack",
+              messages: game_info.messages,
+              phase: game_info.phase,
+              user_turn: game_info.user_turn?
+
+      / Hand — turn-phase stepper, your cards, and the contextual confirm popup
+      .panel.panel--hand.panel--base
+        = render "rummy_games/hand_dock",
+                hand_cards: game_info.hand_cards,
+                phase: game_info.phase,
+                can_discard: game_info.can_discard?
   - else
     .overlay.card
       h1 Waiting for players...

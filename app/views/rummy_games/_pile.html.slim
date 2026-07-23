@@ -1,4 +1,4 @@
-button.pile type="button"
+button.pile type="button" disabled=(!enabled) data-action="click->rummy-turn#draw" data-rummy-turn-action-param=action
   .card-container.card-container--large
     .playing-card
       - if card

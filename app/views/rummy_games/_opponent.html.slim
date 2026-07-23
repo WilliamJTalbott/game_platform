@@ -1,4 +1,4 @@
-.opponent-card class=("opponent-card--turn" if opponent.turn)
+.opponent-card class=[("opponent-card--turn" if opponent.turn), ("opponent-card--you" if opponent.you)]
   p.opponent-card__name
     - if opponent.turn
       i.opponent-card__turn-icon.ph.ph-star.icon--filled

@@ -50,6 +50,10 @@
        and a fully-saturated dark coral fight with the ink for attention. */
     --gf-card-face-selected: hsl(16 45% 20%);
     --gf-card-border: #726e65;
+    /* A lighter, translucent tint of --gf-card-border (same warm neutral hue)
+       for the "this card is playable" outline — plain white read cool/bluish
+       against the warm card face and page chrome. */
+    --gf-card-outline-playable: rgb(192 190 186 / 0.45);
 
     /* Coral — the CTA accent. NOT an Optics concept (Optics has only primary + neutral
        hues), so it's a project token applied explicitly to buttons + accent text.

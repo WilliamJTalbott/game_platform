@@ -1,9 +1,9 @@
 class RummyGamePresenter < GamePresenter
-  OpponentView = Struct.new(:name, :turn, keyword_init: true)
+  OpponentView = Struct.new(:name, :turn, :you, keyword_init: true)
   HandCardView = Struct.new(:card, :selected, keyword_init: true)
 
-  def opponents
-    (game.state.players - [ player ]).map { |opponent| opponent_view(opponent) }
+  def players_in_turn_order
+    game.state.players.map { |other_player| opponent_view(other_player) }
   end
 
   def discard_top
@@ -14,6 +14,18 @@ class RummyGamePresenter < GamePresenter
     game.state.melds
   end
 
+  def phase
+    game.state.phase
+  end
+
+  def can_draw?
+    user_turn? && phase == "draw"
+  end
+
+  def can_discard?
+    user_turn? && phase == "discard"
+  end
+
   def hand_cards
     cards.to_a.map { |card| HandCardView.new(card: card, selected: false) }
   end
@@ -22,8 +34,12 @@ class RummyGamePresenter < GamePresenter
 
   private
 
-  def opponent_view(opponent)
-    OpponentView.new(name: opponent.name, turn: opponent == game.state.active_player)
+  def opponent_view(other_player)
+    OpponentView.new(
+      name: other_player == player ? "You" : other_player.name,
+      turn: other_player == game.state.active_player,
+      you: other_player == player
+    )
   end
 
   def score_for(player) = player.cards.size

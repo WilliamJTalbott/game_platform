@@ -3,8 +3,12 @@
     span.felt-zone__label Piles
 
     .felt-zone__body
-      = render "rummy_games/pile", card: nil, label: "Stock"
-      = render "rummy_games/pile", card: discard_top, label: "Discard"
+      = render "rummy_games/pile", card: nil, label: "Stock", action: "draw_stock", enabled: can_draw
+      = render "rummy_games/pile",
+              card: discard_top,
+              label: "Discard",
+              action: "draw_discard",
+              enabled: can_draw && discard_top.present?
 
   .felt-zone.felt-zone--melds
     span.felt-zone__label Shared melds

@@ -27,6 +27,13 @@
     grid-template-areas:
       "board"
       "hand";
+
+    /* The turn form wraps the board/hand panels so their pile & hand-card buttons can
+       submit it — display: contents keeps the form out of the box tree so its children
+       still land directly in the grid areas above, as if the form weren't there. */
+    .rummy-turn-form {
+      display: contents;
+    }
   }
 
   @media (max-width: 768px) {

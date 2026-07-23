@@ -3,4 +3,19 @@ class RummyGame < Game
   self.player_class = Rummy::Player
 
   serialize :state, coder: Rummy::Game
+
+  def self.permitted_turn_params = %i[action card]
+
+  private
+
+  def turn_target(action:, card: nil)
+    [ action, card_from_key(card) ]
+  end
+
+  def card_from_key(key)
+    return nil if key.blank?
+
+    rank, suit = key.split("-", 2)
+    state.active_player.cards.find { |card| card.rank == rank && card.suit == suit }
+  end
 end

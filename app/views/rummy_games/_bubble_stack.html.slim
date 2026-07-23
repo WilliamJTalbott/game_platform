@@ -1,4 +1,11 @@
 .bubble-stack
-  .feed-bubble.feed-bubble--ghost Alice melded a set of 9s.
-  .feed-bubble.feed-bubble--fade You drew 3♦ from the stock.
-  .feed-bubble.feed-bubble--directive Meld, lay off, or discard
+  - messages.to_a.first(2).reverse.each_with_index do |message, index|
+    .feed-bubble class=(index.zero? ? "feed-bubble--ghost" : "feed-bubble--fade")
+      = message.text
+  .feed-bubble.feed-bubble--directive
+    - if !user_turn
+      | Waiting for opponent
+    - elsif phase == "draw"
+      | Draw from the stock or discard pile
+    - else
+      | Choose a card to discard

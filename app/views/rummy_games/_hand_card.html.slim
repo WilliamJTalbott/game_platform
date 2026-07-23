@@ -1,4 +1,4 @@
-button.hand-card type="button"
+button.hand-card type="button" disabled=(!can_discard) data-action="click->rummy-turn#discard" data-rummy-turn-card-param="#{hand_card.card.rank}-#{hand_card.card.suit}"
   .card-container.card-container--large
     .playing-card class=("playing-card--selected" if hand_card.selected)
       = image_tag("dark_cards/#{hand_card.card.rank.downcase}_#{hand_card.card.suit.downcase}.svg")

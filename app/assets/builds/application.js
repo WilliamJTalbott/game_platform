@@ -9475,8 +9475,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
 /* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
 /* harmony import */ var _offline_alert_controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./offline_alert_controller */ "./app/javascript/controllers/offline_alert_controller.js");
-/* harmony import */ var _service_worker_controller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./service_worker_controller */ "./app/javascript/controllers/service_worker_controller.js");
-/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
+/* harmony import */ var _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./rummy_turn_controller */ "./app/javascript/controllers/rummy_turn_controller.js");
+/* harmony import */ var _service_worker_controller__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./service_worker_controller */ "./app/javascript/controllers/service_worker_controller.js");
+/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
 
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("dialog", _dialog_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -9491,9 +9492,11 @@ _application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selecti
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("offline-alert", _offline_alert_controller__WEBPACK_IMPORTED_MODULE_6__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("service-worker", _service_worker_controller__WEBPACK_IMPORTED_MODULE_7__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("rummy-turn", _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_7__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_8__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("service-worker", _service_worker_controller__WEBPACK_IMPORTED_MODULE_8__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_9__["default"]);
 
 
 /***/ },
@@ -9561,6 +9564,38 @@ class offline_alert_controller_default extends _hotwired_stimulus__WEBPACK_IMPOR
   }
 }
 __publicField(offline_alert_controller_default, "targets", ["popup"]);
+
+
+/***/ },
+
+/***/ "./app/javascript/controllers/rummy_turn_controller.js"
+/*!*************************************************************!*\
+  !*** ./app/javascript/controllers/rummy_turn_controller.js ***!
+  \*************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ rummy_turn_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  draw({ params: { action } }) {
+    this.actionTarget.value = action;
+    this.cardTarget.value = "";
+    this.element.requestSubmit();
+  }
+  discard({ params: { card } }) {
+    this.actionTarget.value = "discard";
+    this.cardTarget.value = card;
+    this.element.requestSubmit();
+  }
+}
+__publicField(rummy_turn_controller_default, "targets", ["action", "card"]);
 
 
 /***/ },
