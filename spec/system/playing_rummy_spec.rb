@@ -6,14 +6,37 @@ RSpec.describe "Playing Rummy", type: :system do
 
   before { login_user(user) }
 
+  def hand_card_input(key)
+    find(:xpath, "//input[@value='#{key}']", visible: :all)
+  end
+
+  def click_hand_card(key)
+    find(:xpath, "//input[@value='#{key}']/parent::label").click
+  end
+
+  it "selects and deselects a hand card locally, with no server round-trip", :js do
+    visit game_path(game)
+    click_button "Stock"
+    expect(page).to have_css(".feed-bubble", text: "drew")
+
+    card = game.reload.state.active_player.cards.first
+    key = "#{card.rank}-#{card.suit}"
+
+    click_hand_card(key)
+    expect(hand_card_input(key)).to be_checked
+
+    click_hand_card(key)
+    expect(hand_card_input(key)).not_to be_checked
+  end
+
   it "draws from the stock, selects a card, and discards it, passing the turn", :js do
     visit game_path(game)
 
     click_button "Stock"
     expect(page).to have_css(".feed-bubble", text: "drew")
 
-    find(".hand-card:not([disabled])", match: :first).click
-    expect(page).to have_css(".playing-card--selected")
+    card = game.reload.state.active_player.cards.first
+    click_hand_card("#{card.rank}-#{card.suit}")
 
     click_button "Discard"
     expect(page).to have_css(".feed-bubble", text: "discarded")
@@ -31,15 +54,7 @@ RSpec.describe "Playing Rummy", type: :system do
     click_button "Stock"
     expect(page).to have_css(".feed-bubble", text: "drew")
 
-    # Each toggle round-trips through a real turn broadcast, so give the
-    # rapid-fire clicks more room than Capybara's 2s default before the next
-    # card's Turbo Stream update has landed.
-    Capybara.using_wait_time(5) do
-      nines.each_with_index do |card, index|
-        find("[data-rummy-turn-card-param='#{card.rank}-#{card.suit}']").click
-        expect(page).to have_css(".playing-card--selected", count: index + 1)
-      end
-    end
+    nines.each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
     click_button "Create meld"
 
     expect(page).to have_css(".meld .meld__kind", text: "set")
@@ -65,9 +80,7 @@ RSpec.describe "Playing Rummy", type: :system do
     click_button "Stock"
     expect(page).to have_css(".feed-bubble", text: "drew")
 
-    find("[data-rummy-turn-card-param='7-Hearts']").click
-    expect(page).to have_css(".playing-card--selected")
-
+    click_hand_card("7-Hearts")
     find(".meld", text: "run").click
 
     expect(page).to have_css(".meld .card-container", count: 4)

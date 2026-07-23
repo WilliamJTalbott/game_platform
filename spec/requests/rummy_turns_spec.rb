@@ -21,8 +21,7 @@ RSpec.describe "Rummy turns", type: :request do
       post game_turns_path(game), params: { turn: { action: "draw_stock" } }
       card = game.reload.state.active_player.cards.first
 
-      post game_turns_path(game), params: { turn: { action: "toggle_select", card: "#{card.rank}-#{card.suit}" } }
-      post game_turns_path(game), params: { turn: { action: "discard" } }
+      post game_turns_path(game), params: { turn: { action: "discard", cards: [ "#{card.rank}-#{card.suit}" ] } }
 
       expect(response).to have_http_status(:no_content)
       expect(game.reload.state.phase).to eq "draw"
@@ -40,10 +39,7 @@ RSpec.describe "Rummy turns", type: :request do
 
     it "creates a shared meld and stays in the meld phase" do
       post game_turns_path(game), params: { turn: { action: "draw_stock" } }
-      %w[Hearts Spades Clubs].each do |suit|
-        post game_turns_path(game), params: { turn: { action: "toggle_select", card: "9-#{suit}" } }
-      end
-      post game_turns_path(game), params: { turn: { action: "meld" } }
+      post game_turns_path(game), params: { turn: { action: "meld", cards: %w[9-Hearts 9-Spades 9-Clubs] } }
 
       expect(response).to have_http_status(:no_content)
       expect(game.reload.state.melds.size).to eq 1
@@ -68,8 +64,7 @@ RSpec.describe "Rummy turns", type: :request do
 
     it "extends the meld and stays in the meld phase" do
       post game_turns_path(game), params: { turn: { action: "draw_stock" } }
-      post game_turns_path(game), params: { turn: { action: "toggle_select", card: "7-Hearts" } }
-      post game_turns_path(game), params: { turn: { action: "lay_off", meld_index: "0" } }
+      post game_turns_path(game), params: { turn: { action: "lay_off", cards: [ "7-Hearts" ], meld_index: "0" } }
 
       expect(response).to have_http_status(:no_content)
       expect(game.reload.state.melds.first.cards).to include(CardGame::Card.new("7", "Hearts"))

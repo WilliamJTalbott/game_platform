@@ -6,9 +6,9 @@ RSpec.describe RummyForm do
   let(:opponent) { Rummy::Player.new(nil, "Opponent") }
   let(:game) { Rummy::Game.new([ active_player, opponent ]) }
   let(:action) { "draw_stock" }
-  let(:card) { nil }
+  let(:cards) { [] }
   let(:meld_index) { nil }
-  let(:form) { described_class.new(game:, action:, card:, meld_index:) }
+  let(:form) { described_class.new(game:, action:, cards:, meld_index:) }
 
   before { active_player.cards << hand_card }
 
@@ -62,39 +62,6 @@ RSpec.describe RummyForm do
     end
   end
 
-  context "when toggling a card's selection during the draw phase" do
-    let(:action) { "toggle_select" }
-    let(:card) { "A-Spades" }
-
-    it "rejects it" do
-      expect(form).not_to be_valid
-      expect(form.errors[:action]).to include("is not allowed during the draw phase")
-    end
-  end
-
-  context "when toggling a card in hand during the meld phase" do
-    let(:action) { "toggle_select" }
-    let(:card) { "A-Spades" }
-
-    before { game.phase = "meld" }
-
-    it "is valid" do
-      expect(form).to be_valid
-    end
-  end
-
-  context "when toggling a card not in hand" do
-    let(:action) { "toggle_select" }
-    let(:card) { "K-Hearts" }
-
-    before { game.phase = "meld" }
-
-    it "adds an error to card" do
-      expect(form).not_to be_valid
-      expect(form.errors[:card]).to include("must be a card in your hand")
-    end
-  end
-
   context "when melding during the draw phase" do
     let(:action) { "meld" }
 
@@ -109,10 +76,11 @@ RSpec.describe RummyForm do
     let(:set_cards) do
       [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ]
     end
+    let(:cards) { [ "9-Hearts", "9-Spades", "9-Clubs" ] }
 
     before do
       game.phase = "meld"
-      active_player.selected = set_cards
+      active_player.cards += set_cards
     end
 
     it "is valid" do
@@ -122,11 +90,9 @@ RSpec.describe RummyForm do
 
   context "when melding an invalid selection" do
     let(:action) { "meld" }
+    let(:cards) { [ "A-Spades" ] }
 
-    before do
-      game.phase = "meld"
-      active_player.selected = [ hand_card ]
-    end
+    before { game.phase = "meld" }
 
     it "adds an error to base" do
       expect(form).not_to be_valid
@@ -146,6 +112,7 @@ RSpec.describe RummyForm do
   context "when laying off a legal card during the meld phase" do
     let(:action) { "lay_off" }
     let(:meld_index) { "0" }
+    let(:cards) { [ "7-Hearts" ] }
     let(:existing_meld) do
       Rummy::Meld.new(
         kind: "run", owner: opponent.user_id,
@@ -157,7 +124,6 @@ RSpec.describe RummyForm do
       game.phase = "meld"
       game.melds = [ existing_meld ]
       active_player.cards << CardGame::Card.new("7", "Hearts")
-      active_player.selected = [ CardGame::Card.new("7", "Hearts") ]
     end
 
     it "is valid" do
@@ -188,6 +154,7 @@ RSpec.describe RummyForm do
   context "when laying off onto a meld the selection doesn't fit" do
     let(:action) { "lay_off" }
     let(:meld_index) { "0" }
+    let(:cards) { [ "A-Spades" ] }
 
     before do
       game.phase = "meld"
@@ -197,7 +164,6 @@ RSpec.describe RummyForm do
           cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
         )
       ]
-      active_player.selected = [ hand_card ]
     end
 
     it "adds an error to base" do
@@ -208,11 +174,9 @@ RSpec.describe RummyForm do
 
   context "when laying off with no meld index" do
     let(:action) { "lay_off" }
+    let(:cards) { [ "A-Spades" ] }
 
-    before do
-      game.phase = "meld"
-      active_player.selected = [ hand_card ]
-    end
+    before { game.phase = "meld" }
 
     it "adds an error to meld_index" do
       expect(form).not_to be_valid
@@ -231,11 +195,9 @@ RSpec.describe RummyForm do
 
   context "when discarding with exactly one card selected during the meld phase" do
     let(:action) { "discard" }
+    let(:cards) { [ "A-Spades" ] }
 
-    before do
-      game.phase = "meld"
-      active_player.selected = [ hand_card ]
-    end
+    before { game.phase = "meld" }
 
     it "is valid" do
       expect(form).to be_valid
@@ -255,10 +217,11 @@ RSpec.describe RummyForm do
 
   context "when discarding with more than one card selected" do
     let(:action) { "discard" }
+    let(:cards) { [ "A-Spades", "2-Hearts" ] }
 
     before do
       game.phase = "meld"
-      active_player.selected = [ hand_card, CardGame::Card.new("2", "Hearts") ]
+      active_player.cards << CardGame::Card.new("2", "Hearts")
     end
 
     it "adds an error to base" do

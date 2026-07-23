@@ -1,12 +1,5 @@
-- if can_meld || can_discard
-  .confirm-pop
-    p.confirm-pop__text
-      - if can_meld
-        | Create a meld with these #{selected_count} cards?
-      - else
-        | Discard this card?
+.confirm-pop hidden="hidden" data-rummy-turn-target="confirmPop"
+  p.confirm-pop__text data-rummy-turn-target="confirmPopText"
 
-    - if can_meld
-      button.btn.btn--primary type="button" data-action="click->rummy-turn#meld" Create meld ✓
-    - if can_discard
-      button.btn.btn--primary type="button" data-action="click->rummy-turn#discardSelected" Discard
+  button.btn.btn--primary type="button" hidden="hidden" data-rummy-turn-target="meldButton" data-action="click->rummy-turn#meld" Create meld ✓
+  button.btn.btn--primary type="button" hidden="hidden" data-rummy-turn-target="discardButton" data-action="click->rummy-turn#discardSelected" Discard

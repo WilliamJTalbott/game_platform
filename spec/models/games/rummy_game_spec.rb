@@ -6,7 +6,7 @@ RSpec.describe RummyGame, type: :model do
   end
 
   it "permits only its own turn params" do
-    expect(RummyGame.permitted_turn_params).to match_array([ :action, :card, :meld_index ])
+    expect(RummyGame.permitted_turn_params).to match_array([ :action, :meld_index, { cards: [] } ])
   end
 
   describe "#start" do
@@ -28,13 +28,13 @@ RSpec.describe RummyGame, type: :model do
   describe "#play_turn" do
     let(:game) { create(:started_game, :rummy, :has_participants, users: create_list(:user, 2)) }
 
-    it "resolves a toggle_select card key to the active player's actual card" do
+    it "resolves a cards array of keys to the active player's actual cards" do
       target_card = game.state.active_player.cards.first
       game.state.phase = "meld"
 
-      game.play_turn(action: "toggle_select", card: "#{target_card.rank}-#{target_card.suit}")
+      game.play_turn(action: "discard", cards: [ "#{target_card.rank}-#{target_card.suit}" ])
 
-      expect(game.state.active_player.selected).to eq [ target_card ]
+      expect(game.state.discard.top).to eq target_card
     end
   end
 
@@ -46,9 +46,8 @@ RSpec.describe RummyGame, type: :model do
       champion = state.players.find { |player| player.user_id == winner.id }
       last_card = champion.cards.first
       champion.cards = [ last_card ]
-      champion.selected = [ last_card ]
       state.turn_index = state.players.index(champion)
       state.phase = "meld"
-      { action: "discard" }
+      { action: "discard", cards: [ "#{last_card.rank}-#{last_card.suit}" ] }
     end
 end

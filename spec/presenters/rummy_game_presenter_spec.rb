@@ -25,17 +25,8 @@ RSpec.describe RummyGamePresenter do
     expect(presenter.discard_top).to eq game.state.discard.top
   end
 
-  it "exposes the active player's hand as unselected hand cards" do
+  it "exposes the active player's hand as hand cards" do
     expect(presenter.hand_cards.map(&:card)).to match_array(game.state.active_player.cards)
-    expect(presenter.hand_cards).to all have_attributes(selected: false)
-  end
-
-  it "flags hand cards the player has toggled as selected" do
-    selected_card = game.state.active_player.cards.first
-    game.state.active_player.selected = [ selected_card ]
-
-    hand_card = presenter.hand_cards.find { |view| view.card == selected_card }
-    expect(hand_card.selected).to be true
   end
 
   it "exposes the current phase" do
@@ -49,53 +40,6 @@ RSpec.describe RummyGamePresenter do
 
     it "is false for the waiting player" do
       expect(game.presenter(waiting_user).can_draw?).to be false
-    end
-  end
-
-  describe "#selected_count" do
-    it "counts the active player's selected cards" do
-      game.state.active_player.selected = game.state.active_player.cards.first(2)
-      expect(presenter.selected_count).to eq 2
-    end
-  end
-
-  describe "#can_meld?" do
-    it "is false during the draw phase" do
-      expect(presenter.can_meld?).to be false
-    end
-
-    it "is true once a valid set or run is selected during the meld phase" do
-      game.state.phase = "meld"
-      game.state.active_player.selected = [
-        CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs")
-      ]
-
-      expect(presenter.can_meld?).to be true
-    end
-
-    it "is false when the selection isn't a valid meld" do
-      game.state.phase = "meld"
-      game.state.active_player.selected = [ CardGame::Card.new("9", "Hearts") ]
-
-      expect(presenter.can_meld?).to be false
-    end
-  end
-
-  describe "#can_discard?" do
-    it "is false during the draw phase" do
-      expect(presenter.can_discard?).to be false
-    end
-
-    it "is true once exactly one card is selected during the meld phase" do
-      game.state.phase = "meld"
-      game.state.active_player.selected = [ game.state.active_player.cards.first ]
-
-      expect(presenter.can_discard?).to be true
-    end
-
-    it "is false when nothing is selected" do
-      game.state.phase = "meld"
-      expect(presenter.can_discard?).to be false
     end
   end
 
@@ -119,42 +63,6 @@ RSpec.describe RummyGamePresenter do
       game.state.melds = [ own_meld ]
 
       expect(presenter.melds.first.owner).to eq "you"
-    end
-
-    describe "lay-off targeting" do
-      let(:run) do
-        Rummy::Meld.build(
-          cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ],
-          owner: waiting_user.id
-        )
-      end
-
-      before do
-        game.state.melds = [ run ]
-        game.state.phase = "meld"
-      end
-
-      it "is not a lay-off candidate and not faded when nothing is selected" do
-        meld_view = presenter.melds.first
-        expect(meld_view.can_lay_off).to be false
-        expect(meld_view.faded).to be false
-      end
-
-      it "can be laid off onto when the selection legally extends it" do
-        game.state.active_player.selected = [ CardGame::Card.new("7", "Hearts") ]
-
-        meld_view = presenter.melds.first
-        expect(meld_view.can_lay_off).to be true
-        expect(meld_view.faded).to be false
-      end
-
-      it "is faded when the selection doesn't legally extend it" do
-        game.state.active_player.selected = [ CardGame::Card.new("2", "Diamonds") ]
-
-        meld_view = presenter.melds.first
-        expect(meld_view.can_lay_off).to be false
-        expect(meld_view.faded).to be true
-      end
     end
   end
 end

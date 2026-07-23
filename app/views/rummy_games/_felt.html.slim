@@ -15,9 +15,6 @@
 
     .felt-zone__body
       - melds.each_with_index do |meld, index|
-        = render "rummy_games/meld", meld: meld, index: index
+        = render "rummy_games/meld", meld: meld, index: index, can_select: can_select
 
-  = render "rummy_games/confirm_pop",
-          selected_count: selected_count,
-          can_meld: can_meld,
-          can_discard: can_discard
+  = render "rummy_games/confirm_pop"

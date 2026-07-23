@@ -7,7 +7,6 @@
             html: { class: "rummy-turn-form" } do |f|
 
       = f.hidden_field :action, data: { "rummy-turn-target": "action" }
-      = f.hidden_field :card, data: { "rummy-turn-target": "card" }
       = f.hidden_field :meld_index, data: { "rummy-turn-target": "meldIndex" }
 
       / Board — opponents strip + the felt (piles & shared melds)
@@ -20,9 +19,7 @@
                   discard_top: game_info.discard_top,
                   melds: game_info.melds,
                   can_draw: game_info.can_draw?,
-                  selected_count: game_info.selected_count,
-                  can_meld: game_info.can_meld?,
-                  can_discard: game_info.can_discard?
+                  can_select: game_info.can_select?
 
       / Feed — floating message bubbles, pinned over the top-right of the board
       = render "rummy_games/bubble_stack",

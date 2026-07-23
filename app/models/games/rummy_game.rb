@@ -4,12 +4,12 @@ class RummyGame < Game
 
   serialize :state, coder: Rummy::Game
 
-  def self.permitted_turn_params = %i[action card meld_index]
+  def self.permitted_turn_params = [ :action, :meld_index, { cards: [] } ]
 
   private
 
-  def turn_target(action:, card: nil, meld_index: nil)
-    [ action, card_from_key(card), meld_index.presence&.to_i ]
+  def turn_target(action:, cards: [], meld_index: nil)
+    [ action, cards.map { |key| card_from_key(key) }.compact, meld_index.presence&.to_i ]
   end
 
   def card_from_key(key)

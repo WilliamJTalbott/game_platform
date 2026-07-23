@@ -36,15 +36,4 @@
       filter: none;
     }
   }
-
-  /* Selected meld — a lay-off target — gets only a slight accent outline, no border. */
-  &.meld--selected {
-    box-shadow: 0 0 0 var(--op-border-width-large) var(--gf-color-accent);
-  }
-
-  /* A meld the current selection can't legally lay off onto, shown dimmed rather
-     than hidden — it stays visible as "not this one" instead of disappearing. */
-  &.meld--faded {
-    opacity: 0.4;
-  }
 }

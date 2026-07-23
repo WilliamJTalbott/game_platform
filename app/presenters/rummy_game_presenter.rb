@@ -1,7 +1,7 @@
 class RummyGamePresenter < GamePresenter
   OpponentView = Struct.new(:name, :turn, :you, keyword_init: true)
-  HandCardView = Struct.new(:card, :selected, keyword_init: true)
-  MeldView = Struct.new(:kind, :owner, :cards, :selected, :can_lay_off, :faded, keyword_init: true)
+  HandCardView = Struct.new(:card, keyword_init: true)
+  MeldView = Struct.new(:kind, :owner, :cards, keyword_init: true)
 
   def players_in_turn_order
     game.state.players.map { |other_player| opponent_view(other_player) }
@@ -27,20 +27,8 @@ class RummyGamePresenter < GamePresenter
     user_turn? && phase == "meld"
   end
 
-  def can_meld?
-    can_select? && Rummy::Meld.valid?(player.selected)
-  end
-
-  def can_discard?
-    can_select? && selected_count == 1
-  end
-
-  def selected_count
-    player.selected.size
-  end
-
   def hand_cards
-    cards.to_a.map { |card| HandCardView.new(card: card, selected: player.selected.include?(card)) }
+    cards.to_a.map { |card| HandCardView.new(card: card) }
   end
 
   def score_label = "Cards left"
@@ -56,18 +44,7 @@ class RummyGamePresenter < GamePresenter
   end
 
   def meld_view(meld)
-    MeldView.new(
-      kind: meld.kind, owner: owner_name(meld.owner), cards: meld.cards, selected: false,
-      can_lay_off: lay_off_candidate?(meld), faded: selecting? && !lay_off_candidate?(meld)
-    )
-  end
-
-  def selecting?
-    can_select? && player.selected.any?
-  end
-
-  def lay_off_candidate?(meld)
-    selecting? && meld.can_add?(player.selected)
+    MeldView.new(kind: meld.kind, owner: owner_name(meld.owner), cards: meld.cards)
   end
 
   def owner_name(owner_user_id)

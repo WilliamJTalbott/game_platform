@@ -1,4 +1,5 @@
-button.hand-card type="button" disabled=(!can_select) data-action="click->rummy-turn#toggleSelect" data-rummy-turn-card-param="#{hand_card.card.rank}-#{hand_card.card.suit}"
+label.hand-card
+  input.hand-card__input type="checkbox" name="turn[cards][]" value="#{hand_card.card.rank}-#{hand_card.card.suit}" disabled=(!can_select) data-rummy-turn-target="cardInput" data-action="change->rummy-turn#refresh"
   .card-container.card-container--large
-    .playing-card class=("playing-card--selected" if hand_card.selected)
+    .playing-card
       = image_tag("dark_cards/#{hand_card.card.rank.downcase}_#{hand_card.card.suit.downcase}.svg")

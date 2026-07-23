@@ -55,14 +55,6 @@
     filter: var(--_gf-playing-card-shadow) var(--_gf-playing-card-shadow-hover);
   }
 
-  &.playing-card--selected {
-    transform: translateY(calc(-1 * var(--op-space-large)));
-    filter: var(--_gf-playing-card-shadow);
-    background-color: var(--gf-card-face-selected);
-    outline: calc(var(--op-border-width-large) - 1px) solid var(--gf-color-accent);
-    outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
-  }
-
   img {
     width: 100%;
     height: 100%;
