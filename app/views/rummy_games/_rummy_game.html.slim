@@ -1,15 +1,20 @@
-.game.game--rummy
-  / Board — opponents strip + the felt (piles & shared melds)
-  .panel.panel--board
-    .panel__body
-      .opponent-strip
-        = render partial: "rummy_games/opponent", collection: opponents, as: :opponent
+.game.game--rummy id=dom_id(game_info.game)
+  - if game_info.started?
+    / Board — opponents strip + the felt (piles & shared melds)
+    .panel.panel--board
+      .panel__body
+        .opponent-strip
+          = render partial: "rummy_games/opponent", collection: game_info.opponents, as: :opponent
 
-      = render "rummy_games/felt", discard_top: discard_top, melds: melds
+        = render "rummy_games/felt", discard_top: game_info.discard_top, melds: game_info.melds
 
-  / Feed — floating message bubbles, pinned over the top-right of the board
-  = render "rummy_games/bubble_stack"
+    / Feed — floating message bubbles, pinned over the top-right of the board
+    = render "rummy_games/bubble_stack"
 
-  / Hand — turn-phase stepper, your cards, and the contextual confirm popup
-  .panel.panel--hand.panel--base
-    = render "rummy_games/hand_dock", hand_cards: hand_cards
+    / Hand — turn-phase stepper, your cards, and the contextual confirm popup
+    .panel.panel--hand.panel--base
+      = render "rummy_games/hand_dock", hand_cards: game_info.hand_cards
+  - else
+    .overlay.card
+      h1 Waiting for players...
+      = button_to "Start Game", start_game_path(game_info.game), method: :post, class: "btn btn--primary"

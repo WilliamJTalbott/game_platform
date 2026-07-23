@@ -17,6 +17,10 @@ FactoryBot.define do
       type { "CrazyEightsGame" }
     end
 
+    trait :rummy do
+      type { "RummyGame" }
+    end
+
     trait :has_user do
       after(:build) do |game, evaluator|
         game.participants << build(:participant, game: game, user: evaluator.user)

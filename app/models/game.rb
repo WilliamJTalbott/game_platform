@@ -1,5 +1,5 @@
 class Game < ApplicationRecord
-  TYPES = %w[GoFishGame CrazyEightsGame].freeze
+  TYPES = %w[GoFishGame CrazyEightsGame RummyGame].freeze
 
   class_attribute :game_class, :player_class
 

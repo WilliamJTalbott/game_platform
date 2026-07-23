@@ -35,7 +35,7 @@ RSpec.describe Game, type: :model do
 
   context "#playable" do
     it "returns every registered game subclass" do
-      expect(Game.playable).to match_array([ GoFishGame, CrazyEightsGame ])
+      expect(Game.playable).to match_array([ GoFishGame, CrazyEightsGame, RummyGame ])
     end
   end
 
