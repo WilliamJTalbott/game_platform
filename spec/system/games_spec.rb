@@ -18,25 +18,15 @@ RSpec.describe 'Games', type: :system do
     it "lets user create go_fish type" do
       click_on "New Game"
       select "Go Fish", from: "Type"
-
-      expect do
-        click_on "Create Game"
-      end.to change(Game, :count).by 1
-
-      last_game = Game.last
-      expect(last_game).to be_an_instance_of(GoFishGame)
+      expect { click_on "Create Game" }.to change(Game, :count).by 1
+      expect(Game.last).to be_an_instance_of(GoFishGame)
     end
 
     it "lets user create crazy_eights type" do
       click_on "New Game"
       select "Crazy Eights", from: "Type"
-
-      expect do
-        click_on "Create Game"
-      end.to change(Game, :count).by 1
-
-      last_game = Game.last
-      expect(last_game).to be_an_instance_of(CrazyEightsGame)
+      expect { click_on "Create Game" }.to change(Game, :count).by 1
+      expect(Game.last).to be_an_instance_of(CrazyEightsGame)
     end
   end
 
@@ -195,10 +185,8 @@ RSpec.describe 'Games', type: :system do
       it "does not let the sidebar crowd out the main content", :js do
         resize_page(375, 700) do
           visit game_path(game)
-
           sidebar_width = page.evaluate_script("document.querySelector('.sidebar').getBoundingClientRect().width")
           main_width = page.evaluate_script("document.querySelector('.op-page__main').getBoundingClientRect().width")
-
           expect(main_width).to be > sidebar_width
         end
       end
@@ -206,20 +194,14 @@ RSpec.describe 'Games', type: :system do
       it "stacks the board, hand, and feed panels in a single column", :js do
         resize_page(375, 700) do
           visit game_path(game)
-
-          board_bottom = page.evaluate_script("document.querySelector('.panel--board').getBoundingClientRect().bottom")
-          hand_top = page.evaluate_script("document.querySelector('.panel--hand').getBoundingClientRect().top")
-          feed_top = page.evaluate_script("document.querySelector('.panel--feed').getBoundingClientRect().top")
-
-          expect(hand_top).to be >= board_bottom
-          expect(feed_top).to be >= board_bottom
+          expect(panel_top(".panel--hand")).to be >= panel_bottom(".panel--board")
+          expect(panel_top(".panel--feed")).to be >= panel_bottom(".panel--board")
         end
       end
 
       it "keeps the move form's selects and submit button tappable", :js do
         resize_page(375, 700) do
           visit game_path(game)
-
           expect(page).to have_select("turn_player_name")
           expect(page).to have_select("turn_rank")
           expect(page).to have_button("Ask for card")
@@ -229,12 +211,7 @@ RSpec.describe 'Games', type: :system do
       it "keeps the hand un-clipped so a hovered card can lift past the row", :js do
         resize_page(375, 700) do
           visit game_path(game)
-
-          overflow_x = page.evaluate_script(
-            "getComputedStyle(document.querySelector('.panel--hand .panel__body')).overflowX"
-          )
-
-          expect(overflow_x).to eq "visible"
+          expect(panel_overflow_x(".panel--hand .panel__body")).to eq "visible"
         end
       end
     end
@@ -243,6 +220,9 @@ RSpec.describe 'Games', type: :system do
   context "[ Card overlap ]" do
     context "go_fish game" do
       let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
+      let(:large_hand_game) do
+        create(:started_game, :go_fish, :users_turn, :many_participants, user: user, users_count: 2)
+      end
 
       it "overlaps hand cards by a consistent ratio of the rendered card width", :js do
         visit game_path(game)
@@ -272,43 +252,23 @@ RSpec.describe 'Games', type: :system do
       end
 
       it "keeps the card's true aspect ratio even when too many cards to fit overflow the row", :js do
-        large_hand_game = create(:started_game, :go_fish, :users_turn, :many_participants,
-                                  user: user, users_count: 2)
-
         visit game_path(large_hand_game)
-
         dims = card_container_dimensions(".panel--hand .card-container")
 
         expect(dims["width"] / dims["height"]).to be_within(0.05).of(5.0 / 7.0)
       end
 
       it "tightens overlap so a large hand fits the row without scrolling", :js do
-        large_hand_game = create(:started_game, :go_fish, :users_turn, :many_participants,
-                                  user: user, users_count: 2)
-
         resize_page(375, 700) do
           visit game_path(large_hand_game)
-
-          fit = page.evaluate_script(<<~JS)
-            (function() {
-              var row = document.querySelector(".panel--hand .panel__body");
-              return { fitsWithoutScroll: row.scrollWidth <= row.clientWidth + 1 };
-            })()
-          JS
-
-          expect(fit["fitsWithoutScroll"]).to be true
+          expect(row_fits_without_scroll?(".panel--hand .panel__body")).to be true
         end
       end
 
       it "tightens the overlap below 40% when the hand is too wide for 40%", :js do
-        large_hand_game = create(:started_game, :go_fish, :users_turn, :many_participants,
-                                  user: user, users_count: 2)
-
         resize_page(375, 700) do
           visit game_path(large_hand_game)
-
           offset = card_pair_offset(".panel--hand .card-container")
-
           expect(offset["gap"]).to be < offset["width"] * 0.6
         end
       end
@@ -342,31 +302,49 @@ RSpec.describe 'Games', type: :system do
 
     it "caches the offline page for use when navigation fails" do
       visit game_path(game)
-
-      cached = page.evaluate_async_script(<<~JS)
-        var done = arguments[0]
-        navigator.serviceWorker.ready
-          .then(() => caches.match("/offline"))
-          .then(r => done(!!r))
-      JS
-
-      expect(cached).to be true
+      expect(offline_page_cached?).to be true
     end
   end
 end
 
-def card_pair_offset(selector)
+def poll_until_stable
+  Timeout.timeout(Capybara.default_max_wait_time) { poll_loop { yield } }
+end
+
+def poll_loop
   previous = nil
+  loop do
+    current = yield
+    return current if current == previous
 
-  Timeout.timeout(Capybara.default_max_wait_time) do
-    loop do
-      current = measure_card_pair(selector)
-      return current if current == previous
-
-      previous = current
-      sleep 0.05
-    end
+    previous = current
+    sleep 0.05
   end
+end
+
+def row_fits_without_scroll?(selector)
+  page.evaluate_script(<<~JS)
+    (function() {
+      var row = document.querySelector(#{selector.to_json});
+      return row.scrollWidth <= row.clientWidth + 1;
+    })()
+  JS
+end
+
+def panel_top(selector)
+  page.evaluate_script("document.querySelector(#{selector.to_json}).getBoundingClientRect().top")
+end
+
+def panel_bottom(selector)
+  page.evaluate_script("document.querySelector(#{selector.to_json}).getBoundingClientRect().bottom")
+end
+
+def panel_overflow_x(selector)
+  page.evaluate_script("getComputedStyle(document.querySelector(#{selector.to_json})).overflowX")
+end
+
+def card_pair_offset(selector)
+  poll_until_stable { measure_card_pair(selector) }
 end
 
 def measure_card_pair(selector)
@@ -381,17 +359,7 @@ def measure_card_pair(selector)
 end
 
 def card_container_dimensions(selector)
-  previous = nil
-
-  Timeout.timeout(Capybara.default_max_wait_time) do
-    loop do
-      current = measure_card_container(selector)
-      return current if current == previous
-
-      previous = current
-      sleep 0.05
-    end
-  end
+  poll_until_stable { measure_card_container(selector) }
 end
 
 def measure_card_container(selector)
@@ -400,6 +368,15 @@ def measure_card_container(selector)
       var rect = document.querySelector(#{selector.to_json}).getBoundingClientRect();
       return { width: rect.width, height: rect.height };
     })()
+  JS
+end
+
+def offline_page_cached?
+  page.evaluate_async_script(<<~JS)
+    var done = arguments[0]
+    navigator.serviceWorker.ready
+      .then(() => caches.match("/offline"))
+      .then(r => done(!!r))
   JS
 end
 

@@ -14,13 +14,28 @@ RSpec.describe "Playing Rummy", type: :system do
     find(:xpath, "//input[@value='#{key}']/parent::label").click
   end
 
-  it "selects and deselects a hand card locally, with no server round-trip", :js do
+  def draw_from_stock!
     visit game_path(game)
     click_button "Stock"
     expect(page).to have_css(".feed-bubble", text: "drew")
+  end
 
+  def drawn_card_key
     card = game.reload.state.active_player.cards.first
-    key = "#{card.rank}-#{card.suit}"
+    "#{card.rank}-#{card.suit}"
+  end
+
+  def remove_cards_from_play(*cards)
+    cards.each do |card|
+      game.state.deck.cards.delete(card)
+      game.state.discard.cards.delete(card)
+      game.state.players.each { |player| player.cards.delete(card) }
+    end
+  end
+
+  it "selects and deselects a hand card locally, with no server round-trip", :js do
+    draw_from_stock!
+    key = drawn_card_key
 
     click_hand_card(key)
     expect(hand_card_input(key)).to be_checked
@@ -30,60 +45,77 @@ RSpec.describe "Playing Rummy", type: :system do
   end
 
   it "draws from the stock, selects a card, and discards it, passing the turn", :js do
-    visit game_path(game)
-
-    click_button "Stock"
-    expect(page).to have_css(".feed-bubble", text: "drew")
-
-    card = game.reload.state.active_player.cards.first
-    click_hand_card("#{card.rank}-#{card.suit}")
+    draw_from_stock!
+    click_hand_card(drawn_card_key)
 
     click_button "Discard"
     expect(page).to have_css(".feed-bubble", text: "discarded")
-
     expect(page).to have_css(".pile[disabled]", match: :first)
   end
 
-  it "melds three selected cards into a shared, public meld", :js do
-    nines = [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ]
-    game.state.active_player.cards = nines
-    game.state.deck.cards -= nines
-    game.save!
+  context "with a meldable set in hand" do
+    let(:nines) { [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ] }
 
-    visit game_path(game)
-    click_button "Stock"
-    expect(page).to have_css(".feed-bubble", text: "drew")
+    before do
+      game.state.active_player.cards = nines
+      game.state.deck.cards -= nines
+      game.save!
+    end
 
-    nines.each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
-    click_button "Create meld"
+    it "melds three selected cards into a shared, public meld", :js do
+      draw_from_stock!
+      nines.each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
+      click_button "Create meld"
 
-    expect(page).to have_css(".meld .meld__kind", text: "set")
+      expect(page).to have_css(".meld .meld__kind", text: "set")
+    end
   end
 
-  it "lays a selected card off onto an opponent's existing meld", :js do
-    opponent = game.state.players.find { |player| player.user_id != user.id }
-    existing_meld = Rummy::Meld.new(
-      kind: "run", owner: opponent.user_id,
-      cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
-    )
-    layoff_card = CardGame::Card.new("7", "Hearts")
-    (existing_meld.cards + [ layoff_card ]).each do |card|
-      game.state.deck.cards.delete(card)
-      game.state.discard.cards.delete(card)
-      game.state.players.each { |player| player.cards.delete(card) }
+  context "with a card that extends an opponent's meld" do
+    let(:opponent) { game.state.players.find { |player| player.user_id != user.id } }
+    let(:existing_meld) do
+      Rummy::Meld.new(
+        kind: "run", owner: opponent.user_id,
+        cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+      )
     end
-    game.state.melds = [ existing_meld ]
-    game.state.active_player.cards << layoff_card
-    game.save!
+    let(:layoff_card) { CardGame::Card.new("7", "Hearts") }
 
-    visit game_path(game)
-    click_button "Stock"
-    expect(page).to have_css(".feed-bubble", text: "drew")
+    before do
+      remove_cards_from_play(*existing_meld.cards, layoff_card)
+      game.state.melds = [ existing_meld ]
+      game.state.active_player.cards << layoff_card
+      game.save!
+    end
 
-    click_hand_card("7-Hearts")
-    find(".meld", text: "run").click
+    it "lays a selected card off onto an opponent's existing meld", :js do
+      draw_from_stock!
+      click_hand_card("7-Hearts")
+      find(".meld", text: "run").click
 
-    expect(page).to have_css(".meld .card-container", count: 4)
+      expect(page).to have_css(".meld .card-container", count: 4)
+    end
+  end
+
+  context "with only the winning meld left in hand" do
+    let(:four) { CardGame::Card.new("4", "Hearts") }
+    let(:five) { CardGame::Card.new("5", "Hearts") }
+    let(:six) { CardGame::Card.new("6", "Hearts") }
+
+    before do
+      remove_cards_from_play(four, five, six)
+      game.state.active_player.cards = [ four, five ]
+      game.state.deck.cards << six
+      game.save!
+    end
+
+    it "goes out by melding the last cards in hand, ending the game", :js do
+      draw_from_stock!
+      [ four, five, six ].each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
+      click_button "Create meld"
+
+      expect(page).to have_css(".end-of-game-modal", text: "You win")
+    end
   end
 
   context "when it is not the user's turn" do

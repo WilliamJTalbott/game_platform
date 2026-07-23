@@ -19,23 +19,16 @@ class GamesController < ApplicationController
 
   def create
     type_class = Game.from_type(params[:game][:type])
+    return unprocessable_new(Game.new) unless type_class
 
-    if type_class
-      build_and_save_game(type_class)
-    else
-      @game = Game.new
-      render :new, status: :unprocessable_content
-    end
+    build_and_save_game(type_class)
   end
 
   def start
     @game = Game.find(params[:id])
+    return redirect_to game_path(@game) if @game.start
 
-    if @game.start
-      redirect_to game_path(@game)
-    else
-      render :show, status: :unprocessable_content
-    end
+    render :show, status: :unprocessable_content
   end
 
   private
@@ -43,12 +36,14 @@ class GamesController < ApplicationController
   def build_and_save_game(type_class)
     @game = type_class.new(game_params)
     @participant = @game.participants.new(user: Current.session.user)
+    return redirect_to game_path(@game) if @game.save
 
-    if @game.save
-      redirect_to game_path(@game)
-    else
-      render :new, status: :unprocessable_content
-    end
+    unprocessable_new(@game)
+  end
+
+  def unprocessable_new(game)
+    @game = game
+    render :new, status: :unprocessable_content
   end
 
   def game_params

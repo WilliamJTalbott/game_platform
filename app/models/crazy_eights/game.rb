@@ -20,16 +20,17 @@ module CrazyEights
       discard.place(card, suit)
       new_turn_result(played_by, card)
       turn_result.suit_changed(suit) if discard.wild?(card)
-
-      if game_over?
-        turn_result.winner
-        return played_by
-      end
+      return declare_winner(played_by) if game_over?
 
       switch_turn
     end
 
     private
+
+    def declare_winner(played_by)
+      turn_result.winner
+      played_by
+    end
 
     def switch_turn
       self.turn_index = (turn_index + 1) % players.size
@@ -39,10 +40,8 @@ module CrazyEights
     def dig_for_card
       loop do
         replenish_deck if deck.depleted?
-
         card = deck.draw
         active_player.receive(card)
-
         return if discard.valid_play?(card)
       end
     end

@@ -11,14 +11,18 @@ RSpec.describe CrazyEightsGamePresenter do
     expect(presenter.score_label).to eq "Cards left"
   end
 
-  it "ranks players with the fewest cards first" do
-    winner_player = game.state.players.find { |player| player.user_id == winner.id }
-    runner_up, third = (game.state.players - [ winner_player ]).first(2)
-    winner_player.cards = []
-    runner_up.cards = [ "3" ]
-    third.cards = [ "3", "4" ]
+  context "with players holding a different number of cards" do
+    before do
+      winner_player = game.state.players.find { |player| player.user_id == winner.id }
+      runner_up, third = (game.state.players - [ winner_player ]).first(2)
+      winner_player.cards = []
+      runner_up.cards = [ "3" ]
+      third.cards = [ "3", "4" ]
+    end
 
-    ranked_scores = presenter.scoreboard.sort_by(&:rank).map(&:score)
-    expect(ranked_scores).to eq ranked_scores.sort
+    it "ranks players with the fewest cards first" do
+      ranked_scores = presenter.scoreboard.sort_by(&:rank).map(&:score)
+      expect(ranked_scores).to eq ranked_scores.sort
+    end
   end
 end

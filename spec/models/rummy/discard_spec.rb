@@ -31,11 +31,13 @@ RSpec.describe Rummy::Discard do
   end
 
   describe "#recycle" do
-    it "keeps the top card and returns the rest for reshuffling" do
+    before do
       discard.place(CardGame::Card.new("7", "Clubs"))
       discard.place(CardGame::Card.new("8", "Clubs"))
       discard.place(CardGame::Card.new("9", "Hearts"))
+    end
 
+    it "keeps the top card and returns the rest for reshuffling" do
       recyclable = discard.recycle
 
       expect(recyclable).to eq [ CardGame::Card.new("7", "Clubs"), CardGame::Card.new("8", "Clubs") ]

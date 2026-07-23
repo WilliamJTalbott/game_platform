@@ -6,14 +6,14 @@ module SelectHelper
   def smart_select(value, from:)
     label = find(:label, text: from, match: :first)
     input = find(id: label['for'], visible: :all)
+    return tom_select(input, value) if tom_select_input?(input)
+    return tailored_select(input, value) if input.tag_name == 'tailored-select'
 
-    if input.tag_name == 'input' && input.native.attribute(:'aria-controls').include?('ts-dropdown')
-      tom_select(input, value)
-    elsif input.tag_name == 'tailored-select'
-      tailored_select(input, value)
-    else
-      regular_select(value.to_s, from:)
-    end
+    regular_select(value.to_s, from:)
+  end
+
+  def tom_select_input?(input)
+    input.tag_name == 'input' && input.native.attribute(:'aria-controls').include?('ts-dropdown')
   end
 
   def tailored_select(input, value)

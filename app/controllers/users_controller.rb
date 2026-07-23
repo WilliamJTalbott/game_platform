@@ -12,13 +12,10 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    return render(:new, layout: "no_sidebar") unless @user.save
 
-    if @user.save
-      start_new_session_for(@user)
-      redirect_to root_path
-    else
-      render :new, layout: "no_sidebar"
-    end
+    start_new_session_for(@user)
+    redirect_to root_path
   end
 
   def edit

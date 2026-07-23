@@ -59,11 +59,7 @@ class Game < ApplicationRecord
     total_seconds = (self.finished_at - self.started_at).to_i
     return unless total_seconds
 
-    hours = total_seconds / 3600
-    minutes = (total_seconds / 60) % 60
-    seconds = total_seconds % 60
-
-    [ hours, minutes, seconds ].map { |t| t.to_s.rjust(2, "0") }.join(":")
+    format_duration(total_seconds)
   end
 
   def player_from_user(user)
@@ -98,5 +94,12 @@ class Game < ApplicationRecord
 
   def base_name
     self.class.name.delete_suffix("Game")
+  end
+
+  def format_duration(total_seconds)
+    hours = total_seconds / 3600
+    minutes = (total_seconds / 60) % 60
+    seconds = total_seconds % 60
+    [ hours, minutes, seconds ].map { |t| t.to_s.rjust(2, "0") }.join(":")
   end
 end

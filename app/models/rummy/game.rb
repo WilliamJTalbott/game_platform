@@ -21,7 +21,12 @@ module Rummy
 
     def play_turn(action, cards = [], meld_index = nil)
       turn_result = TurnResult.new(players, active_player)
+      dispatch_action(action, turn_result, cards, meld_index)
+    end
 
+    private
+
+    def dispatch_action(action, turn_result, cards, meld_index)
       case action
       when "draw_stock" then draw_from_stock(turn_result)
       when "draw_discard" then draw_from_discard(turn_result)
@@ -30,8 +35,6 @@ module Rummy
       when "discard" then discard_card(turn_result, cards)
       end
     end
-
-    private
 
     def draw_from_stock(turn_result)
       recycle_discard_if_depleted
@@ -57,7 +60,7 @@ module Rummy
       active_player.cards -= new_meld.cards
       self.melds = melds + [ new_meld ]
       turn_result.melded(new_meld)
-      nil
+      finish_if_out(turn_result)
     end
 
     def lay_off(turn_result, cards, meld_index)
@@ -67,7 +70,7 @@ module Rummy
       active_player.cards -= cards
       melds[meld_index] = target.add(cards)
       turn_result.laid_off(cards, target)
-      nil
+      finish_if_out(turn_result)
     end
 
     def discard_card(turn_result, cards)
@@ -76,9 +79,12 @@ module Rummy
       discard.place(card)
       turn_result.discarded(card)
       return declare_winner(turn_result) if active_player.out_of_cards?
-
       advance_turn
       nil
+    end
+
+    def finish_if_out(turn_result)
+      declare_winner(turn_result) if active_player.out_of_cards?
     end
 
     def declare_winner(turn_result)

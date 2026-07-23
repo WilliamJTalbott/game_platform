@@ -7,11 +7,10 @@ RSpec.describe "Turns", type: :request do
   describe "game-specific param permitting" do
     context "for a Go Fish game" do
       let(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
+      let(:opponent) { (game.state.players - [ game.state.active_player ]).first }
+      let(:rank) { game.state.active_player.cards.first.rank }
 
       it "drops a foreign param belonging to another game, rather than raising" do
-        opponent = (game.state.players - [ game.state.active_player ]).first
-        rank = game.state.active_player.cards.first.rank
-
         post game_turns_path(game), params: {
           turn: { player_name: opponent.name, rank: rank, card: "A of Spades" }
         }
@@ -22,12 +21,14 @@ RSpec.describe "Turns", type: :request do
 
     context "for a Crazy Eights game" do
       let(:game) { create(:started_game, :crazy_eights, :users_turn, :many_participants, user: user) }
+      let(:playable) { CardGame::Card.new("3", game.state.discard.active_card.suit) }
 
-      it "drops a foreign param belonging to another game, rather than raising" do
-        playable = CardGame::Card.new("3", game.state.discard.active_card.suit)
+      before do
         game.state.active_player.cards.unshift(playable)
         game.save!
+      end
 
+      it "drops a foreign param belonging to another game, rather than raising" do
         post game_turns_path(game), params: {
           turn: { card: playable.to_s, player_name: "anyone" }
         }

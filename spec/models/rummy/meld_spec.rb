@@ -114,12 +114,14 @@ RSpec.describe Rummy::Meld do
   end
 
   describe "#add" do
-    it "returns a new meld with the cards merged in, preserving kind and owner" do
-      meld = described_class.new(
+    let(:meld) do
+      described_class.new(
         kind: "run", owner: 3,
         cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
       )
+    end
 
+    it "returns a new meld with the cards merged in, preserving kind and owner" do
       extended = meld.add([ CardGame::Card.new("7", "Hearts") ])
 
       expect(extended).to have_attributes(kind: "run", owner: 3)

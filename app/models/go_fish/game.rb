@@ -24,12 +24,9 @@ module GoFish
     def decide_winner
       highest_count = players.map(&:book_count).max
       tied_players = players.select { |player| player.book_count == highest_count }
+      return tied_players.first if tied_players.length == 1
 
-      if tied_players.length == 1
-        tied_players.first
-      else
-        handle_book_tie(tied_players)
-      end
+      handle_book_tie(tied_players)
     end
 
     def handle_book_tie(tied_players)

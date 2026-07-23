@@ -40,20 +40,17 @@ class IconBuilder
   end
 
   def build
-    options = {
-      class: tag_classes.compact_blank.join(" "),
-      title: hover_text
-    }
-
-    if color.present?
-      # color: primary, neutral, alerts-notice, alerts-warning, alerts-danger, alerts-info
-      options[:style] = "#{color_attribute}: var(--op-color-#{color}-base);"
-    end
-
-    tag.send(tag_method, tag_contents, **options)
+    tag.send(tag_method, tag_contents, **build_options)
   end
 
   private
+
+  # color: primary, neutral, alerts-notice, alerts-warning, alerts-danger, alerts-info
+  def build_options
+    options = { class: tag_classes.compact_blank.join(" "), title: hover_text }
+    options[:style] = "#{color_attribute}: var(--op-color-#{color}-base);" if color.present?
+    options
+  end
 
   def tag_method
     raise NotImplementedError

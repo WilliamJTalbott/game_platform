@@ -50,8 +50,8 @@ RSpec.describe RummyGamePresenter do
         owner: game.state.players.last.user_id
       )
       game.state.melds = [ opponent_meld ]
-
       meld_view = presenter.melds.first
+
       expect(meld_view).to have_attributes(kind: "set", owner: game.state.players.last.name, cards: opponent_meld.cards)
     end
 

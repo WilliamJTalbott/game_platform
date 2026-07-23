@@ -1,3 +1,12 @@
+DEFAULT_PLAYWRIGHT_OPTIONS = {
+  browser_type: :chromium,
+  headless: true,
+  viewport: { width: 1400, height: 1400 },
+  browser_options: {
+    args: [ '--disable-backgrounding-occluded-windows' ]
+  }
+}.freeze
+
 RSpec.configure do |config|
   Capybara.register_driver :playwright_headless do |app|
     create_driver(app)
@@ -28,16 +37,7 @@ RSpec.configure do |config|
   end
 
   def create_driver(app, options = {})
-    default_options = {
-      browser_type: :chromium,
-      headless: true,
-      viewport: { width: 1400, height: 1400 },
-      browser_options: {
-        args: [ '--disable-backgrounding-occluded-windows' ]
-      }
-    }
-
-    merged_options = default_options.merge(options)
+    merged_options = DEFAULT_PLAYWRIGHT_OPTIONS.merge(options)
     Capybara::Playwright::Driver.new(app, **merged_options)
   end
 end
