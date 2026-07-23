@@ -1,0 +1,43 @@
+/* Floating feed — pinned over the top-right of .game--rummy (see game.css), so it
+   reads as a live message trail rather than a side panel. Older entries fade/ghost. */
+.bubble-stack {
+  position: absolute;
+  top: var(--op-space-x-large);
+  right: var(--op-space-medium);
+  width: calc(26 * var(--op-space-scale-unit));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--op-space-2x-small);
+  z-index: 1;
+}
+
+.feed-bubble {
+  max-width: 100%;
+  border-radius: var(--op-radius-large) var(--op-radius-large) var(--op-radius-small) var(--op-radius-large);
+  padding: var(--op-space-small) var(--op-space-medium);
+  font-size: var(--op-font-small);
+  background-color: var(--op-color-neutral-plus-max);
+  border: var(--op-border-width) solid var(--op-color-border);
+  box-shadow: var(--op-shadow-small);
+
+  &.feed-bubble--ghost {
+    opacity: 0.3;
+  }
+
+  &.feed-bubble--fade {
+    opacity: 0.6;
+  }
+
+  &.feed-bubble--directive {
+    background-color: var(--gf-color-accent);
+    border-color: var(--gf-color-accent);
+    color: var(--gf-color-on-accent);
+    font-weight: var(--op-font-weight-bold);
+
+    &::before {
+      content: "➜";
+      margin-right: var(--op-space-3x-small);
+    }
+  }
+}

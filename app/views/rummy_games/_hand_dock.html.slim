@@ -1,0 +1,13 @@
+.panel__body.hand-dock
+  .hand-dock__top
+    = render "rummy_games/phase_stepper"
+
+    .hand-dock__meta
+      span.hand-dock__count Your hand · 8 cards
+      span.hand-dock__timer
+        | Your turn —
+        b.hand-dock__timer-value 0:22
+
+  .hand-wrap
+    .hand-fan
+      = render partial: "rummy_games/hand_card", collection: hand_cards, as: :hand_card

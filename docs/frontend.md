@@ -118,7 +118,7 @@ Classes follow **`block__element--modifier`**, one block per file in `components
 - **Element** — a part of the block, joined with `__`: `.stat-block__header`,
   `.panel__body`, `.feed__messages`.
 - **Modifier** — a variant, joined with `--`: `.playing-card--playable`,
-  `.panel--board`, `.game--crazy`.
+  `.panel--board`, `.game--crazy_eights`, `.game--rummy`.
 
 Elements and modifiers are **nested inside the block** using SCSS `&`, so one file reads
 as one component:
@@ -179,13 +179,19 @@ as one component:
   `nav.sidebar.sidebar--drawer`. A bare `.sidebar {}` selector matches *both* nested
   elements. To override an Optics `.sidebar--drawer`-scoped property, match
   `.sidebar.sidebar--drawer` (same specificity, loads later) — see `components/sidebar.css`.
-- **The hand row never scrolls, and that's load-bearing.** `hand_controller.js`
-  (Stimulus, `data-controller="hand"`) measures rendered card width via
-  `ResizeObserver` and sets `--gf-card-overlap` (consumed by `.card-container`'s
-  `margin-left` in `playing_card.css`) so cards overlap *more* than the 40% default
-  whenever the hand is too wide to fit — never scroll, never shrink cards. This is why
-  `.panel--hand .panel__body` is `overflow: visible`: the CSS Overflow spec forces
-  `overflow-y` to compute as `auto` (clipping) whenever `overflow-x` is anything but
-  `visible`, which would clip the `.playing-card--playable:hover` lift at the row
-  instead of letting it rise over the header. Don't reintroduce `overflow-x: auto`
-  here without re-solving that clip.
+- **Go Fish / Crazy Eights' hand row never scrolls, and that's load-bearing.**
+  `hand_controller.js` (Stimulus, `data-controller="hand"`) measures rendered card
+  width via `ResizeObserver` and sets `--gf-card-overlap` (consumed by
+  `.card-container`'s `margin-left` in `playing_card.css`) so cards overlap *more*
+  than the 40% default whenever the hand is too wide to fit — never scroll, never
+  shrink cards. This is why `.panel--hand .panel__body` is `overflow: visible`: the
+  CSS Overflow spec forces `overflow-y` to compute as `auto` (clipping) whenever
+  `overflow-x` is anything but `visible`, which would clip the
+  `.playing-card--playable:hover` lift at the row instead of letting it rise over
+  the header. Don't reintroduce `overflow-x: auto` here without re-solving that clip.
+  **Rummy's hand-dock deliberately does the opposite** (see `hand_dock.css`): cards
+  are fixed-size and packed with a flat gap, `.hand-fan` scrolls horizontally on
+  overflow, and neither `data-controller="hand"` nor `--gf-card-overlap` computation
+  is wired up — `.hand-fan`'s own `padding-top` (sized to `--gf-card-hover-lift`)
+  reserves the lift headroom instead. Don't port one game's hand-overflow strategy
+  to the other without re-reading why it was chosen.

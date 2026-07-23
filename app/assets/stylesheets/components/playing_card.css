@@ -17,6 +17,14 @@
   aspect-ratio: var(--gf-card-aspect-ratio);
 }
 
+/* Self-sized (independent of parent height) — for cards inside compact chips like
+   melds, where there's no ancestor with an explicit height for --large to inherit. */
+.card-container--small {
+  flex: 0 0 auto;
+  width: calc(4 * var(--op-space-scale-unit));
+  aspect-ratio: var(--gf-card-aspect-ratio);
+}
+
 
 .playing-card {
 
@@ -31,12 +39,28 @@
   position: relative;
   z-index: 1;
 
+  /* The card face itself — the SVGs (dark_cards/*.svg) hold only the rank/suit
+     ink and paint on top of this. Keeping the face a real element (rather than
+     baked into the SVG) is what lets --selected below just swap a background
+     color instead of swapping images. */
+  background-color: var(--gf-card-face);
+  border: var(--op-border-width) solid var(--gf-card-border);
+  border-radius: var(--op-radius-medium);
+
   filter: var(--_gf-playing-card-shadow);
-  transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out, background-color 0.2s ease-in-out;
 
   &.playing-card--playable:hover {
     transform: translateY(calc(-1 * var(--gf-card-hover-lift)));
     filter: var(--_gf-playing-card-shadow) var(--_gf-playing-card-shadow-hover);
+  }
+
+  &.playing-card--selected {
+    transform: translateY(calc(-1 * var(--op-space-large)));
+    filter: var(--_gf-playing-card-shadow);
+    background-color: var(--gf-card-face-selected);
+    outline: calc(var(--op-border-width-large) - 1px) solid var(--gf-color-accent);
+    outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
   }
 
   img {

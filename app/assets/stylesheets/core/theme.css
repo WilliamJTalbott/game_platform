@@ -22,7 +22,15 @@
     --op-border-width: 1.8px;
     --op-border-width-large: 3px;
 
-    --op-radius-x-large: 12px;
+    /* Rounder overall, to match the mockup — overridden once here rather than
+       swapping which named token each component reaches for, so every consumer
+       of --op-radius-* (cards, melds, piles, the felt, popups, buttons...) stays
+       in lockstep instead of drifting component-by-component. */
+    --op-radius-small: 4px;
+    --op-radius-medium: 6px;
+    --op-radius-large: 10px;
+    --op-radius-x-large: 16px;
+    --op-radius-2x-large: 20px;
 
     --gf-card-hover-lift: 50px;
     --gf-card-aspect-ratio: 5 / 7;
@@ -30,16 +38,34 @@
     --gf-color-overlay: rgb(0 0 0 / 0.5);
     --gf-color-shadow: rgb(0 0 0 / 0.6);
 
+    /* Playing-card face — a deliberately dark, "ink on card stock" look that stays
+       constant regardless of the site's light/dark theme (see dark_cards/*.svg,
+       which now hold only the rank/suit ink; this is the card's background,
+       previously baked into each SVG as a fill+stroke rect). Warm-tinted off the
+       same neutral hue as the page chrome instead of a flat gray/black. */
+    --gf-card-face: #272520;
+    /* A dark, muted coral (same 16° hue as --gf-color-accent, much darker and
+       far less saturated) rather than a light wash of it — the rank/suit ink
+       needs to read clearly against a selected card, and both a lighter wash
+       and a fully-saturated dark coral fight with the ink for attention. */
+    --gf-card-face-selected: hsl(16 45% 20%);
+    --gf-card-border: #726e65;
+
     /* Coral — the CTA accent. NOT an Optics concept (Optics has only primary + neutral
        hues), so it's a project token applied explicitly to buttons + accent text.
-       - --gf-color-accent: flat bright coral for FILLS (buttons); paired with dark
-         --gf-color-on-accent ink because coral is light (white-on-coral fails contrast).
+       - --gf-color-accent: flat bright coral for FILLS (buttons, the directive
+         feed bubble); paired with white --gf-color-on-accent ink.
        - --gf-color-accent-text: a light-dark() pair so accent TEXT/links stay legible
          on both light and dark page backgrounds (a single bright coral would fail on
          white). Still one hue (16°) — coral never becomes a ramp / muddy copper. */
     --gf-color-accent: hsl(16 85% 62%);
-    --gf-color-on-accent: hsl(20 35% 14%);
+    --gf-color-on-accent: #fff;
     --gf-color-accent-text: light-dark(hsl(16 90% 42%), hsl(16 85% 66%));
+
+    /* Secondary — a soft coral tint for surfaces that need to read as "accent" without
+       the full-strength fill (e.g. a highlighted card in a list). Mixed against the
+       page surface rather than a fixed hex so it stays correct in both themes. */
+    --gf-color-accent-secondary: color-mix(in srgb, var(--gf-color-accent) 20%, var(--op-color-neutral-plus-max));
 
     /* Board — green felt, independent of the Optics re-skin above (the felt is a
        game concern, not an Optics color). Consumed by the board/table component —
@@ -47,6 +73,26 @@
        light-mode felt and the deep dark-mode felt from one token. */
     --gf-felt: light-dark(#bfd2c6, #1b2a22);
     --gf-felt-bright: light-dark(#e6f5ea, #274035);
+
+    /* Popup surface (confirm-pop) — needs its own light-dark() pair rather than
+       an Optics --op-color-neutral-plus-* step: those all trend toward the page's
+       own near-black in dark mode (by design, for chrome like the sidebar), which
+       left the popup reading as the same darkness as the page behind it instead
+       of a raised card. */
+    --gf-popup-surface: light-dark(#faf9f6, #24221e);
+
+    /* Straight from the mockup's --meld-chip: a translucent white laid over the felt
+       zone, so it's guaranteed lighter than whatever's underneath in both themes
+       (rather than a solid hand-picked color that has to be tuned to match). */
+    --gf-felt-brighter: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05));
+
+    /* The mockup's "muted" secondary-text color reads noticeably brighter in dark
+       mode than Optics' own neutral-minus-two (58% lightness vs. minus-two's 40%),
+       which made labels like "Piles" hard to read there. minus-four's dark value
+       (52%) is the closest ramp step to that target; its light value (24%) still
+       reads fine (a touch darker/higher-contrast than the mockup's own light-mode
+       muted, not a problem). */
+    --gf-color-muted: var(--op-color-neutral-minus-four);
 
     /* CSS custom properties can't be read inside @media conditions, so these are
        documentation only — keep any `@media (max-width: …)` query in sync by hand. */

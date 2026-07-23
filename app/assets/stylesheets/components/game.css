@@ -18,6 +18,17 @@
   "hand feed";
   }
 
+  /* Rummy's feed is a floating bubble stack (see bubble_stack.css), not a side panel —
+     it's positioned absolutely against this element rather than occupying a grid area. */
+  &.game--rummy {
+    position: relative;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    grid-template-areas:
+      "board"
+      "hand";
+  }
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr auto auto auto;

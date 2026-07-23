@@ -1,0 +1,11 @@
+.opponent-card class=("opponent-card--turn" if opponent.turn)
+  p.opponent-card__name
+    - if opponent.turn
+      i.opponent-card__turn-icon.ph.ph-star.icon--filled
+    = opponent.name
+
+  .opponent-card__divider
+
+  .opponent-card__hand
+    - 3.times do
+      span.opponent-card__mini-card

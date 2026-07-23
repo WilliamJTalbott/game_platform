@@ -1,15 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 252" width="180" height="252">
-<rect x="1.5" y="1.5" width="177" height="249" rx="10" fill="#2a2a2a" stroke="#63666B" stroke-width="3"/>
-<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#e04040">6</text>
-<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="#e04040">♥</text>
+<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#dc4d38">6</text>
+<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="#dc4d38">♥</text>
 <g transform="rotate(180, 90.0, 126.0)">
-<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#e04040">6</text>
-<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="#e04040">♥</text>
+<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#dc4d38">6</text>
+<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="#dc4d38">♥</text>
 </g>
-<text x="62.0" y="82.3" font-family="Georgia, serif" font-size="28" fill="#e04040" text-anchor="middle" dominant-baseline="middle">♥</text>
-<text x="118.0" y="82.3" font-family="Georgia, serif" font-size="28" fill="#e04040" text-anchor="middle" dominant-baseline="middle">♥</text>
-<text x="62.0" y="126.0" font-family="Georgia, serif" font-size="28" fill="#e04040" text-anchor="middle" dominant-baseline="middle">♥</text>
-<text x="118.0" y="126.0" font-family="Georgia, serif" font-size="28" fill="#e04040" text-anchor="middle" dominant-baseline="middle">♥</text>
-<text x="62.0" y="169.7" font-family="Georgia, serif" font-size="28" fill="#e04040" text-anchor="middle" dominant-baseline="middle" transform="rotate(180,62.0,169.7)">♥</text>
-<text x="118.0" y="169.7" font-family="Georgia, serif" font-size="28" fill="#e04040" text-anchor="middle" dominant-baseline="middle" transform="rotate(180,118.0,169.7)">♥</text>
+<text x="62.0" y="82.3" font-family="Georgia, serif" font-size="28" fill="#dc4d38" text-anchor="middle" dominant-baseline="middle">♥</text>
+<text x="118.0" y="82.3" font-family="Georgia, serif" font-size="28" fill="#dc4d38" text-anchor="middle" dominant-baseline="middle">♥</text>
+<text x="62.0" y="126.0" font-family="Georgia, serif" font-size="28" fill="#dc4d38" text-anchor="middle" dominant-baseline="middle">♥</text>
+<text x="118.0" y="126.0" font-family="Georgia, serif" font-size="28" fill="#dc4d38" text-anchor="middle" dominant-baseline="middle">♥</text>
+<text x="62.0" y="169.7" font-family="Georgia, serif" font-size="28" fill="#dc4d38" text-anchor="middle" dominant-baseline="middle" transform="rotate(180,62.0,169.7)">♥</text>
+<text x="118.0" y="169.7" font-family="Georgia, serif" font-size="28" fill="#dc4d38" text-anchor="middle" dominant-baseline="middle" transform="rotate(180,118.0,169.7)">♥</text>
 </svg>

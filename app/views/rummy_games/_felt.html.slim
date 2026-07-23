@@ -1,0 +1,15 @@
+.felt
+  .felt-zone.felt-zone--piles
+    span.felt-zone__label Piles
+
+    .felt-zone__body
+      = render "rummy_games/pile", card: nil, label: "Stock"
+      = render "rummy_games/pile", card: discard_top, label: "Discard"
+
+  .felt-zone.felt-zone--melds
+    span.felt-zone__label Shared melds
+
+    .felt-zone__body
+      = render partial: "rummy_games/meld", collection: melds, as: :meld
+
+  = render "rummy_games/confirm_pop"

@@ -30,4 +30,7 @@ Rails.application.routes.draw do
   resources :rules, only: [ :index ]
 
   resources :offline, only: [ :index ]
+
+  # Temporary — static design preview for the Rummy mockup. Remove once Rummy ships for real.
+  get "rummy-preview" => "rummy_previews#show", as: :rummy_preview
 end

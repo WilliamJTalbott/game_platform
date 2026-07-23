@@ -1,0 +1,41 @@
+.meld {
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-3x-small);
+  padding: var(--op-space-x-small);
+  border-radius: var(--op-radius-medium);
+  background-color: var(--gf-felt-brighter);
+  border: var(--op-border-width) solid var(--gf-color-muted);
+
+  .meld__header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--op-space-small);
+  }
+
+  .meld__kind {
+    font-size: var(--op-font-x-small);
+    color: var(--gf-color-muted);
+  }
+
+  .meld__owner {
+    font-size: var(--op-font-x-small);
+    color: var(--gf-color-accent-text);
+  }
+
+  .meld__cards {
+    display: flex;
+    gap: var(--op-space-3x-small);
+
+    /* Meld cards sit flat against the chip's own surface — no drop-shadow (that's
+       reserved for hand cards, which need to read as "lifted" off the felt). */
+    .playing-card {
+      filter: none;
+    }
+  }
+
+  &.meld--selected {
+    border-color: var(--gf-color-accent);
+    box-shadow: 0 0 0 var(--op-border-width-large) var(--gf-color-accent);
+  }
+}

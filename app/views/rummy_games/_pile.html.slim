@@ -1,0 +1,9 @@
+button.pile type="button"
+  .card-container.card-container--large
+    .playing-card
+      - if card
+        = image_tag("dark_cards/#{card.rank.downcase}_#{card.suit.downcase}.svg")
+      - else
+        = image_tag("dark_cards/card_back.svg")
+
+  p.pile__caption = label

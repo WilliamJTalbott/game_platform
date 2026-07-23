@@ -1,0 +1,4 @@
+button.hand-card type="button"
+  .card-container.card-container--large
+    .playing-card class=("playing-card--selected" if hand_card.selected)
+      = image_tag("dark_cards/#{hand_card.card.rank.downcase}_#{hand_card.card.suit.downcase}.svg")

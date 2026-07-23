@@ -1,52 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 252" width="180" height="252">
-  <defs>
-    <pattern id="lattice" x="0" y="0" width="18" height="18" patternUnits="userSpaceOnUse">
-      <path d="M9,0 L18,9 L9,18 L0,9 Z" fill="none" stroke="#7a1515" stroke-width="0.7"/>
-    </pattern>
-    <clipPath id="inner-clip">
-      <rect x="14" y="14" width="152" height="224" rx="6"/>
-    </clipPath>
-  </defs>
+  <!-- No background rect/border here — the card face is the .playing-card div,
+       see playing_card.css. This is ink only, same as the rank/suit faces.
 
-  <!-- Card base -->
-  <rect x="1.5" y="1.5" width="177" height="249" rx="10" fill="#2a2a2a" stroke="#63666B" stroke-width="3"/>
+       An 8-petal sunburst medallion in the accent coral, alternating a bright
+       and a deep tone for depth, framed by a thin ring and simple corner dots. -->
 
-  <!-- Inner field with lattice -->
-  <rect x="14" y="14" width="152" height="224" rx="6" fill="#221010"/>
-  <rect x="14" y="14" width="152" height="224" rx="6" fill="url(#lattice)" clip-path="url(#inner-clip)"/>
+  <circle cx="90" cy="126" r="72" fill="none" stroke="#f0784c" stroke-width="0.8" opacity="0.3"/>
 
-  <!-- Double border frame -->
-  <rect x="8"  y="8"  width="164" height="236" rx="8" fill="none" stroke="#cc1122" stroke-width="1.5"/>
-  <rect x="14" y="14" width="152" height="224" rx="6" fill="none" stroke="#cc1122" stroke-width="0.8"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#f0784c" fill-opacity="0.85"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#cf4817" fill-opacity="0.55" transform="rotate(45 90 126)"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#f0784c" fill-opacity="0.85" transform="rotate(90 90 126)"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#cf4817" fill-opacity="0.55" transform="rotate(135 90 126)"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#f0784c" fill-opacity="0.85" transform="rotate(180 90 126)"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#cf4817" fill-opacity="0.55" transform="rotate(225 90 126)"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#f0784c" fill-opacity="0.85" transform="rotate(270 90 126)"/>
+  <path d="M90,50  C101,80  101,106 90,126 C79,106  79,80  90,50  Z"  fill="#cf4817" fill-opacity="0.55" transform="rotate(315 90 126)"/>
 
-  <!-- Central nested diamond ornament -->
-  <!-- Outermost diamond -->
-  <polygon points="90,58 138,126 90,194 42,126"
-           fill="none" stroke="#e04040" stroke-width="1.4"/>
-  <!-- Middle diamond -->
-  <polygon points="90,78 118,126 90,174 62,126"
-           fill="none" stroke="#cc1122" stroke-width="1"/>
-  <!-- Inner diamond (subtle fill) -->
-  <polygon points="90,98 108,126 90,154 72,126"
-           fill="#cc1122" fill-opacity="0.12" stroke="#e04040" stroke-width="0.8"/>
+  <circle cx="90" cy="126" r="17" fill="none" stroke="#f0784c" stroke-width="1.3"/>
+  <text x="90" y="127" font-family="Georgia, serif" font-size="16" fill="#f0784c" text-anchor="middle" dominant-baseline="middle">&#9830;</text>
 
-  <!-- Center diamond symbol -->
-  <text x="90" y="133" font-family="Georgia, serif" font-size="22"
-        fill="#e04040" text-anchor="middle" dominant-baseline="middle">♦</text>
-
-  <!-- Corner L-bracket ornaments -->
-  <!-- top-left -->
-  <polyline points="21,28 21,21 28,21" fill="none" stroke="#e04040" stroke-width="1"/>
-  <!-- top-right -->
-  <polyline points="152,21 159,21 159,28" fill="none" stroke="#e04040" stroke-width="1"/>
-  <!-- bottom-left -->
-  <polyline points="21,224 21,231 28,231" fill="none" stroke="#e04040" stroke-width="1"/>
-  <!-- bottom-right -->
-  <polyline points="152,231 159,231 159,224" fill="none" stroke="#e04040" stroke-width="1"/>
-
-  <!-- Midpoint accent diamonds on outer border edges -->
-  <polygon points="90,62 93,65 90,68 87,65" fill="#e04040"/>
-  <polygon points="90,184 93,187 90,190 87,187" fill="#e04040"/>
-  <polygon points="45,126 48,123 51,126 48,129" fill="#e04040"/>
-  <polygon points="129,126 132,123 135,126 132,129" fill="#e04040"/>
+  <circle cx="24" cy="30" r="2.4" fill="#f0784c" opacity="0.55"/>
+  <circle cx="156" cy="30" r="2.4" fill="#f0784c" opacity="0.55"/>
+  <circle cx="24" cy="222" r="2.4" fill="#f0784c" opacity="0.55"/>
+  <circle cx="156" cy="222" r="2.4" fill="#f0784c" opacity="0.55"/>
 </svg>

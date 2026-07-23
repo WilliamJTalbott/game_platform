@@ -1,0 +1,63 @@
+/* The board panel's body is normally a static block of content, but the mockup's
+   stage is a grid (opponents auto, felt 1fr, hand auto) — the felt claims whatever
+   room the opponents strip doesn't need. Scoped to game--rummy so go_fish/crazy_eights
+   boards, which don't have a felt, are untouched. */
+.game--rummy .panel--board .panel__body {
+  display: flex;
+  flex-direction: column;
+  padding: var(--op-space-medium);
+}
+
+/* The felt is the muted board surface; each felt-zone is a raised, brighter panel on
+   top of it (piles on the left, shared melds filling the rest). Board tokens live in
+   theme.css (--gf-felt / --gf-felt-bright) since the board is a game concern, not an
+   Optics re-skin. */
+.felt {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: var(--op-space-medium);
+  margin-top: var(--op-space-medium);
+  padding: var(--op-space-medium);
+  border-radius: var(--op-radius-x-large);
+  background-color: var(--gf-felt);
+  overflow: hidden;
+}
+
+.felt-zone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-small);
+  padding: var(--op-space-small) var(--op-space-medium);
+  border-radius: var(--op-radius-large);
+  background-color: var(--gf-felt-bright);
+  box-shadow: var(--op-shadow-small);
+
+  .felt-zone__label {
+    font-size: var(--op-font-x-small);
+    font-weight: var(--op-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--op-letter-spacing-label);
+    color: var(--gf-color-muted);
+  }
+
+  .felt-zone__body {
+    display: flex;
+    align-items: center;
+    gap: var(--op-space-medium);
+  }
+
+  &.felt-zone--piles {
+    flex: 0 0 auto;
+  }
+
+  &.felt-zone--melds {
+    flex: 1;
+
+    .felt-zone__body {
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+}

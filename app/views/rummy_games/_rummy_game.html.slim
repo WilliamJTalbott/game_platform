@@ -1,0 +1,15 @@
+.game.game--rummy
+  / Board — opponents strip + the felt (piles & shared melds)
+  .panel.panel--board
+    .panel__body
+      .opponent-strip
+        = render partial: "rummy_games/opponent", collection: opponents, as: :opponent
+
+      = render "rummy_games/felt", discard_top: discard_top, melds: melds
+
+  / Feed — floating message bubbles, pinned over the top-right of the board
+  = render "rummy_games/bubble_stack"
+
+  / Hand — turn-phase stepper, your cards, and the contextual confirm popup
+  .panel.panel--hand.panel--base
+    = render "rummy_games/hand_dock", hand_cards: hand_cards
