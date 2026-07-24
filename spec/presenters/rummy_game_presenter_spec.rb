@@ -52,7 +52,14 @@ RSpec.describe RummyGamePresenter do
       game.state.melds = [ opponent_meld ]
       meld_view = presenter.melds.first
 
-      expect(meld_view).to have_attributes(kind: "set", owner: game.state.players.last.name, cards: opponent_meld.cards)
+      expect(meld_view).to have_attributes(label: "Set · 9", owner: game.state.players.last.name, cards: opponent_meld.cards)
+    end
+
+    it "labels a run with its shared suit glyph" do
+      run = [ CardGame::Card.new("4", "Diamonds"), CardGame::Card.new("5", "Diamonds"), CardGame::Card.new("6", "Diamonds") ]
+      game.state.melds = [ Rummy::Meld.build(cards: run, owner: game.state.players.last.user_id) ]
+
+      expect(presenter.melds.first.label).to eq "Run · ♦"
     end
 
     it "labels the viewer's own meld \"you\"" do

@@ -1,0 +1,73 @@
+.meld {
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-2x-small);
+  padding: var(--op-space-x-small);
+  border-radius: var(--op-radius-large);
+  background-color: var(--gf-felt-brighter);
+  box-shadow: var(--gf-lobby-bar-shadow);
+
+  .meld__header {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--op-space-small);
+  }
+
+  .meld__label {
+    font-size: var(--op-font-x-small);
+    color: var(--gf-color-muted);
+  }
+
+  .meld__owner {
+    font-size: var(--op-font-x-small);
+    color: var(--gf-color-accent-text);
+  }
+
+  .meld__cards {
+    display: flex;
+    gap: var(--op-space-2x-small);
+  }
+
+  /* A simplified placeholder for each melded card — just its rank + suit glyph on
+     the dark card stock, far more legible at this size than the full card art. It
+     keeps the real card's portrait aspect ratio so it still reads as a card, not a
+     squashed pill. */
+  .meld__card {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(4 * var(--op-space-scale-unit));
+    aspect-ratio: var(--gf-card-aspect-ratio);
+    font-size: var(--op-font-x-small);
+    font-weight: var(--op-font-weight-semi-bold);
+    line-height: 1;
+    color: var(--gf-card-ink);
+    background-color: var(--gf-card-face);
+    border: var(--op-border-width) solid var(--gf-card-border);
+    border-radius: var(--op-radius-medium);
+
+    &.meld__card--red {
+      color: var(--gf-card-ink-red);
+    }
+  }
+}
+
+.meld--new {
+  align-items: center;
+  justify-content: center;
+  min-width: var(--op-space-4x-large);
+  min-height: var(--op-space-4x-large);
+  border: var(--op-border-width-large) dashed var(--gf-color-muted);
+  background-color: transparent;
+
+  /* .meld's own `display: flex` (same specificity) would otherwise win the
+     cascade tie over the UA stylesheet's [hidden] rule and keep this visible. */
+  &[hidden] {
+    display: none;
+  }
+
+  .meld__plus {
+    font-size: var(--op-font-large);
+    color: var(--gf-color-muted);
+  }
+}

@@ -3,7 +3,7 @@
     = simple_form_for game_info.form,
             as: :turn,
             url: game_turns_path(game_info.game),
-            data: { controller: "rummy-turn" },
+            data: { controller: "rummy-turn", "rummy-turn-phase-value": game_info.phase },
             html: { class: "rummy-turn-form" } do |f|
 
       = f.hidden_field :action, data: { "rummy-turn-target": "action" }

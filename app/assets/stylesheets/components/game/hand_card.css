@@ -1,12 +1,19 @@
-/* .hand-card is the actual flex item inside .hand-fan — it has to carry the
-   height/flex sizing itself so the nested .card-container--large's height:100%
-   has something definite to resolve against. */
+/* .hand-card is one card in a player's own hand — the flex item inside .hand-fan,
+   shared by every game. It carries the height/flex sizing itself so the nested
+   .card-container--large's height:100% has something definite to resolve against.
+   Selectable hands (Rummy) wrap a hidden checkbox (.hand-card__input); display-only
+   hands (Go Fish, Crazy Eights) omit it and so match none of the affordance rules
+   below — they render as plain, static cards. */
 .hand-card {
   position: relative;
   display: block;
   flex: 0 0 auto;
   height: 100%;
-  cursor: pointer;
+  cursor: default;
+
+  &:has(.hand-card__input) {
+    cursor: pointer;
+  }
 
   &:has(.hand-card__input:disabled) {
     opacity: 0.75;
@@ -14,14 +21,15 @@
     cursor: default;
   }
 
-  &:not(:has(.hand-card__input:disabled)) .playing-card {
-    outline: calc(var(--op-border-width-large) - 1px) solid var(--gf-card-outline-playable);
+  &:has(.hand-card__input:enabled) .playing-card {
+    outline: calc(var(--op-border-width-large) - 1px) solid var(--op-color-neutral-base);
     outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
   }
 
-  &:not(:has(.hand-card__input:disabled)):hover .playing-card,
+  &:has(.hand-card__input:enabled):hover .playing-card,
   &:has(.hand-card__input:focus-visible) .playing-card {
-    outline-color: var(--gf-color-accent);
+    outline-color: var(--op-color-neutral-minus-three);
+    background-color: var(--op-color-neutral-plus-three);
   }
 }
 

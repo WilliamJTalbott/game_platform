@@ -47,6 +47,24 @@ RSpec.describe "Rummy turns", type: :request do
     end
   end
 
+  context "when the active player selects cards that don't form a meld" do
+    before do
+      sign_in(active_user)
+      game.state.active_player.cards =
+        [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("2", "Spades"), CardGame::Card.new("7", "Clubs") ] +
+        game.state.active_player.cards
+      game.save!
+    end
+
+    it "rejects the meld" do
+      post game_turns_path(game), params: { turn: { action: "draw_stock" } }
+      post game_turns_path(game), params: { turn: { action: "meld", cards: %w[9-Hearts 2-Spades 7-Clubs] } }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(game.reload.state.melds).to be_empty
+    end
+  end
+
   context "when the active player lays a card off onto an opponent's meld" do
     let(:existing_meld) do
       Rummy::Meld.new(

@@ -18,7 +18,7 @@ There are exactly two kinds of color:
    handful of **hand-picked shades** (`--gf-color-accent*`), *not* a derived ramp.
 2. **Zone accents — one hand-picked color owned by a single context.** Green is the
    game **felt** (`--gf-felt*`); blue is the games-index **lobby** (`--gf-lobby-bar`,
-   consumed by the raised game bars in `components/game_card.css`). A zone accent is
+   consumed by the raised game bars in `components/lobby/game_card.css`). A zone accent is
    applied only inside its zone and never leaks out — green appears *only* on the card
    table, never on chrome.
 
@@ -55,9 +55,10 @@ The layout links every local stylesheet with one helper call, in
   `--op-*` tokens and `.op-*` component classes come from.
 - **Line 2** uses a Propshaft feature: `:app` is a **bulk-include symbol**, not a
   filename. It emits a separate `<link>` for **every** stylesheet under `app/assets`
-  (`core/base.css`, `core/theme.css`, and all of `components/*.css`). Propshaft also
-  offers `:all`, which additionally includes gem-provided stylesheets — we use `:app`
-  so only our own CSS is linked.
+  — it globs `app/assets/**/*.css` **recursively**, so `core/*.css` and every file in
+  the `components/` subfolders are all picked up (order is by sorted logical path).
+  Propshaft also offers `:all`, which additionally includes gem-provided stylesheets —
+  we use `:app` so only our own CSS is linked.
 
 **Consequence for daily work:** to add styles, just drop a `.css` file in
 `app/assets/stylesheets/` and Propshaft serves it automatically. There is **no
@@ -73,12 +74,16 @@ app/assets/stylesheets/
   core/
     base.css               # element resets / global defaults
     theme.css              # ALL design tokens live here (see below)
-  components/
-    playing_card.css       # one BEM block per file
-    panel.css
-    stat_block.css
-    ...
+  components/              # one BEM block per file, grouped by domain
+    layout/                # app structure & chrome: page, panel, sidebar, menu, banner, body, overlay
+    game/                  # in-game screens: game, felt, cards, hand, pile, meld, feed, opponents, …
+    lobby/                 # home/lobby & account: lobby, game_card, info_card, profile, stats, login
+    ui/                    # generic reusable widgets: button, dialog, popup
 ```
+
+The subfolders are purely for navigation — Propshaft's recursive glob loads every
+file regardless of depth, so a block can move between folders without touching any
+link tag or manifest. Pick the folder by the block's domain; when in doubt, `game/`.
 
 ## Optics
 
@@ -133,7 +138,7 @@ How each color in the model maps to tokens (see the annotated `core/theme.css`):
   primary ramp for a surface.
 - **Coral is hand-picked project tokens.** `--gf-color-accent` (flat bright fill) +
   `--gf-color-on-accent` (ink on it) for fills like primary buttons
-  (`components/button.css`) and the directive bubble; `--gf-color-accent-text` (a
+  (`components/ui/button.css`) and the directive bubble; `--gf-color-accent-text` (a
   `light-dark()` pair, contrast-safe on either page background) for accent text/headings/
   brand (`body`/`info_card`/`profile`/`sidebar`/`meld`); `--gf-color-accent-secondary`
   (a soft tint) for "accent" surfaces that shouldn't be full-strength. All one hue (16°) —
@@ -141,8 +146,8 @@ How each color in the model maps to tokens (see the annotated `core/theme.css`):
 - **Green is the felt zone accent.** `--gf-felt`/`--gf-felt-bright`/`--gf-felt-brighter`
   (`light-dark()` pairs) paint the card table only. Green appears nowhere else.
 - **Blue is the lobby zone accent.** `--gf-lobby-bar` (`light-dark()` pair) is the
-  games-index's raised game-bar surface, consumed by `components/game_card.css`. Its tray
-  (`components/lobby.css`) stays warm-neutral chrome via its own dedicated
+  games-index's raised game-bar surface, consumed by `components/lobby/game_card.css`. Its tray
+  (`components/lobby/lobby.css`) stays warm-neutral chrome via its own dedicated
   `--gf-lobby-tray-bg`/`--gf-lobby-tray-border` tokens (a step darker than the page, not an
   Optics ramp step — see the `light-dark()` gotcha below for why that distinction matters);
   only the bars carry blue. The recessed-tray/raised-bar elevation pair is
@@ -199,7 +204,8 @@ as one component:
 
 ## Adding a new styled component
 
-1. Create `app/assets/stylesheets/components/<block-name>.css`.
+1. Create `app/assets/stylesheets/components/<domain>/<block-name>.css`, picking the
+   domain subfolder (`layout/`, `game/`, `lobby/`, `ui/`) by what the block is for.
 2. Name the root class after the block; add elements/modifiers with `__`/`--`, nested
    under the block with `&`.
 3. Color it per the color model: **neutrals** (surfaces, borders, body text) come from
@@ -249,7 +255,7 @@ as one component:
   partial in a generic `div.sidebar`, and the partial's own root renders Optics'
   `nav.sidebar.sidebar--drawer`. A bare `.sidebar {}` selector matches *both* nested
   elements. To override an Optics `.sidebar--drawer`-scoped property, match
-  `.sidebar.sidebar--drawer` (same specificity, loads later) — see `components/sidebar.css`.
+  `.sidebar.sidebar--drawer` (same specificity, loads later) — see `components/layout/sidebar.css`.
 - **Go Fish / Crazy Eights' hand row never scrolls, and that's load-bearing.**
   `hand_controller.js` (Stimulus, `data-controller="hand"`) measures rendered card
   width via `ResizeObserver` and sets `--gf-card-overlap` (consumed by

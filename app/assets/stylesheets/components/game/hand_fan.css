@@ -1,0 +1,30 @@
+/* The shared player's-hand row for every game (Go Fish, Crazy Eights, Rummy).
+   .hand-wrap is the positioned band that gives .hand-fan a definite height to
+   size its cards against; .hand-fan is the scrolling row of .hand-card items. */
+.hand-wrap {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Cards keep their natural (aspect-ratio-derived) size and a fixed gap, packed
+   flush left — they never stretch/space-out to fill the row. A hand that
+   overflows the available width scrolls horizontally instead of shrinking or
+   fanning into an overlap. padding-top reserves room, inside this same clipping
+   box, for a selected card's lift (see .hand-card__input:checked in
+   hand_card.css) so it isn't cut off by overflow-y: hidden below. */
+.hand-fan {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  gap: var(--op-space-x-small);
+  height: 100%;
+  padding-top: var(--gf-card-hover-lift);
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .card-container {
+    --gf-card-overlap: 0px;
+  }
+}

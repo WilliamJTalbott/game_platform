@@ -48,9 +48,11 @@
     .panel__header
       p Your Hand
 
-    .panel__body.hand
+    .panel__body
       - if game_info.started?
-        = render partial: "go_fish_games/card", collection: game_info.cards, as: :card
+        .hand-wrap
+          .hand-fan
+            = render partial: "go_fish_games/hand_card", collection: game_info.cards, as: :hand_card
 
 - unless game_info.started?
   .overlay.card

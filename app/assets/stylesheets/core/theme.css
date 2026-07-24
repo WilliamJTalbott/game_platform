@@ -1,57 +1,28 @@
 :root {
 
-    /* THE COLOR MODEL (read docs/frontend.md first): Optics contributes ONLY the
-       neutral chrome. Every actual *color* on the site is hand-picked and applied
-       explicitly — none of our components derive color from the Optics primary ramp.
-       There are exactly two kinds of color:
-         1. Coral — the one brand accent, everywhere (CTAs, links, focus, brand). A few
-            hand-picked shades live below as --gf-color-accent*; NOT a derived ramp.
-         2. Zone accents — one hand-picked color owned by a single context: green for
-            the game felt (--gf-felt*, below), blue for the games-index lobby (added
-            when that page is built). A zone accent never leaks outside its zone.
-
-       Primary is pointed at CORAL's hue so Optics' OWN internal chrome (focus rings,
-       focused Simple Form inputs, any .op-* accent state we don't override) reads as
-       coral rather than a stray green or Optics default. This is the *only* reason the
-       primary knobs are set — our own CSS never reads --op-color-primary-*. Note the
-       fixed mid-dark base lightness means these internals render a MUTED coral; the
-       bright CTA coral stays the project token below. Do not re-point our components
-       at this ramp to get coral — use --gf-color-accent* instead. */
+    /* Color model: see docs/frontend.md ("The color model" + "Design tokens"). Optics
+       owns only the neutral chrome; every actual color (coral accent, felt/lobby zone
+       accents) is hand-picked below, never derived from --op-color-primary-*. Primary
+       is pointed at coral's hue solely so Optics' own internal chrome (focus rings,
+       focused Simple Form inputs) reads coral instead of a stray default. */
     --op-color-primary-h: 16;    /* coral, matches --gf-color-accent */
     --op-color-primary-s: 70%;
     --op-color-primary-l: 40%;   /* nearly inert — Optics hardcodes the base lightness */
 
-    /* Chrome — warm slate. Optics' neutral scale drives background/border/surface
-       colors, and its hue tracks primary by default; we decouple it to the mockup's
-       "yellow slate gray" — a warm hue (~49°) at enough saturation (14%) to read as
-       warm rather than a flat near-gray. (The mockup's neutrals sit at h49–54, s14–28%;
-       14% is a compromise — higher would over-tint the near-white 98% surfaces.) Both
-       light and dark re-skin from these knobs (the plus/minus tokens are light-dark()
-       pairs) — verify both schemes after changing them. Leave neutral-l inheriting
-       primary-l (its default). */
+    /* Chrome hue/sat — decoupled from primary (which it tracks by default) to a warm
+       "yellow slate gray" per the mockups. neutral-l is left at its primary-l default. */
     --op-color-neutral-h: 49;
     --op-color-neutral-s: 14%;
 
-    /* Page background — one step down the neutral ramp from Optics' near-white default
-       (plus-eight, 98%). plus-five (90% light / 18% dark) reads as a subtly darker warm
-       neutral, so the near-white surfaces (lobby tray 96%, panels 98%) sit slightly
-       raised off the page instead of blending into a flat white sheet. Not a special
-       hand-picked color — just a darker shade of the same neutral, from the ramp.
-       Only Optics' `body` rule consumes --op-color-background. */
+    /* One step down from Optics' near-white default so near-white surfaces (panels,
+       lobby tray) sit visibly raised off the page instead of blending into it. */
     --op-color-background: var(--op-color-neutral-plus-max);
 
     --op-border-width: 1.8px;
     --op-border-width-large: 3px;
 
-    /* Radius scale. It turns out the mockups' rounding IS Optics' native scale for
-       four of five steps — the mockups cluster at 2 / 5-6 / 8 / 12 / 20, and Optics
-       ships 2 / 4 / 8 / 12 / 16. So we keep Optics native for small(2) / medium(4) /
-       large(8) / x-large(12) and override ONLY 2x-large, which Optics tops out at 16px
-       but the mockups' big surfaces (the felt board, the lobby tray, the phase-stepper
-       chips, modals) want at 20px. Fidelity to the mockups then comes from each
-       component reaching for the step that matches its mockup counterpart — cards →
-       x-large(12), buttons/pile/meld → large(8), mini-cards → small(2) — not from
-       re-tuning the scale. One override, the rest is Optics. */
+    /* Optics tops out at 16px; the mockups' big surfaces (felt, lobby tray, modals)
+       want 20px. Every other radius step matches Optics' native scale already. */
     --op-radius-2x-large: 20px;
 
     --gf-card-hover-lift: 50px;
@@ -60,83 +31,39 @@
     --gf-color-overlay: rgb(0 0 0 / 0.5);
     --gf-color-shadow: rgb(0 0 0 / 0.6);
 
-    /* Playing-card face — a deliberately dark, "ink on card stock" look that stays
-       constant regardless of the site's light/dark theme (see dark_cards/*.svg,
-       which now hold only the rank/suit ink; this is the card's background,
-       previously baked into each SVG as a fill+stroke rect). Warm-tinted off the
-       same neutral hue as the page chrome instead of a flat gray/black. */
+    /* Card face stays a constant dark "ink on card stock" look regardless of site
+       theme (dark_cards/*.svg hold only the rank/suit ink now, not this fill). */
     --gf-card-face: #272520;
-    /* A dark, muted coral (same 16° hue as --gf-color-accent, much darker and
-       far less saturated) rather than a light wash of it — the rank/suit ink
-       needs to read clearly against a selected card, and both a lighter wash
-       and a fully-saturated dark coral fight with the ink for attention. */
-    --gf-card-face-selected: hsl(16 45% 20%);
+    --gf-card-face-selected: hsl(16 45% 20%); /* dark/muted coral so ink still reads over it */
     --gf-card-border: #726e65;
-    /* A lighter, translucent tint of --gf-card-border (same warm neutral hue)
-       for the "this card is playable" outline — plain white read cool/bluish
-       against the warm card face and page chrome. */
-    --gf-card-outline-playable: rgb(192 190 186 / 0.45);
+    --gf-card-outline-playable: rgb(192 190 186 / 0.45); /* warm tint; plain white read cool here */
+    /* Rank/suit ink for the simplified meld chips (rummy melds render cards as a
+       rank+suit glyph, not full art). Legible on the dark --gf-card-face. */
+    --gf-card-ink: #e9e7e1;
+    --gf-card-ink-red: hsl(4 74% 64%);
 
-    /* Coral — THE brand accent. A few hand-picked shades, applied explicitly to
-       buttons + accent text; not a derived ramp (Optics never generates these).
-       - --gf-color-accent: flat bright coral for FILLS (buttons, the directive
-         feed bubble); paired with white --gf-color-on-accent ink.
-       - --gf-color-accent-text: a light-dark() pair so accent TEXT/links stay legible
-         on both light and dark page backgrounds (a single bright coral would fail on
-         white). Still one hue (16°) — coral never becomes a ramp / muddy copper. */
+    /* Coral — the one brand accent (see docs/frontend.md). One hue (16°), a few
+       hand-picked shades, never a derived ramp. */
     --gf-color-accent: hsl(16 85% 62%);
     --gf-color-on-accent: #fff;
-    --gf-color-accent-text: light-dark(hsl(16 90% 42%), hsl(16 85% 66%));
-
-    /* Secondary — a soft coral tint for surfaces that need to read as "accent" without
-       the full-strength fill (e.g. a highlighted card in a list). Mixed against the
-       page surface rather than a fixed hex so it stays correct in both themes. */
+    --gf-color-accent-text: light-dark(hsl(16 90% 42%), var(--gf-color-accent)); /* legible on both page bgs */
     --gf-color-accent-secondary: color-mix(in srgb, var(--gf-color-accent) 20%, var(--op-color-neutral-plus-max));
 
-    /* Board — green felt: the game table's hand-picked ZONE accent. Green lives ONLY
-       here; it never appears on chrome (chrome is warm-neutral from Optics). Consumed
-       by the board/table component — apply `background: var(--gf-felt)` there.
-       light-dark() yields the muted light-mode felt and the deep dark-mode felt from
-       one token. (The games-index lobby will add a blue zone accent the same way.) */
+    /* Felt — the game board's zone accent. Green lives only here, never on chrome. */
     --gf-felt: light-dark(#bfd2c6, #1b2a22);
     --gf-felt-bright: light-dark(#e6f5ea, #274035);
+    --gf-felt-brighter: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05)); /* translucent white over felt */
 
-    /* Lobby — blue-gray: the games-index's hand-picked ZONE accent, the sibling of the
-       felt above. Consumed by components/game_card.css (the raised game bars). The tray
-       (components/lobby.css) stays warm-neutral chrome and only the raised bars carry
-       this blue, deliberately a softer pop than the green table so the felt still
-       out-pops it. --gf-lobby-bar is the raised bar surface (mockup --felt-bright); blue
-       lives ONLY in the lobby, never on chrome or the game table. */
+    /* Lobby — the games-index's zone accent, sibling of felt above. Only the raised
+       game bars (components/lobby/game_card.css) carry blue; the tray stays neutral chrome. */
     --gf-lobby-bar: light-dark(#eef1f5, #262b32);
-
-    /* Tray surface — a dedicated dark shade (mockup's --felt), not a step off the
-       Optics ramp: reusing --op-color-neutral-plus-seven sat LIGHTER than the page
-       body in dark mode (14% L vs the body's 8% L), which reads as raised instead of
-       recessed. This literal light-dark() pair matches the mockup felt's own measured
-       lightness (~91%/~9% L) so the tray sits visibly darker than its surroundings in
-       both themes, same warm neutral hue as the rest of chrome. */
     --gf-lobby-tray-bg: light-dark(
       hsl(var(--op-color-neutral-h) var(--op-color-neutral-s) 91%),
       hsl(var(--op-color-neutral-h) var(--op-color-neutral-s) 9%)
     );
-
-    /* Hairline tray edge (mockup's --felt-border) — subtle enough to read as a seam,
-       not a stroke, so it doesn't compete with the tray's inset shadow above.
-       light-dark() must wrap only the <color> argument, not the whole shorthand —
-       wrapping the full "1px solid rgb(...)" string is invalid and silently drops the
-       border to none (the bug that made this invisible before). */
+    /* light-dark() must wrap only the <color>, not the whole shorthand — see the
+       light-dark() gotcha in docs/frontend.md. */
     --gf-lobby-tray-border: 1px solid light-dark(rgb(90 80 55 / 0.14), rgb(200 185 140 / 0.09));
-
-    /* The lobby's two-layer elevation grammar (from the mockup's felt): a recessed
-       warm-neutral tray (inset shadow) holding raised bars (drop shadow). The tray
-       tone stays Optics neutral chrome — only --gf-lobby-bar above carries blue. This
-       pair is deliberately a softer pop than the green board's shadows so gameplay
-       still out-pops the lobby. light-dark() gives each its light/dark value.
-
-       Each shadow is two layers, straight from the mockup's --felt-inset-shadow /
-       --zone-shadow: the recess/raise depth cue, PLUS a hairline highlight (bottom
-       inset on the tray, top inset on the bars) that catches the "light" and sells
-       the bevel — without it the edges read flat instead of physically raised. */
     --gf-lobby-tray-shadow:
       inset 0 2px 6px light-dark(rgb(70 62 40 / 0.12), rgb(0 0 0 / 0.4)),
       inset 0 -1px 0 light-dark(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.03));
@@ -144,28 +71,10 @@
       inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.05)),
       0 2px 7px light-dark(rgb(70 62 40 / 0.13), rgb(0 0 0 / 0.34));
 
-    /* Popup surface (confirm-pop) — needs its own light-dark() pair rather than
-       an Optics --op-color-neutral-plus-* step: those all trend toward the page's
-       own near-black in dark mode (by design, for chrome like the sidebar), which
-       left the popup reading as the same darkness as the page behind it instead
-       of a raised card. */
-    --gf-popup-surface: light-dark(#faf9f6, #24221e);
+    --gf-color-muted: var(--op-color-neutral-minus-four); /* closest ramp step to the mockups' muted text in dark mode */
 
-    /* Straight from the mockup's --meld-chip: a translucent white laid over the felt
-       zone, so it's guaranteed lighter than whatever's underneath in both themes
-       (rather than a solid hand-picked color that has to be tuned to match). */
-    --gf-felt-brighter: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05));
-
-    /* The mockup's "muted" secondary-text color reads noticeably brighter in dark
-       mode than Optics' own neutral-minus-two (58% lightness vs. minus-two's 40%),
-       which made labels like "Piles" hard to read there. minus-four's dark value
-       (52%) is the closest ramp step to that target; its light value (24%) still
-       reads fine (a touch darker/higher-contrast than the mockup's own light-mode
-       muted, not a problem). */
-    --gf-color-muted: var(--op-color-neutral-minus-four);
-
-    /* CSS custom properties can't be read inside @media conditions, so these are
-       documentation only — keep any `@media (max-width: …)` query in sync by hand. */
+    /* CSS custom properties can't be read inside @media conditions — this is
+       documentation only; keep any matching @media (max-width: …) in sync by hand. */
     --gf-breakpoint-tablet: 768px;
 
 }

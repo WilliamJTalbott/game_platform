@@ -1,10 +1,8 @@
 button.meld type="button" disabled=(!can_select) data-action="click->rummy-turn#layOff" data-rummy-turn-meld-index-param=index
   .meld__header
-    span.meld__kind = meld.kind
+    span.meld__label = meld.label
     span.meld__owner = meld.owner
 
   .meld__cards
     - meld.cards.each do |card|
-      .card-container.card-container--small
-        .playing-card
-          = image_tag("dark_cards/#{card.rank.downcase}_#{card.suit.downcase}.svg")
+      span.meld__card class=("meld__card--red" if card.red?) = card.to_s

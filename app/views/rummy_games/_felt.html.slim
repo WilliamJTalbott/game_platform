@@ -8,7 +8,8 @@
               card: discard_top,
               label: "Discard",
               action: "draw_discard",
-              enabled: can_draw && discard_top.present?
+              enabled: can_draw && discard_top.present?,
+              discardable: true
 
   .felt-zone.felt-zone--melds
     span.felt-zone__label Shared melds
@@ -17,4 +18,5 @@
       - melds.each_with_index do |meld, index|
         = render "rummy_games/meld", meld: meld, index: index, can_select: can_select
 
-  = render "rummy_games/confirm_pop"
+      button.meld.meld--new hidden="hidden" type="button" data-rummy-turn-target="meldPlaceholder" data-action="click->rummy-turn#meld"
+        span.meld__plus +

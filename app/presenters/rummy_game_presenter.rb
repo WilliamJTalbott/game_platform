@@ -1,7 +1,7 @@
 class RummyGamePresenter < GamePresenter
   OpponentView = Struct.new(:name, :turn, :you, keyword_init: true)
   HandCardView = Struct.new(:card, keyword_init: true)
-  MeldView = Struct.new(:kind, :owner, :cards, keyword_init: true)
+  MeldView = Struct.new(:label, :owner, :cards, keyword_init: true)
 
   def players_in_turn_order
     game.state.players.map { |other_player| opponent_view(other_player) }
@@ -44,7 +44,18 @@ class RummyGamePresenter < GamePresenter
   end
 
   def meld_view(meld)
-    MeldView.new(kind: meld.kind, owner: owner_name(meld.owner), cards: meld.cards)
+    MeldView.new(label: meld_label(meld), owner: owner_name(meld.owner), cards: meld.cards)
+  end
+
+  # A set is defined by its shared rank, a run by its shared suit — surface that
+  # key next to the kind, e.g. "Set · 7" or "Run · ♠".
+  def meld_label(meld)
+    "#{meld.kind.capitalize} · #{meld_key(meld)}"
+  end
+
+  def meld_key(meld)
+    card = meld.cards.first
+    meld.kind == "set" ? card.rank : CardGame::Card::SUIT_SYMBOLS.fetch(card.suit)
   end
 
   def owner_name(owner_user_id)

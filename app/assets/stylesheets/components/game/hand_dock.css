@@ -4,18 +4,12 @@
    relative band (rather than the "auto" grid row growing to fit content) so the
    hand-fan below always has a definite height to size cards against. The cap is
    padded out by --gf-card-hover-lift so that room reserved for a lifted card
-   (see .hand-fan below) doesn't eat into the cards' own height. The background
+   (see .hand-fan in hand_fan.css) doesn't eat into the cards' own height. The background
    reuses Optics' own sidebar tone (--op-color-neutral-plus-eight) so the dock
    reads as the same "chrome" surface as the sidebar, per the mockup. */
 .game--rummy .panel--hand {
   max-height: calc(clamp(140px, 22vh, 220px) + var(--gf-card-hover-lift));
   background-color: var(--op-color-neutral-plus-eight);
-}
-
-.game--rummy .panel--hand .panel__body {
-  flex-direction: column;
-  align-items: stretch;
-  gap: var(--op-space-small);
 }
 
 .hand-dock {
@@ -48,31 +42,3 @@
   }
 }
 
-.hand-wrap {
-  position: relative;
-  width: 100%;
-  flex: 1;
-  min-height: 0;
-}
-
-/* Cards keep their natural (aspect-ratio-derived) size and a fixed gap, packed
-   flush left — they never stretch/space-out to fill the row. A hand that
-   overflows the available width scrolls horizontally instead of shrinking or
-   fanning into an overlap. padding-top reserves room, inside this same
-   clipping box, for a lifted/hovered card (see .playing-card--selected and
-   --playable:hover in playing_card.css) so it isn't cut off by overflow-y:
-   hidden below. */
-.hand-fan {
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-start;
-  gap: var(--op-space-x-small);
-  height: 100%;
-  padding-top: var(--gf-card-hover-lift);
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  .card-container {
-    --gf-card-overlap: 0px;
-  }
-}

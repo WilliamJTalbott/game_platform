@@ -51,4 +51,16 @@ RSpec.describe CardGame::Card do
       expect(described_class.from_s('10♦')).to eq described_class.new('10', 'Diamonds')
     end
   end
+
+  describe "#red?" do
+    it "is true for Hearts and Diamonds" do
+      expect(described_class.new('10', 'Diamonds')).to be_red
+      expect(described_class.new('4', 'Hearts')).to be_red
+    end
+
+    it "is false for Spades and Clubs" do
+      expect(described_class.new('A', 'Clubs')).to_not be_red
+      expect(described_class.new('K', 'Spades')).to_not be_red
+    end
+  end
 end

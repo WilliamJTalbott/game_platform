@@ -3,11 +3,12 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="rummy-turn"
 export default class extends Controller {
   static targets = [
-    "action", "meldIndex", "cardInput", "confirmPop", "confirmPopText", "meldButton", "discardButton"
+    "action", "meldIndex", "cardInput", "discardPile", "meldPlaceholder"
   ]
+  static values = { phase: String }
 
   draw({ params: { action } }) {
-    this.actionTarget.value = action
+    this.actionTarget.value = this.phaseValue === "meld" && action === "draw_discard" ? "discard" : action
     this.meldIndexTarget.value = ""
     this.element.requestSubmit()
   }
@@ -24,23 +25,11 @@ export default class extends Controller {
     this.element.requestSubmit()
   }
 
-  discardSelected() {
-    this.actionTarget.value = "discard"
-    this.meldIndexTarget.value = ""
-    this.element.requestSubmit()
-  }
-
   refresh() {
     const count = this.checkedInputs.length
-    const canMeld = count >= 3
-    const canDiscard = count === 1
 
-    this.meldButtonTarget.hidden = !canMeld
-    this.discardButtonTarget.hidden = !canDiscard
-    this.confirmPopTarget.hidden = !canMeld && !canDiscard
-    this.confirmPopTextTarget.textContent = canMeld
-      ? `Create a meld with these ${count} cards?`
-      : "Discard this card?"
+    this.meldPlaceholderTarget.hidden = count < 3
+    if (this.phaseValue === "meld") this.discardPileTarget.disabled = count !== 1
   }
 
   get checkedInputs() {

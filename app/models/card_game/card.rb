@@ -38,6 +38,8 @@ module CardGame
       "#{rank}#{suit_symbol}"
     end
 
+    def red? = %w[ Hearts Diamonds ].include?(suit)
+
     def self.from_s(str)
       new(str[0...-1], SUIT_SYMBOLS.key(str[-1]))
     end

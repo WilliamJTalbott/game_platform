@@ -219,42 +219,17 @@ RSpec.describe 'Games', type: :system do
           expect(page).to have_button("Ask for card")
         end
       end
-
-      it "keeps the hand un-clipped so a hovered card can lift past the row", :js do
-        resize_page(375, 700) do
-          visit game_path(game)
-          expect(panel_overflow_x(".panel--hand .panel__body")).to eq "visible"
-        end
-      end
     end
   end
 
-  context "[ Card overlap ]" do
+  context "[ Hand card layout ]" do
     context "go_fish game" do
       let!(:game) { create(:started_game, :go_fish, :users_turn, :many_participants, user: user) }
       let(:large_hand_game) do
         create(:started_game, :go_fish, :users_turn, :many_participants, user: user, users_count: 2)
       end
 
-      it "overlaps hand cards by a consistent ratio of the rendered card width", :js do
-        visit game_path(game)
-
-        offset = card_pair_offset(".panel--hand .card-container")
-
-        expect(offset["gap"]).to be_within(2).of(offset["width"] * 0.6)
-      end
-
-      it "keeps that ratio consistent on a narrower viewport, instead of a fixed offset", :js do
-        resize_page(700, 700) do
-          visit game_path(game)
-
-          offset = card_pair_offset(".panel--hand .card-container")
-
-          expect(offset["gap"]).to be_within(2).of(offset["width"] * 0.6)
-        end
-      end
-
-      it "overlaps the expanded opponent hand by the same ratio", :js do
+      it "overlaps the expanded opponent hand by a consistent ratio of the card width", :js do
         visit game_path(game)
         all(".player-dropdown__summary").first.click
 
@@ -268,21 +243,6 @@ RSpec.describe 'Games', type: :system do
         dims = card_container_dimensions(".panel--hand .card-container")
 
         expect(dims["width"] / dims["height"]).to be_within(0.05).of(5.0 / 7.0)
-      end
-
-      it "tightens overlap so a large hand fits the row without scrolling", :js do
-        resize_page(375, 700) do
-          visit game_path(large_hand_game)
-          expect(row_fits_without_scroll?(".panel--hand .panel__body")).to be true
-        end
-      end
-
-      it "tightens the overlap below 40% when the hand is too wide for 40%", :js do
-        resize_page(375, 700) do
-          visit game_path(large_hand_game)
-          offset = card_pair_offset(".panel--hand .card-container")
-          expect(offset["gap"]).to be < offset["width"] * 0.6
-        end
       end
     end
   end
@@ -335,25 +295,12 @@ def poll_loop
   end
 end
 
-def row_fits_without_scroll?(selector)
-  page.evaluate_script(<<~JS)
-    (function() {
-      var row = document.querySelector(#{selector.to_json});
-      return row.scrollWidth <= row.clientWidth + 1;
-    })()
-  JS
-end
-
 def panel_top(selector)
   page.evaluate_script("document.querySelector(#{selector.to_json}).getBoundingClientRect().top")
 end
 
 def panel_bottom(selector)
   page.evaluate_script("document.querySelector(#{selector.to_json}).getBoundingClientRect().bottom")
-end
-
-def panel_overflow_x(selector)
-  page.evaluate_script("getComputedStyle(document.querySelector(#{selector.to_json})).overflowX")
 end
 
 def card_pair_offset(selector)

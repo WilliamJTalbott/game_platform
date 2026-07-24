@@ -9585,7 +9585,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
 
 class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
   draw({ params: { action } }) {
-    this.actionTarget.value = action;
+    this.actionTarget.value = this.phaseValue === "meld" && action === "draw_discard" ? "discard" : action;
     this.meldIndexTarget.value = "";
     this.element.requestSubmit();
   }
@@ -9599,19 +9599,10 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
     this.meldIndexTarget.value = meldIndex;
     this.element.requestSubmit();
   }
-  discardSelected() {
-    this.actionTarget.value = "discard";
-    this.meldIndexTarget.value = "";
-    this.element.requestSubmit();
-  }
   refresh() {
     const count = this.checkedInputs.length;
-    const canMeld = count >= 3;
-    const canDiscard = count === 1;
-    this.meldButtonTarget.hidden = !canMeld;
-    this.discardButtonTarget.hidden = !canDiscard;
-    this.confirmPopTarget.hidden = !canMeld && !canDiscard;
-    this.confirmPopTextTarget.textContent = canMeld ? `Create a meld with these ${count} cards?` : "Discard this card?";
+    this.meldPlaceholderTarget.hidden = count < 3;
+    if (this.phaseValue === "meld") this.discardPileTarget.disabled = count !== 1;
   }
   get checkedInputs() {
     return this.cardInputTargets.filter((input) => input.checked);
@@ -9621,11 +9612,10 @@ __publicField(rummy_turn_controller_default, "targets", [
   "action",
   "meldIndex",
   "cardInput",
-  "confirmPop",
-  "confirmPopText",
-  "meldButton",
-  "discardButton"
+  "discardPile",
+  "meldPlaceholder"
 ]);
+__publicField(rummy_turn_controller_default, "values", { phase: String });
 
 
 /***/ },

@@ -48,9 +48,17 @@ RSpec.describe "Playing Rummy", type: :system do
     draw_from_stock!
     click_hand_card(drawn_card_key)
 
-    click_button "Discard"
+    find(".pile", text: "Discard").click
     expect(page).to have_css(".feed-bubble", text: "discarded")
     expect(page).to have_css(".pile[disabled]", match: :first)
+  end
+
+  it "only enables the discard pile once exactly one card is selected", :js do
+    draw_from_stock!
+    expect(page).to have_css(".pile[disabled]", text: "Discard")
+
+    click_hand_card(drawn_card_key)
+    expect(page).to have_no_css(".pile[disabled]", text: "Discard")
   end
 
   context "with a meldable set in hand" do
@@ -65,9 +73,23 @@ RSpec.describe "Playing Rummy", type: :system do
     it "melds three selected cards into a shared, public meld", :js do
       draw_from_stock!
       nines.each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
-      click_button "Create meld"
+      find(".meld--new").click
 
-      expect(page).to have_css(".meld .meld__kind", text: "set")
+      expect(page).to have_css(".meld .meld__label", text: "Set · 9")
+    end
+
+    it "only reveals the meld placeholder once three or more cards are selected", :js do
+      draw_from_stock!
+      expect(page).to have_no_css(".meld--new")
+
+      nines.first(2).each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
+      expect(page).to have_no_css(".meld--new")
+
+      click_hand_card("#{nines.third.rank}-#{nines.third.suit}")
+      expect(page).to have_css(".meld--new")
+
+      click_hand_card("#{nines.third.rank}-#{nines.third.suit}")
+      expect(page).to have_no_css(".meld--new")
     end
   end
 
@@ -91,9 +113,9 @@ RSpec.describe "Playing Rummy", type: :system do
     it "lays a selected card off onto an opponent's existing meld", :js do
       draw_from_stock!
       click_hand_card("7-Hearts")
-      find(".meld", text: "run").click
+      find(".meld", text: "Run").click
 
-      expect(page).to have_css(".meld .card-container", count: 4)
+      expect(page).to have_css(".meld .meld__card", count: 4)
     end
   end
 
@@ -112,7 +134,7 @@ RSpec.describe "Playing Rummy", type: :system do
     it "goes out by melding the last cards in hand, ending the game", :js do
       draw_from_stock!
       [ four, five, six ].each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
-      click_button "Create meld"
+      find(".meld--new").click
 
       expect(page).to have_css(".end-of-game-modal", text: "You win")
     end

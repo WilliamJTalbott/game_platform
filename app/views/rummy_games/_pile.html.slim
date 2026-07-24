@@ -1,4 +1,4 @@
-button.pile type="button" disabled=(!enabled) data-action="click->rummy-turn#draw" data-rummy-turn-action-param=action
+button.pile type="button" disabled=(!enabled) data-action="click->rummy-turn#draw" data-rummy-turn-action-param=action data-rummy-turn-target=(local_assigns[:discardable] ? "discardPile" : nil)
   .card-container.card-container--large
     .playing-card
       - if card
