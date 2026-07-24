@@ -4,7 +4,7 @@
   align-items: center;
   gap: var(--op-space-2x-small);
   padding: var(--op-space-2x-small);
-  border-radius: var(--op-radius-medium);
+  border-radius: var(--op-radius-large);
   background: none;
   border: 0;
 

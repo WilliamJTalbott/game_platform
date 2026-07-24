@@ -14,7 +14,7 @@
 
 .feed-bubble {
   max-width: 100%;
-  border-radius: var(--op-radius-large) var(--op-radius-large) var(--op-radius-small) var(--op-radius-large);
+  border-radius: var(--op-radius-x-large) var(--op-radius-x-large) var(--op-radius-medium) var(--op-radius-x-large);
   padding: var(--op-space-small) var(--op-space-medium);
   font-size: var(--op-font-small);
   background-color: var(--op-color-neutral-plus-max);

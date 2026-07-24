@@ -22,25 +22,36 @@
     --op-color-primary-l: 40%;   /* nearly inert — Optics hardcodes the base lightness */
 
     /* Chrome — warm slate. Optics' neutral scale drives background/border/surface
-       colors, and its hue tracks primary by default; we decouple it to a subtle warm
-       (yellow) tinge at low saturation rather than inheriting the copper hue. Both
+       colors, and its hue tracks primary by default; we decouple it to the mockup's
+       "yellow slate gray" — a warm hue (~49°) at enough saturation (14%) to read as
+       warm rather than a flat near-gray. (The mockup's neutrals sit at h49–54, s14–28%;
+       14% is a compromise — higher would over-tint the near-white 98% surfaces.) Both
        light and dark re-skin from these knobs (the plus/minus tokens are light-dark()
        pairs) — verify both schemes after changing them. Leave neutral-l inheriting
        primary-l (its default). */
-    --op-color-neutral-h: 42;
-    --op-color-neutral-s: 8%;
+    --op-color-neutral-h: 49;
+    --op-color-neutral-s: 14%;
+
+    /* Page background — one step down the neutral ramp from Optics' near-white default
+       (plus-eight, 98%). plus-five (90% light / 18% dark) reads as a subtly darker warm
+       neutral, so the near-white surfaces (lobby tray 96%, panels 98%) sit slightly
+       raised off the page instead of blending into a flat white sheet. Not a special
+       hand-picked color — just a darker shade of the same neutral, from the ramp.
+       Only Optics' `body` rule consumes --op-color-background. */
+    --op-color-background: var(--op-color-neutral-plus-max);
 
     --op-border-width: 1.8px;
     --op-border-width-large: 3px;
 
-    /* Rounder overall, to match the mockup — overridden once here rather than
-       swapping which named token each component reaches for, so every consumer
-       of --op-radius-* (cards, melds, piles, the felt, popups, buttons...) stays
-       in lockstep instead of drifting component-by-component. */
-    --op-radius-small: 4px;
-    --op-radius-medium: 6px;
-    --op-radius-large: 10px;
-    --op-radius-x-large: 16px;
+    /* Radius scale. It turns out the mockups' rounding IS Optics' native scale for
+       four of five steps — the mockups cluster at 2 / 5-6 / 8 / 12 / 20, and Optics
+       ships 2 / 4 / 8 / 12 / 16. So we keep Optics native for small(2) / medium(4) /
+       large(8) / x-large(12) and override ONLY 2x-large, which Optics tops out at 16px
+       but the mockups' big surfaces (the felt board, the lobby tray, the phase-stepper
+       chips, modals) want at 20px. Fidelity to the mockups then comes from each
+       component reaching for the step that matches its mockup counterpart — cards →
+       x-large(12), buttons/pile/meld → large(8), mini-cards → small(2) — not from
+       re-tuning the scale. One override, the rest is Optics. */
     --op-radius-2x-large: 20px;
 
     --gf-card-hover-lift: 50px;
@@ -98,19 +109,40 @@
        lives ONLY in the lobby, never on chrome or the game table. */
     --gf-lobby-bar: light-dark(#eef1f5, #262b32);
 
+    /* Tray surface — a dedicated dark shade (mockup's --felt), not a step off the
+       Optics ramp: reusing --op-color-neutral-plus-seven sat LIGHTER than the page
+       body in dark mode (14% L vs the body's 8% L), which reads as raised instead of
+       recessed. This literal light-dark() pair matches the mockup felt's own measured
+       lightness (~91%/~9% L) so the tray sits visibly darker than its surroundings in
+       both themes, same warm neutral hue as the rest of chrome. */
+    --gf-lobby-tray-bg: light-dark(
+      hsl(var(--op-color-neutral-h) var(--op-color-neutral-s) 91%),
+      hsl(var(--op-color-neutral-h) var(--op-color-neutral-s) 9%)
+    );
+
+    /* Hairline tray edge (mockup's --felt-border) — subtle enough to read as a seam,
+       not a stroke, so it doesn't compete with the tray's inset shadow above.
+       light-dark() must wrap only the <color> argument, not the whole shorthand —
+       wrapping the full "1px solid rgb(...)" string is invalid and silently drops the
+       border to none (the bug that made this invisible before). */
+    --gf-lobby-tray-border: 1px solid light-dark(rgb(90 80 55 / 0.14), rgb(200 185 140 / 0.09));
+
     /* The lobby's two-layer elevation grammar (from the mockup's felt): a recessed
        warm-neutral tray (inset shadow) holding raised bars (drop shadow). The tray
        tone stays Optics neutral chrome — only --gf-lobby-bar above carries blue. This
        pair is deliberately a softer pop than the green board's shadows so gameplay
-       still out-pops the lobby. light-dark() gives each its light/dark value. */
-    --gf-lobby-tray-shadow: light-dark(
-      inset 0 2px 5px rgb(70 62 40 / 0.12),
-      inset 0 2px 7px rgb(0 0 0 / 0.4)
-    );
-    --gf-lobby-bar-shadow: light-dark(
-      0 2px 6px rgb(70 62 40 / 0.13),
-      0 2px 8px rgb(0 0 0 / 0.34)
-    );
+       still out-pops the lobby. light-dark() gives each its light/dark value.
+
+       Each shadow is two layers, straight from the mockup's --felt-inset-shadow /
+       --zone-shadow: the recess/raise depth cue, PLUS a hairline highlight (bottom
+       inset on the tray, top inset on the bars) that catches the "light" and sells
+       the bevel — without it the edges read flat instead of physically raised. */
+    --gf-lobby-tray-shadow:
+      inset 0 2px 6px light-dark(rgb(70 62 40 / 0.12), rgb(0 0 0 / 0.4)),
+      inset 0 -1px 0 light-dark(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.03));
+    --gf-lobby-bar-shadow:
+      inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.05)),
+      0 2px 7px light-dark(rgb(70 62 40 / 0.13), rgb(0 0 0 / 0.34));
 
     /* Popup surface (confirm-pop) — needs its own light-dark() pair rather than
        an Optics --op-color-neutral-plus-* step: those all trend toward the page's

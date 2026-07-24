@@ -18,4 +18,16 @@ create(:finished_game, :go_fish, :user_won, :has_participants,
 create(:finished_game, :go_fish, :user_won, :has_participants,
        name: "Go Fish — you lose", user: opponent, users: [ me ]).save!
 
+# A Rummy game where it's your turn and your hand is a single valid meld ->
+# melding it empties your hand and wins the game, showing the end-of-game screen.
+rummy = create(:started_game, :rummy, :users_turn, :has_participants,
+               name: "Rummy — one play from winning", user: me, users: [ opponent ])
+rummy.player_from_user(me).cards = [
+  CardGame::Card.new("5", "Hearts"),
+  CardGame::Card.new("5", "Spades"),
+  CardGame::Card.new("5", "Clubs")
+]
+rummy.state.phase = "meld"
+rummy.save!
+
 puts "Done. Sign in as me@example.com / password and open a game."

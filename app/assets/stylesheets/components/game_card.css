@@ -10,7 +10,7 @@
   justify-content: space-between;
   gap: var(--op-space-medium);
   padding: var(--op-space-small) var(--op-space-medium);
-  border-radius: var(--op-radius-large);
+  border-radius: var(--op-radius-x-large);
   background-color: var(--gf-lobby-bar);
   box-shadow: var(--gf-lobby-bar-shadow);
 
@@ -77,7 +77,7 @@
     min-width: 4.5rem;
     padding: var(--op-space-x-small) var(--op-space-small);
     border: var(--op-border-width) solid transparent;
-    border-radius: var(--op-radius-small);
+    border-radius: var(--op-radius-large);
     font-size: var(--op-font-small);
     font-weight: var(--op-font-weight-semi-bold);
     text-decoration: none;

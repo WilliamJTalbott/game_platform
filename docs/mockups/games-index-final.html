@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Games Index — Home Dashboard Mockup (felt-zone categories)</title>
+<style>
+  /* ---- shared theme tokens: mirrors rummy-final.html so both mockups read as one system ---- */
+  :root, :root[data-theme="light"] {
+    --line: #5c584a; --line-soft: #cbc8bb; --fill: #ecebe2; --fill-2: #e0ded1;
+    --accent: #c2410c; --ink: #26241d; --muted: #6a6656; --faint: #9a9583;
+    /* lobby "felt" = warm sidebar-tone tray + blue-gray raised bars (green reserved for the table) */
+    --felt: #ecebe2; --felt-bright: #eef1f5;
+    --page-bg: #dedcd3;
+    --app-bg: #f6f5ef; --app-border: 2px solid var(--line);
+    --surface: #f6f5ef;
+    --accent-tint: #fbe0d1;
+    --felt-border: 1px solid rgba(90,80,55,.14);
+    --felt-border-line: rgba(90,80,55,.18);
+    --felt-inset-shadow: inset 0 2px 5px rgba(70,62,40,.12), inset 0 -1px 0 rgba(255,255,255,.4);
+    --zone-top-highlight: rgba(255,255,255,.7);
+    --zone-shadow: inset 0 1px 0 var(--zone-top-highlight), 0 2px 6px rgba(70,62,40,.13);
+    --overlay-shadow: 0 2px 6px rgba(0,0,0,.12);
+    --pop-shadow: 0 6px 16px rgba(0,0,0,.16);
+  }
+  :root[data-theme="dark"] {
+    --line: #7a7460; --line-soft: #383527; --fill: #1b1a13; --fill-2: #2a2819;
+    --accent: #f2825a; --ink: #eeeade; --muted: #a39c86; --faint: #6f6a58;
+    /* lobby "felt" = warm sidebar-tone tray + blue-gray raised bars (green reserved for the table) */
+    --felt: #1b1a13; --felt-bright: #262b32;
+    --page-bg: #100f0a;
+    --app-bg: #17150e; --app-border: 1px solid var(--line-soft);
+    --surface: #221f16;
+    --accent-tint: rgba(242,130,90,.20);
+    --felt-border: 1px solid rgba(200,185,140,.09);
+    --felt-border-line: rgba(200,185,140,.13);
+    --felt-inset-shadow: inset 0 2px 7px rgba(0,0,0,.4), inset 0 -1px 0 rgba(255,255,255,.03);
+    --zone-top-highlight: rgba(255,255,255,.05);
+    --zone-shadow: inset 0 1px 0 var(--zone-top-highlight), 0 2px 8px rgba(0,0,0,.34);
+    --overlay-shadow: 0 4px 10px rgba(0,0,0,.45);
+    --pop-shadow: 0 8px 20px rgba(0,0,0,.55);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--page-bg); padding: 20px; transition: background .2s, color .2s; }
+  h1.page-title { font-size: 15px; font-weight: 600; margin: 0 0 4px; }
+  p.note { margin: 0 0 12px; color: var(--muted); font-size: 12px; max-width: 940px; }
+
+  .toolbar { max-width: 1024px; margin: 0 auto 12px; display: flex; justify-content: flex-end; }
+  .theme-toggle { font: inherit; font-size: 12px; cursor: pointer; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line-soft); background: var(--surface); color: var(--ink); box-shadow: var(--overlay-shadow); }
+
+  .app { display: grid; grid-template-columns: 140px 1fr; width: 100%; max-width: 1024px; min-height: 640px; margin: 0 auto; border: var(--app-border); background: var(--app-bg); border-radius: 8px; overflow: hidden; }
+  .sidebar { border-right: 2px dashed var(--line-soft); padding: 14px 10px; background: var(--fill); display: flex; flex-direction: column; gap: 8px; }
+  .sidebar .brand { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+  .sidebar .nav { border: 1px dashed var(--line-soft); border-radius: 5px; padding: 6px 8px; font-size: 11px; color: var(--muted); }
+  .sidebar .nav.active { border-style: solid; border-color: var(--accent); color: var(--accent); font-weight: 700; background: var(--accent-tint); }
+  .sidebar .spacer { flex: 1; }
+
+  /* ---- main dashboard ---- */
+  .main { display: flex; flex-direction: column; padding: 22px 26px 20px; gap: 18px; }
+
+  .dash-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .greet { font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -.01em; }
+  .stats { font-size: 13px; color: var(--muted); margin: 6px 0 0; font-variant-numeric: tabular-nums; }
+  .stats b { color: var(--ink); font-weight: 600; }
+  .new-btn { font-size: 13px; font-weight: 700; color: #fff; background: var(--accent); border: 2px solid var(--accent); border-radius: 9px; padding: 10px 16px; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; cursor: pointer; }
+  .new-btn .spade { font-size: 14px; }
+
+  /* ---- FELT: recessed muted parent; the game bars themselves are the raised elements ---- */
+  .felt {
+    flex: 1; position: relative; border-radius: 20px; background: var(--felt);
+    border: var(--felt-border); padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;
+    box-shadow: var(--felt-inset-shadow);
+  }
+
+  /* section header sits directly on the felt — label + count, no panel */
+  .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 4px 2px; }
+  .sec-head__label { font-size: 11px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .sec-head__label .spade { color: var(--accent); font-size: 12px; }
+  .sec-head__count { font-size: 11px; color: var(--faint); font-variant-numeric: tabular-nums; }
+
+  /* divider between the two groups, drawn on the felt */
+  .sec-divider { border: none; border-top: 1px solid var(--felt-border-line); margin: 10px 2px 4px; }
+
+  /* game card = the raised, brighter bar on the felt */
+  .card { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 12px; background: var(--felt-bright); padding: 13px 16px; box-shadow: var(--zone-shadow); }
+  .card .name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card .type { font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .card .right { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+  .count { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .count.full { color: var(--muted); font-weight: 600; }
+
+  .badge { font-size: 10px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: var(--accent); background: var(--accent-tint); border: 1px solid var(--accent); border-radius: 999px; padding: 2px 9px; display: inline-flex; align-items: center; gap: 5px; }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .cta { font: inherit; font-size: 12px; font-weight: 600; border-radius: 7px; text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 72px; }
+  /* View = primary: solid coral, white text */
+  .cta.view { color: #fff; background: var(--accent); border: 2px solid var(--accent); padding: 8px 10px; font-weight: 700; }
+  /* Join = secondary: soft coral-tint fill, coral text, coral outline */
+  .cta.join { color: var(--accent); background: var(--accent-tint); border: 2px solid var(--accent); padding: 8px 10px; }
+  /* Full = inert status chip: Join's shape, muted outline (not coral), clearly not an action */
+  .cta.full-chip { color: var(--muted); background: transparent; border: 2px solid var(--line-soft); padding: 8px 10px; cursor: default; }
+
+  /* ---- footer / history link ---- */
+  .dash-foot { display: flex; justify-content: flex-end; }
+  .history { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+  <h1 class="page-title">Games Index — home dashboard (final).</h1>
+  <p class="note">
+    Same recessed-tray + raised-bars grammar as Rummy, but the lobby's tray is the <b>sidebar's warm tone</b> with <b>blue-gray raised
+    game bars</b> — cohesive with the chrome and deliberately a <b>softer pop</b> so the green game table still out-pops it. Green stays
+    reserved for gameplay; coral carries the actions (View / Join) and the "Your turn" badge. Toggle themes to check both schemes.
+  </p>
+
+  <div class="toolbar">
+    <button id="theme-toggle" class="theme-toggle" type="button"></button>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Game Platform</div>
+      <div class="nav active">Games</div><div class="nav">Stats</div>
+      <div class="nav">Rules</div><div class="nav">History</div>
+      <div class="spacer"></div>
+      <div class="nav">Profile</div><div class="nav">Logout</div>
+    </aside>
+
+    <section class="main">
+      <!-- greeting + inline stat line + New Game -->
+      <div class="dash-head">
+        <div>
+          <p class="greet">Welcome back, Will</p>
+          <p class="stats"><b>12</b> played · <b>7</b> won · <b>58%</b> win rate</p>
+        </div>
+        <button class="new-btn"><span class="spade">♠</span> New Game</button>
+      </div>
+
+      <!-- FELT: recessed parent holding the two raised category zones -->
+      <div class="felt">
+        <div class="sec-head">
+          <span class="sec-head__label"><span class="spade">♠</span> Your Games</span>
+          <span class="sec-head__count">2 active</span>
+        </div>
+        <div class="card">
+          <div>
+            <div class="name">Friday Night <span class="badge"><span class="dot"></span> Your turn</span></div>
+            <div class="type">Go Fish</div>
+          </div>
+          <div class="right">
+            <span class="count">4/6</span>
+            <a class="cta view" href="#">View</a>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <div class="name">Rematch</div>
+            <div class="type">Crazy Eights</div>
+          </div>
+          <div class="right">
+            <span class="count">3/7</span>
+            <a class="cta view" href="#">View</a>
+          </div>
+        </div>
+
+        <hr class="sec-divider">
+
+        <div class="sec-head">
+          <span class="sec-head__label"><span class="spade">♠</span> Open Games to Join</span>
+          <span class="sec-head__count">3 open</span>
+        </div>
+        <div class="card">
+          <div>
+            <div class="name">Lunch Match</div>
+            <div class="type">Crazy Eights</div>
+          </div>
+          <div class="right">
+            <span class="count">2/7</span>
+            <button class="cta join">Join</button>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <div class="name">One Seat Left</div>
+            <div class="type">Go Fish</div>
+          </div>
+          <div class="right">
+            <span class="count">5/6</span>
+            <button class="cta join">Join</button>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <div class="name">Full Table</div>
+            <div class="type">Crazy Eights</div>
+          </div>
+          <div class="right">
+            <span class="count">7/7</span>
+            <span class="cta full-chip">Full</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- history link -->
+      <div class="dash-foot">
+        <a class="history" href="#">View History →</a>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var btn = document.getElementById('theme-toggle');
+      function apply(theme) {
+        root.dataset.theme = theme;
+        btn.textContent = theme === 'dark' ? '☀︎ Switch to light' : '☾ Switch to dark';
+      }
+      btn.addEventListener('click', function () {
+        apply(root.dataset.theme === 'dark' ? 'light' : 'dark');
+      });
+      apply(root.dataset.theme || 'dark');
+    })();
+  </script>
+</body>
+</html>

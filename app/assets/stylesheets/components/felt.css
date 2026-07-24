@@ -20,7 +20,7 @@
   gap: var(--op-space-medium);
   margin-top: var(--op-space-medium);
   padding: var(--op-space-medium);
-  border-radius: var(--op-radius-x-large);
+  border-radius: var(--op-radius-2x-large);
   background-color: var(--gf-felt);
   overflow: hidden;
 }
@@ -30,7 +30,7 @@
   flex-direction: column;
   gap: var(--op-space-small);
   padding: var(--op-space-small) var(--op-space-medium);
-  border-radius: var(--op-radius-large);
+  border-radius: var(--op-radius-x-large);
   background-color: var(--gf-felt-bright);
   box-shadow: var(--op-shadow-small);
 
