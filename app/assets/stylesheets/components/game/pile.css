@@ -19,7 +19,6 @@
     outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
   }
 
-  &:not(:disabled):hover .playing-card,
   &:not(:disabled):focus-visible .playing-card {
     outline-color: var(--gf-color-accent);
   }

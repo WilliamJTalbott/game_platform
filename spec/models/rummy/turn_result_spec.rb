@@ -40,4 +40,13 @@ RSpec.describe Rummy::TurnResult do
       expect(onlooker.messages.last.text).to eq "Alice emptied their hand and won!"
     end
   end
+
+  describe "#blocked" do
+    it "tells everyone the game is blocked and names the winner" do
+      turn_result.blocked(onlooker)
+
+      expect(actor.messages.last.text).to eq "The stock is empty and can't be refilled — the game is blocked. Bob wins."
+      expect(onlooker.messages.last.text).to eq "The stock is empty and can't be refilled — the game is blocked. You win!"
+    end
+  end
 end

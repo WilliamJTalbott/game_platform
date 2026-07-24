@@ -9600,9 +9600,12 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
     this.element.requestSubmit();
   }
   refresh() {
-    const count = this.checkedInputs.length;
-    this.meldPlaceholderTarget.hidden = count < 3;
-    if (this.phaseValue === "meld") this.discardPileTarget.disabled = count !== 1;
+    const checked = this.checkedInputs;
+    this.meldPlaceholderTarget.hidden = checked.length < 3;
+    if (this.phaseValue === "meld") {
+      const lockedAlone = checked.length === 1 && checked[0].dataset.locked === "true";
+      this.discardPileTarget.disabled = checked.length !== 1 || lockedAlone;
+    }
   }
   get checkedInputs() {
     return this.cardInputTargets.filter((input) => input.checked);

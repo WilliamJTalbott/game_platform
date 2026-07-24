@@ -184,6 +184,54 @@ RSpec.describe RummyForm do
     end
   end
 
+  context "when laying off before owning a meld" do
+    let(:action) { "lay_off" }
+    let(:meld_index) { "0" }
+    let(:cards) { [ "7-Hearts" ] }
+
+    before do
+      active_player.user_id = 1
+      opponent.user_id = 2
+      game.phase = "meld"
+      game.melds = [
+        Rummy::Meld.new(
+          kind: "run", owner: 2,
+          cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+        )
+      ]
+      active_player.cards << CardGame::Card.new("7", "Hearts")
+    end
+
+    it "adds an error telling the player to meld first" do
+      expect(form).not_to be_valid
+      expect(form.errors[:base]).to include("lay down a meld of your own before laying off")
+    end
+  end
+
+  context "when discarding the card just drawn from the discard pile" do
+    let(:action) { "discard" }
+    let(:cards) { [ "A-Spades" ] }
+
+    before do
+      game.phase = "meld"
+      game.locked_card = hand_card
+      active_player.cards << CardGame::Card.new("2", "Hearts")
+    end
+
+    it "rejects it while another card could be discarded" do
+      expect(form).not_to be_valid
+      expect(form.errors[:base]).to include("you can't discard the card you just drew from the discard pile")
+    end
+
+    context "but it is the only card left" do
+      before { active_player.cards = [ hand_card ] }
+
+      it "allows the discard so the turn can end" do
+        expect(form).to be_valid
+      end
+    end
+  end
+
   context "when discarding during the draw phase" do
     let(:action) { "discard" }
 

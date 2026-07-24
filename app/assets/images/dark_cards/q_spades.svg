@@ -1,10 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 252" width="180" height="252">
-<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#f6f5f4">Q</text>
-<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="#f6f5f4">♠</text>
+<style>@media (prefers-color-scheme: dark){text{fill:hsl(49 14% 80%)}}</style>
+<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="hsl(49 14% 20%)">Q</text>
+<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="hsl(49 14% 20%)">♠</text>
 <g transform="rotate(180, 90.0, 126.0)">
-<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="#f6f5f4">Q</text>
-<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="#f6f5f4">♠</text>
+<text x="10" y="26" font-family="Georgia, serif" font-size="20" font-weight="bold" fill="hsl(49 14% 20%)">Q</text>
+<text x="12" y="43" font-family="Georgia, serif" font-size="15" fill="hsl(49 14% 20%)">♠</text>
 </g>
-<text x="90" y="116" font-family="Georgia, serif" font-size="64" font-weight="bold" fill="#f6f5f4" text-anchor="middle">Q</text>
-<text x="90" y="164" font-family="Georgia, serif" font-size="32" fill="#f6f5f4" text-anchor="middle">♠</text>
+<text x="90" y="116" font-family="Georgia, serif" font-size="64" font-weight="bold" fill="hsl(49 14% 20%)" text-anchor="middle">Q</text>
+<text x="90" y="164" font-family="Georgia, serif" font-size="32" fill="hsl(49 14% 20%)" text-anchor="middle">♠</text>
 </svg>

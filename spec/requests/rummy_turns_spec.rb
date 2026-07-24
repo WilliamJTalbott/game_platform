@@ -72,10 +72,17 @@ RSpec.describe "Rummy turns", type: :request do
         cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
       )
     end
+    # A player must have laid down a meld of their own before laying off.
+    let(:own_meld) do
+      Rummy::Meld.new(
+        kind: "set", owner: active_user.id,
+        cards: [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ]
+      )
+    end
 
     before do
       sign_in(active_user)
-      game.state.melds = [ existing_meld ]
+      game.state.melds = [ existing_meld, own_meld ]
       game.state.active_player.cards << CardGame::Card.new("7", "Hearts")
       game.save!
     end

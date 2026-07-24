@@ -11,8 +11,10 @@ class RummyForm
   validate :action_matches_phase
   validate :discard_pile_has_a_card, if: -> { action == "draw_discard" }
   validate :selection_forms_a_valid_meld, if: -> { action == "meld" }
+  validate :player_owns_a_meld, if: -> { action == "lay_off" }
   validate :lay_off_targets_a_valid_meld, if: -> { action == "lay_off" }
   validate :exactly_one_card_is_selected, if: -> { action == "discard" }
+  validate :not_discarding_locked_card, if: -> { action == "discard" }
 
   private
 
@@ -35,6 +37,18 @@ class RummyForm
 
   def exactly_one_card_is_selected
     errors.add(:base, "select exactly one card to discard") unless selected_cards.size == 1
+  end
+
+  def player_owns_a_meld
+    return if game.melds.any? { |meld| meld.owner == game.active_player.user_id }
+
+    errors.add(:base, "lay down a meld of your own before laying off")
+  end
+
+  def not_discarding_locked_card
+    return unless game.locked?(selected_cards.first)
+
+    errors.add(:base, "you can't discard the card you just drew from the discard pile")
   end
 
   def lay_off_targets_a_valid_meld

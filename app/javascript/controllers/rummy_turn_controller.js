@@ -26,10 +26,16 @@ export default class extends Controller {
   }
 
   refresh() {
-    const count = this.checkedInputs.length
+    const checked = this.checkedInputs
 
-    this.meldPlaceholderTarget.hidden = count < 3
-    if (this.phaseValue === "meld") this.discardPileTarget.disabled = count !== 1
+    this.meldPlaceholderTarget.hidden = checked.length < 3
+    // A locked card (just drawn from the discard) can still join a meld, but
+    // can't be discarded — so keep the discard pile disabled when it's the lone
+    // selection. The server enforces the same rule.
+    if (this.phaseValue === "meld") {
+      const lockedAlone = checked.length === 1 && checked[0].dataset.locked === "true"
+      this.discardPileTarget.disabled = checked.length !== 1 || lockedAlone
+    }
   }
 
   get checkedInputs() {

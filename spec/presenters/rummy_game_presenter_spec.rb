@@ -33,6 +33,22 @@ RSpec.describe RummyGamePresenter do
     expect(presenter.phase).to eq "draw"
   end
 
+  describe "#hand_cards locking" do
+    before do
+      game.state.phase = "meld"
+      game.state.locked_card = game.state.active_player.cards.first
+    end
+
+    it "flags the card drawn from the discard in the active player's own hand" do
+      locked = presenter.hand_cards.find { |hand_card| hand_card.card == game.state.locked_card }
+      expect(locked.locked).to be true
+    end
+
+    it "never flags a locked card for the waiting player" do
+      expect(game.presenter(waiting_user).hand_cards.map(&:locked)).to all be false
+    end
+  end
+
   describe "#can_draw?" do
     it "is true for the active player during the draw phase" do
       expect(presenter.can_draw?).to be true

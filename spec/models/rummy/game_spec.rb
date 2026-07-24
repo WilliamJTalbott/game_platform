@@ -22,6 +22,26 @@ RSpec.describe Rummy::Game do
     end
   end
 
+  describe "hand size by player count" do
+    it "deals 10 cards each in a two-player game" do
+      two = described_class.new(Array.new(2) { Rummy::Player.new })
+      two.deal
+      expect(two.players).to all have_attributes(cards: have_attributes(size: 10))
+    end
+
+    it "deals 7 cards each in a three- or four-player game" do
+      four = described_class.new(Array.new(4) { Rummy::Player.new })
+      four.deal
+      expect(four.players).to all have_attributes(cards: have_attributes(size: 7))
+    end
+
+    it "deals 6 cards each in a five-player game" do
+      five = described_class.new(Array.new(5) { Rummy::Player.new })
+      five.deal
+      expect(five.players).to all have_attributes(cards: have_attributes(size: 6))
+    end
+  end
+
   describe "#as_json" do
     it "transforms it into json" do
       game.deal
@@ -48,6 +68,13 @@ RSpec.describe Rummy::Game do
       restored = described_class.load(game.as_json)
 
       expect(restored.melds.first).to have_attributes(kind: "set", owner: players.first.user_id, cards: set_cards)
+    end
+
+    it "preserves the discard lock" do
+      game.locked_card = CardGame::Card.new("7", "Clubs")
+      restored = described_class.load(game.as_json)
+
+      expect(restored.locked_card).to eq game.locked_card
     end
   end
 
@@ -82,6 +109,19 @@ RSpec.describe Rummy::Game do
           expect(game.active_player.cards).to eq [ CardGame::Card.new("2", "Hearts") ]
           expect(game.discard.cards).to eq [ top_of_discard ]
         end
+
+        context "and the discard has nothing left to recycle" do
+          before { game.discard.cards = [ top_of_discard ] }
+
+          it "ends the blocked game by returning a player as the winner" do
+            expect(game.play_turn("draw_stock")).to be_a Rummy::Player
+          end
+
+          it "never deals a nil card into the hand" do
+            game.play_turn("draw_stock")
+            expect(game.active_player.cards).to be_empty
+          end
+        end
       end
     end
 
@@ -99,6 +139,11 @@ RSpec.describe Rummy::Game do
       it "moves to the meld phase" do
         game.play_turn("draw_discard")
         expect(game.phase).to eq "meld"
+      end
+
+      it "locks the drawn card from being discarded this turn" do
+        game.play_turn("draw_discard")
+        expect(game.locked_card).to eq top_of_discard
       end
     end
 
@@ -197,12 +242,47 @@ RSpec.describe Rummy::Game do
       end
     end
 
+    context "laying off before owning a meld" do
+      let(:layoff_card) { CardGame::Card.new("7", "Hearts") }
+      let(:opponent_meld) do
+        Rummy::Meld.new(
+          kind: "run", owner: 2,
+          cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+        )
+      end
+
+      before do
+        players.first.user_id = 1
+        players.last.user_id = 2
+        game.phase = "meld"
+        game.melds = [ opponent_meld ]
+        players.first.cards = [ layoff_card, CardGame::Card.new("2", "Diamonds") ]
+      end
+
+      it "rejects the lay off, leaving the hand untouched" do
+        expect { game.play_turn("lay_off", [ layoff_card ], 0) }.not_to change { players.first.cards }
+      end
+
+      it "allows the lay off once the player owns a meld" do
+        own_set = [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ]
+        game.melds << Rummy::Meld.new(kind: "set", owner: 1, cards: own_set)
+        game.play_turn("lay_off", [ layoff_card ], 0)
+        expect(players.first.cards).to eq [ CardGame::Card.new("2", "Diamonds") ]
+      end
+    end
+
     context "discarding" do
       let(:discarded_card) { CardGame::Card.new("A", "Spades") }
 
       before do
         game.phase = "meld"
         game.active_player.cards = [ discarded_card, CardGame::Card.new("2", "Hearts") ]
+      end
+
+      it "clears the discard lock as the turn advances" do
+        game.locked_card = CardGame::Card.new("2", "Hearts")
+        game.play_turn("discard", [ discarded_card ])
+        expect(game.locked_card).to be_nil
       end
 
       it "moves the selected card from the hand to the discard pile" do
@@ -230,6 +310,28 @@ RSpec.describe Rummy::Game do
           expect(game.play_turn("discard", [ discarded_card ])).to eq winner
         end
       end
+    end
+  end
+
+  describe "#locked?" do
+    let(:drawn) { CardGame::Card.new("7", "Clubs") }
+    let(:other) { CardGame::Card.new("2", "Hearts") }
+
+    before { game.locked_card = drawn }
+
+    it "is true for the drawn card while other cards remain" do
+      game.active_player.cards = [ drawn, other ]
+      expect(game.locked?(drawn)).to be true
+    end
+
+    it "is false once the drawn card is the only card left" do
+      game.active_player.cards = [ drawn ]
+      expect(game.locked?(drawn)).to be false
+    end
+
+    it "is false for any other card" do
+      game.active_player.cards = [ drawn, other ]
+      expect(game.locked?(other)).to be false
     end
   end
 end

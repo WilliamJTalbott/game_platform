@@ -1,5 +1,7 @@
-label.hand-card
-  input.hand-card__input type="checkbox" name="turn[cards][]" value="#{hand_card.card.rank}-#{hand_card.card.suit}" disabled=(!can_select) data-rummy-turn-target="cardInput" data-action="change->rummy-turn#refresh"
+label.hand-card class=("hand-card--locked" if hand_card.locked)
+  input.hand-card__input type="checkbox" name="turn[cards][]" value="#{hand_card.card.rank}-#{hand_card.card.suit}" disabled=(!can_select) data-rummy-turn-target="cardInput" data-action="change->rummy-turn#refresh" data-locked=hand_card.locked.to_s
   .card-container.card-container--large
     .playing-card
       = image_tag("dark_cards/#{hand_card.card.rank.downcase}_#{hand_card.card.suit.downcase}.svg")
+  - if hand_card.locked
+    i.hand-card__lock.ph-bold.ph-lock-simple aria-label="You can't discard the card you just drew this turn" title="You can't discard the card you just drew this turn"

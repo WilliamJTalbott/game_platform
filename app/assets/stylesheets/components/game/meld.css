@@ -28,10 +28,10 @@
     gap: var(--op-space-2x-small);
   }
 
-  /* A simplified placeholder for each melded card — just its rank + suit glyph on
-     the dark card stock, far more legible at this size than the full card art. It
-     keeps the real card's portrait aspect ratio so it still reads as a card, not a
-     squashed pill. */
+  /* A simplified placeholder for each melded card — just its rank + suit glyph, far
+     more legible at this size than the full card art. It reuses the real card's face
+     tokens (--op-color-neutral-plus-five / -base, see playing_card.css) and its
+     portrait aspect ratio, so it reads as the same stock — just text instead of art. */
   .meld__card {
     display: inline-flex;
     align-items: center;
@@ -41,9 +41,9 @@
     font-size: var(--op-font-x-small);
     font-weight: var(--op-font-weight-semi-bold);
     line-height: 1;
-    color: var(--gf-card-ink);
-    background-color: var(--gf-card-face);
-    border: var(--op-border-width) solid var(--gf-card-border);
+    color: var(--op-color-neutral-on-plus-five);
+    background-color: var(--op-color-neutral-plus-five);
+    border: var(--op-border-width) solid var(--op-color-neutral-base);
     border-radius: var(--op-radius-medium);
 
     &.meld__card--red {
@@ -55,8 +55,12 @@
 .meld--new {
   align-items: center;
   justify-content: center;
-  min-width: var(--op-space-4x-large);
-  min-height: var(--op-space-4x-large);
+  /* A square placeholder — width and height share one token, so tweak the side
+     here to taste. */
+  min-width: 92px;
+  min-height: 92px;
+  /*border: var(--op-border-width-large) dashed var(--gf-color-accent);*/
+  /*background-color: var(--gf-color-accent-secondary);*/
   border: var(--op-border-width-large) dashed var(--gf-color-muted);
   background-color: transparent;
 

@@ -236,6 +236,16 @@ as one component:
   a fixed color — it will look wrong in the color scheme you didn't test. Always verify
   both schemes (`page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }`
   in a system spec) before shipping a color-token change.
+- **Card face SVGs (`app/assets/images/dark_cards/*.svg`) carry their own theme-aware ink.**
+  They're loaded via `<img>`, so page CSS (and `--op-*` tokens) can't reach inside them.
+  The card *face* is a real CSS element (`.playing-card` / `.meld__card` background), but the
+  rank/suit ink lives in the SVG. Black-suit cards (spades/clubs) bake a light-mode dark ink
+  (`hsl(49 14% 20%)`, matching `--op-color-neutral-on-plus-five`) as the `fill` attribute plus
+  an embedded `<style>@media (prefers-color-scheme: dark){text{fill:hsl(49 14% 80%)}}</style>`
+  to flip it in dark mode; red-suit cards stay `#dc4d38` (legible on both faces). This tracks
+  the **OS** color scheme only — the app has no manual theme toggle. If one is ever added
+  (`[data-theme-mode]`), these `<img>` SVGs won't follow it and would need inlining +
+  `currentColor`. The two card-back SVGs are decorative and left untouched.
 - **`light-dark()` only accepts two `<color>` arguments — never a full shadow/border
   shorthand.** `light-dark(inset 0 2px 5px rgb(...), inset 0 2px 7px rgb(...))` or
   `light-dark(1px solid rgb(...), 1px solid rgb(...))` are invalid values: the whole

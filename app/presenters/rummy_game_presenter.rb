@@ -1,6 +1,6 @@
 class RummyGamePresenter < GamePresenter
   OpponentView = Struct.new(:name, :turn, :you, keyword_init: true)
-  HandCardView = Struct.new(:card, keyword_init: true)
+  HandCardView = Struct.new(:card, :locked, keyword_init: true)
   MeldView = Struct.new(:label, :owner, :cards, keyword_init: true)
 
   def players_in_turn_order
@@ -28,12 +28,16 @@ class RummyGamePresenter < GamePresenter
   end
 
   def hand_cards
-    cards.to_a.map { |card| HandCardView.new(card: card) }
+    cards.to_a.map { |card| HandCardView.new(card: card, locked: card_locked?(card)) }
   end
 
   def score_label = "Cards left"
 
   private
+
+  def card_locked?(card)
+    user_turn? && game.state.locked?(card)
+  end
 
   def opponent_view(other_player)
     OpponentView.new(

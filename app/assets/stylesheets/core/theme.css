@@ -31,16 +31,13 @@
     --gf-color-overlay: rgb(0 0 0 / 0.5);
     --gf-color-shadow: rgb(0 0 0 / 0.6);
 
-    /* Card face stays a constant dark "ink on card stock" look regardless of site
-       theme (dark_cards/*.svg hold only the rank/suit ink now, not this fill). */
-    --gf-card-face: #272520;
+    /* The card face + border are Optics neutrals applied directly (see
+       playing_card.css); only the selected-card tint is hand-picked (coral). */
     --gf-card-face-selected: hsl(16 45% 20%); /* dark/muted coral so ink still reads over it */
-    --gf-card-border: #726e65;
-    --gf-card-outline-playable: rgb(192 190 186 / 0.45); /* warm tint; plain white read cool here */
-    /* Rank/suit ink for the simplified meld chips (rummy melds render cards as a
-       rank+suit glyph, not full art). Legible on the dark --gf-card-face. */
-    --gf-card-ink: #e9e7e1;
-    --gf-card-ink-red: hsl(4 74% 64%);
+    /* Red-suit ink for the simplified meld chips (rummy melds render cards as a
+       rank+suit glyph, not full art). Matches the red in dark_cards/*.svg; there is
+       no Optics red, so it stays hand-picked. Black suits use the neutral on-color. */
+    --gf-card-ink-red: #dc4d38;
 
     /* Coral — the one brand accent (see docs/frontend.md). One hue (16°), a few
        hand-picked shades, never a derived ramp. */
@@ -57,10 +54,6 @@
     /* Lobby — the games-index's zone accent, sibling of felt above. Only the raised
        game bars (components/lobby/game_card.css) carry blue; the tray stays neutral chrome. */
     --gf-lobby-bar: light-dark(#eef1f5, #262b32);
-    --gf-lobby-tray-bg: light-dark(
-      hsl(var(--op-color-neutral-h) var(--op-color-neutral-s) 91%),
-      hsl(var(--op-color-neutral-h) var(--op-color-neutral-s) 9%)
-    );
     /* light-dark() must wrap only the <color>, not the whole shorthand — see the
        light-dark() gotcha in docs/frontend.md. */
     --gf-lobby-tray-border: 1px solid light-dark(rgb(90 80 55 / 0.14), rgb(200 185 140 / 0.09));

@@ -8,6 +8,10 @@ A Rails 8 web platform for playing turn-based card games (**Go Fish**, **Crazy E
 
 This is primarily a **skill-development project** for the author, but it should be built to real-world production standards — treat it as a real app, not a throwaway.
 
+## Scope Discipline
+
+Implement ONLY what the plan/request lists. Do not add accessibility, responsive, animation, or "polish" extras the user explicitly deferred or skipped. If you think something is missing, ask first.
+
 ## Tech stack
 
 - **Ruby 3.4.4**, **Rails 8.1**, **PostgreSQL**, **Puma**
@@ -45,6 +49,16 @@ bin/ci                                              # full CI: setup, rubocop, b
 - **`:chrome`-tagged system specs can't fake "offline" for the service worker** — test SW caching directly (`caches.match(...)`) rather than simulating a failed navigation. See [docs/handoffs/2026-07-22-offline-spec-flake.md](docs/handoffs/2026-07-22-offline-spec-flake.md) for why (Selenium's offline emulation misses the SW's separate CDP target).
 - **Every `Game` subclass shares one contract spec.** `spec/support/shared_examples/platform_game.rb` (`it_behaves_like "a platform game", …`) asserts the STI contract: `start` deals + persists, `play_turn` mutates and survives a reload (the jsonb round-trip guard), winning stamps the winner + `finished_at`, and `presenter`/`form_class` return the right types. A new game adds **one** `it_behaves_like` line with `legal_turn`/`winning_turn` lambdas that know how to make a legal move — not a reimplementation of the contract.
 - **Verify frontend/visual work with a screenshot system spec, not the Chrome extension.** `spec/support/helpers/playwright_helper.rb` gives every `:js` system spec a `screenshot(name, **options)` helper (Playwright driver) — drive the page to the state you want to check, call `screenshot("descriptive-name", fullPage: true)`, then Read the resulting `tmp/screenshots/*.png` to confirm it visually. This is the project's standard way to *see* a change (layout, CSS, an element's visible/hidden state) — prefer it over `mcp__claude-in-chrome__*` tools, since it reuses the same login/factory setup as the rest of the suite and is reproducible by anyone re-running the spec. Keep the spec if it asserts real behavior worth locking in; delete it if it was only scaffolding to look at a screenshot. Remember Capybara's `visible: false` matches regardless of visibility (not "must be hidden") — use `have_no_css`/`have_css` (or the screenshot itself) to actually confirm something is shown/hidden.
+
+## Testing & Commits
+
+- All work is spec-first TDD: write failing specs, implement to green, then run `rubocop`.
+- Keep methods and `it` blocks under 7 lines, but never at the cost of elegance — flag rather than force awkward extractions.
+- Commit ONLY files touched in the current session; never `git add -A`.
+
+## Rails Gotchas
+
+Games use STI (`GoFishGame`, `CrazyEightsGame`, `RummyGame` < `Game`). Path helpers must use the base route (`game_path(game)`), not the subclass (`go_fish_game_path`).
 
 ## Architecture (big picture)
 

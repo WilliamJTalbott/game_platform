@@ -30,6 +30,13 @@ module Rummy
       broadcast("You emptied your hand and won!", "#{actor.name} emptied their hand and won!")
     end
 
+    def blocked(winner)
+      players.each do |player|
+        outcome = player == winner ? "You win!" : "#{winner.name} wins."
+        player.add_normal_message("The stock is empty and can't be refilled — the game is blocked. #{outcome}")
+      end
+    end
+
     private
 
     attr_reader :players, :actor

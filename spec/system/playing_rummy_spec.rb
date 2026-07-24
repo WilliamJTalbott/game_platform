@@ -102,10 +102,17 @@ RSpec.describe "Playing Rummy", type: :system do
       )
     end
     let(:layoff_card) { CardGame::Card.new("7", "Hearts") }
+    # A player must own a meld before laying off onto anyone else's.
+    let(:own_meld) do
+      Rummy::Meld.new(
+        kind: "set", owner: user.id,
+        cards: [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ]
+      )
+    end
 
     before do
-      remove_cards_from_play(*existing_meld.cards, layoff_card)
-      game.state.melds = [ existing_meld ]
+      remove_cards_from_play(*existing_meld.cards, *own_meld.cards, layoff_card)
+      game.state.melds = [ existing_meld, own_meld ]
       game.state.active_player.cards << layoff_card
       game.save!
     end
@@ -115,7 +122,7 @@ RSpec.describe "Playing Rummy", type: :system do
       click_hand_card("7-Hearts")
       find(".meld", text: "Run").click
 
-      expect(page).to have_css(".meld .meld__card", count: 4)
+      expect(find(".meld", text: "Run")).to have_css(".meld__card", count: 4)
     end
   end
 
@@ -137,6 +144,28 @@ RSpec.describe "Playing Rummy", type: :system do
       find(".meld--new").click
 
       expect(page).to have_css(".end-of-game-modal", text: "You win")
+    end
+  end
+
+  context "after drawing a card from the discard pile" do
+    let(:drawn) { CardGame::Card.new("K", "Diamonds") }
+
+    before do
+      remove_cards_from_play(drawn)
+      game.state.discard.cards = [ drawn ]
+      game.save!
+    end
+
+    it "marks the drawn card locked and keeps it from being discarded", :js do
+      visit game_path(game)
+      find(".pile", text: "Discard").click
+      expect(page).to have_css(".feed-bubble", text: "drew")
+
+      expect(page).to have_css(".hand-card--locked .hand-card__lock")
+      screenshot("rummy-locked-card", fullPage: true)
+
+      click_hand_card("K-Diamonds")
+      expect(page).to have_css(".pile[disabled]", text: "Discard")
     end
   end
 

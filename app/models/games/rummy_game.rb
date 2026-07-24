@@ -1,5 +1,5 @@
 class RummyGame < Game
-  MAX_PLAYERS = 5 # 10-card hands from a single 52-card deck cap the table at five
+  MAX_PLAYERS = 5 # single 52-card deck; hand size scales down with player count (see Rummy::Game#hand_size)
 
   self.game_class = Rummy::Game
   self.player_class = Rummy::Player

@@ -16,9 +16,18 @@
   }
 
   &:has(.hand-card__input:disabled) {
-    opacity: 0.75;
-    filter: saturate(0.55);
     cursor: default;
+  }
+
+  /* Rather than fading a disabled card (which skews the ink toward off colors),
+     darken just the face a shade and its border a bit more. The SVG ink paints on
+     top and stays true to color. NB: this is tuned for dark mode, where higher
+     `plus-*` neutrals read darker (the scale flips between schemes).
+     A *locked* card is NOT disabled — it's still selectable for melding, so it
+     keeps the normal card look and only gains the lock badge below. */
+  &:has(.hand-card__input:disabled) .playing-card {
+    background-color: var(--op-color-neutral-plus-seven);
+    border-color: var(--op-color-neutral-plus-two);
   }
 
   &:has(.hand-card__input:enabled) .playing-card {
@@ -26,7 +35,6 @@
     outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
   }
 
-  &:has(.hand-card__input:enabled):hover .playing-card,
   &:has(.hand-card__input:focus-visible) .playing-card {
     outline-color: var(--op-color-neutral-minus-three);
     background-color: var(--op-color-neutral-plus-three);
@@ -45,6 +53,25 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* The coral lock badge marks which card can't be discarded this turn (it stays
+   selectable for melding). */
+.hand-card__lock {
+  position: absolute;
+  top: var(--op-space-x-small);
+  right: var(--op-space-x-small);
+  z-index: 1;
+  color: var(--gf-color-accent);
+  font-size: var(--op-font-size-x-large);
+  pointer-events: none;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Keep the lock pinned to the card as it lifts on select — same offset and
+   easing as the .playing-card transform below. */
+.hand-card__input:checked ~ .hand-card__lock {
+  transform: translateY(calc(-1 * var(--op-space-large)));
 }
 
 /* :checked is a stable pseudo-class on a stable node (the input never remounts),
