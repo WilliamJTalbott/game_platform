@@ -142,8 +142,11 @@ How each color in the model maps to tokens (see the annotated `core/theme.css`):
   (`light-dark()` pairs) paint the card table only. Green appears nowhere else.
 - **Blue is the lobby zone accent.** `--gf-lobby-bar` (`light-dark()` pair) is the
   games-index's raised game-bar surface, consumed by `components/game_card.css`. Its tray
-  (`components/lobby.css`) stays warm-neutral chrome; only the bars carry blue. The
-  recessed-tray/raised-bar elevation pair is `--gf-lobby-tray-shadow`/`--gf-lobby-bar-shadow`.
+  (`components/lobby.css`) stays warm-neutral chrome via its own dedicated
+  `--gf-lobby-tray-bg`/`--gf-lobby-tray-border` tokens (a step darker than the page, not an
+  Optics ramp step — see the `light-dark()` gotcha below for why that distinction matters);
+  only the bars carry blue. The recessed-tray/raised-bar elevation pair is
+  `--gf-lobby-tray-shadow`/`--gf-lobby-bar-shadow`.
 - **The Optics primary hue is pointed at coral** — solely so Optics' own internal chrome
   (focus rings, focused inputs) reads coral. Our CSS never reads `--op-color-primary-*`.
 
@@ -227,6 +230,17 @@ as one component:
   a fixed color — it will look wrong in the color scheme you didn't test. Always verify
   both schemes (`page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }`
   in a system spec) before shipping a color-token change.
+- **`light-dark()` only accepts two `<color>` arguments — never a full shadow/border
+  shorthand.** `light-dark(inset 0 2px 5px rgb(...), inset 0 2px 7px rgb(...))` or
+  `light-dark(1px solid rgb(...), 1px solid rgb(...))` are invalid values: the whole
+  `box-shadow`/`border` declaration silently drops to its initial value (`none`), with
+  no console warning — it just looks like the style was never applied. Wrap `light-dark()`
+  around only the color portion of each layer instead (e.g.
+  `inset 0 2px 5px light-dark(rgb(...), rgb(...))`), or wrap the entire value if every
+  argument truly is a plain color. Check `getComputedStyle(el).boxShadow`/`.border` when a
+  shadow/border token seems to have no effect — this bug shipped invisibly in
+  `--gf-lobby-tray-shadow`/`--gf-lobby-bar-shadow`/`--gf-lobby-tray-border` for a full
+  session before being caught.
 - **CSS custom properties can't be read inside `@media` conditions.** Breakpoint values
   (e.g. `--gf-breakpoint-tablet` in `core/theme.css`) are documentation only — every
   `@media (max-width: …)` query using that breakpoint must repeat the literal pixel value
