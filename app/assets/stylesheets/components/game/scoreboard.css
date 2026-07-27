@@ -3,7 +3,7 @@
   border-collapse: collapse;
 
   thead {
-    color: var(--op-color-neutral-minus-two);
+    color: var(--gp-color-neutral-minus-two);
     font-size: var(--op-font-small);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -16,8 +16,8 @@
   }
 
   .scoreboard__row--winner {
-    background-color: var(--op-color-neutral-plus-seven);
-    color: var(--op-color-neutral-on-plus-seven);
+    background-color: var(--gp-color-neutral-plus-seven);
+    color: var(--gp-color-neutral-on-plus-seven);
   }
 
   .scoreboard__crown {
@@ -26,7 +26,7 @@
 
   .scoreboard__you {
     margin-left: var(--op-space-small);
-    color: var(--op-color-neutral-minus-two);
+    color: var(--gp-color-neutral-minus-two);
     font-weight: var(--op-font-weight-medium);
   }
 }

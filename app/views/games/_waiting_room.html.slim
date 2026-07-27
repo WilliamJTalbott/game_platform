@@ -1,23 +1,26 @@
-.overlay.card.waiting-room
-  h1.waiting-room__title = lobby.name
-  p.waiting-room__meta
-    = "#{lobby.type_label} · #{lobby.player_count} players"
+.waiting-room
+  .waiting-room__stage
+    .waiting-room__panel
+      header.waiting-room__head
+        h1.waiting-room__title = lobby.name
+        p.waiting-room__meta
+          = "#{lobby.type_label} · #{lobby.player_count} players"
 
-  ul.waiting-room__roster
-    - lobby.players.each do |row|
-      li.waiting-room__player
-        | • #{row.name}
-        - if row.host?
-          span.waiting-room__badge
-            | (host)
-        - if row.you?
-          span.waiting-room__badge
-            | (you)
+      .waiting-room__seating
+        p.waiting-room__seating-label At the table
+        ul.waiting-room__seats
+          - lobby.players.each do |row|
+            li.waiting-room__seat
+              span.waiting-room__seat-name = row.name
+              - if row.host?
+                span.waiting-room__role Host
+              - if row.you?
+                span.waiting-room__you You
+          - lobby.open_seats.times do
+            li.waiting-room__seat.waiting-room__seat--open
+              span.waiting-room__seat-name Open seat
 
-  p.waiting-room__status = lobby.status_line
-
-  .waiting-room__actions
-    button.btn.btn--secondary data-controller="clipboard" data-clipboard-value-value=lobby.invite_url data-action="clipboard#copy"
-      | Copy invite link
-    - if lobby.show_start?
-      = button_to "Start Game", start_game_path(lobby.game), method: :post, class: "btn btn--primary"
+      footer.waiting-room__actions
+        button.btn.btn--secondary.waiting-room__cta data-controller="clipboard" data-clipboard-value-value=lobby.invite_url data-action="clipboard#copy"
+          | Copy invite link
+        = button_to lobby.start_label, start_game_path(lobby.game), method: :post, disabled: !lobby.start_enabled?, class: "btn btn--primary waiting-room__cta", form_class: "waiting-room__action"

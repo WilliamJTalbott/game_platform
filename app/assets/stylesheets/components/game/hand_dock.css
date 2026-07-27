@@ -3,13 +3,13 @@
    straight over the hand-fan instead. The panel itself is capped to a viewport-
    relative band (rather than the "auto" grid row growing to fit content) so the
    hand-fan below always has a definite height to size cards against. The cap is
-   padded out by --gf-card-hover-lift so that room reserved for a lifted card
+   padded out by --gp-card-hover-lift so that room reserved for a lifted card
    (see .hand-fan in hand_fan.css) doesn't eat into the cards' own height. The background
-   reuses Optics' own sidebar tone (--op-color-neutral-plus-eight) so the dock
+   reuses Optics' own sidebar tone (--gp-color-neutral-plus-eight) so the dock
    reads as the same "chrome" surface as the sidebar, per the mockup. */
 .game--rummy .panel--hand {
-  max-height: calc(clamp(140px, 22vh, 220px) + var(--gf-card-hover-lift));
-  background-color: var(--op-color-neutral-plus-eight);
+  max-height: calc(clamp(140px, 22vh, 220px) + var(--gp-card-hover-lift));
+  background-color: var(--gp-color-neutral-plus-eight);
 }
 
 .hand-dock {
@@ -29,15 +29,15 @@
 
   .hand-dock__count {
     font-size: var(--op-font-x-small);
-    color: var(--gf-color-muted);
+    color: var(--gp-color-muted);
   }
 
   .hand-dock__timer {
     font-size: var(--op-font-x-small);
-    color: var(--gf-color-muted);
+    color: var(--gp-color-muted);
 
     .hand-dock__timer-value {
-      color: var(--op-color-neutral-on-plus-max);
+      color: var(--gp-color-neutral-on-plus-max);
     }
   }
 }

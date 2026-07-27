@@ -1,18 +1,27 @@
 /* A single raised game bar on the lobby tray (see lobby.css). Blue-gray surface
-   (--gf-lobby-bar) + drop shadow reads as raised over the recessed tray. The name
+   (--gp-lobby-bar) + drop shadow reads as raised over the recessed tray. The name
    leads; the type is subtle beneath it; the count + CTA cluster sits right. The CTA
    is tri-state: --view (solid coral, primary), --join (coral tint + outline,
    secondary), --full (inert muted chip, not an action) — all sharing one min-width so
-   rows stay aligned whichever renders. */
+   rows stay aligned whichever renders.
+
+   The --your-turn row is the page's answer to "what do I do now": the one game waiting on
+   you takes the accent surface and the highest lift on the tray, so it reads before any
+   text does. Coral here is turn state, not decoration (the One Signal Rule). */
 .game-card {
+  /* The bar is the app's one cool surface, so the warm muted step that clears contrast on
+     the page (--gp-color-muted) lands at 4.4:1 on slate. One step lighter on the same
+     Optics ramp — the hue stays the project's single neutral. */
+  --_gp-card-muted: var(--gp-color-neutral-minus-five);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--op-space-medium);
   padding: var(--op-space-small) var(--op-space-medium);
   border-radius: var(--op-radius-x-large);
-  background-color: var(--gf-lobby-bar);
-  box-shadow: var(--gf-lobby-bar-shadow);
+  background-color: var(--gp-lobby-bar);
+  box-shadow: var(--gp-lobby-bar-shadow);
 
   .game-card__name {
     display: flex;
@@ -23,9 +32,23 @@
     font-weight: var(--op-font-weight-semi-bold);
   }
 
+  /* The live row swaps slate for a coral tint rather than mixing coral *into* slate — coral
+     and slate are near-complements, so any mix of the two desaturates to a plum-brown
+     instead of reading lit.
+
+     32% is stronger than the shared --gp-color-accent-secondary (20%) because that token is
+     mixed over the page tone, and the room is now warm and lifted: at 20% the row landed
+     only a few levels off the tray beneath it and stopped reading as the lit one. Mixed
+     here rather than by editing the shared token, which also dresses the Join CTA and the
+     turn badge and should not move with this row. */
+  &.game-card--your-turn {
+    background-color: color-mix(in srgb, var(--gp-color-accent) 32%, var(--gp-color-neutral-plus-max));
+    box-shadow: var(--gp-lobby-bar-shadow-live);
+  }
+
   .game-card__type {
     margin-top: var(--op-space-3x-small);
-    color: var(--gf-color-muted);
+    color: var(--_gp-card-muted);
     font-size: var(--op-font-small);
   }
 
@@ -34,10 +57,16 @@
     align-items: center;
     gap: var(--op-space-3x-small);
     padding: var(--op-space-3x-small) var(--op-space-x-small);
-    border: var(--op-border-width) solid var(--gf-color-accent);
+    border: var(--op-border-width) solid var(--gp-color-accent);
     border-radius: var(--op-radius-pill);
-    background-color: var(--gf-color-accent-secondary);
-    color: var(--gf-color-accent-text);
+    /* This badge only ever renders on a --your-turn row (the view gates both on the same
+       condition), so it is styled for that surface. Its fill is the shared tint, one step
+       deeper than the row, so it reads as a chip resting on it. The label takes room ink
+       rather than coral: coral-on-coral-tint measured 3.2:1 once the room lifted, and this
+       is 10px uppercase — the coral border and the row's own wash carry the accent, so the
+       signal survives without asking 10px type to do it at 3.2:1. */
+    background-color: var(--gp-color-accent-secondary);
+    color: var(--gp-color-neutral-minus-max);
     font-size: var(--op-font-2x-small);
     font-weight: var(--op-font-weight-bold);
     text-transform: uppercase;
@@ -59,7 +88,7 @@
   }
 
   .game-card__count {
-    color: var(--gf-color-muted);
+    color: var(--_gp-card-muted);
     font-size: var(--op-font-small);
     font-variant-numeric: tabular-nums;
   }
@@ -83,23 +112,37 @@
     text-decoration: none;
     cursor: pointer;
 
+    /* Both live variants dim the same coral in place with a brightness filter, matching
+       .btn--primary (ui/button.css) — coral never shifts hue, because a ramp-darkened
+       coral reads as muddy copper. --full is deliberately inert and gets no states. */
+    &.game-card__cta--view,
+    &.game-card__cta--join {
+      &:hover {
+        filter: brightness(0.94);
+      }
+
+      &:active {
+        filter: brightness(0.88);
+      }
+    }
+
     &.game-card__cta--view {
-      background-color: var(--gf-color-accent);
-      border-color: var(--gf-color-accent);
-      color: var(--gf-color-on-accent);
+      background-color: var(--gp-color-accent);
+      border-color: var(--gp-color-accent);
+      color: var(--gp-color-on-accent);
       font-weight: var(--op-font-weight-bold);
     }
 
     &.game-card__cta--join {
-      background-color: var(--gf-color-accent-secondary);
-      border-color: var(--gf-color-accent);
-      color: var(--gf-color-accent-text);
+      background-color: var(--gp-color-accent-secondary);
+      border-color: var(--gp-color-accent);
+      color: var(--gp-color-accent-text);
     }
 
     &.game-card__cta--full {
       background-color: transparent;
-      border-color: var(--op-color-border);
-      color: var(--gf-color-muted);
+      border-color: var(--gp-color-border);
+      color: var(--_gp-card-muted);
       cursor: default;
     }
   }

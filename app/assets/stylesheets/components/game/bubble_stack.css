@@ -17,8 +17,8 @@
   border-radius: var(--op-radius-x-large) var(--op-radius-x-large) var(--op-radius-medium) var(--op-radius-x-large);
   padding: var(--op-space-small) var(--op-space-medium);
   font-size: var(--op-font-small);
-  background-color: var(--op-color-neutral-plus-max);
-  border: var(--op-border-width) solid var(--op-color-border);
+  background-color: var(--gp-color-neutral-plus-max);
+  border: var(--op-border-width) solid var(--gp-color-border);
   box-shadow: var(--op-shadow-small);
 
   &.feed-bubble--ghost {
@@ -30,9 +30,9 @@
   }
 
   &.feed-bubble--directive {
-    background-color: var(--gf-color-accent);
-    border-color: var(--gf-color-accent);
-    color: var(--gf-color-on-accent);
+    background-color: var(--gp-color-accent);
+    border-color: var(--gp-color-accent);
+    color: var(--gp-color-on-accent);
     font-weight: var(--op-font-weight-bold);
 
     &::before {

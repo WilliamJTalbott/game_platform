@@ -62,6 +62,21 @@ RSpec.describe "Games", type: :request do
       it "renders the badge" do
         expect(response.body).to include("Your turn")
       end
+
+      it "marks the row as the live one" do
+        expect(response.body).to include("game-card--your-turn")
+      end
+    end
+
+    context "when the viewer's game has not started" do
+      before do
+        create(:game, :go_fish, :has_user, user: user)
+        get games_path
+      end
+
+      it "leaves the row unmarked" do
+        expect(response.body).to_not include("game-card--your-turn")
+      end
     end
   end
 

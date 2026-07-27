@@ -3,15 +3,15 @@
   justify-content: center;
   gap: var(--op-space-medium);
   padding-bottom: var(--op-space-medium);
-  border-bottom: var(--op-border-width) solid var(--op-color-border);
+  border-bottom: var(--op-border-width) solid var(--gp-color-border);
 }
 
 .opponent-card {
   min-width: calc(11 * var(--op-space-scale-unit));
-  border: var(--op-border-width) solid var(--op-color-border);
+  border: var(--op-border-width) solid var(--gp-color-border);
   border-radius: var(--op-radius-medium);
   padding: var(--op-space-x-small) var(--op-space-small);
-  background-color: var(--op-color-neutral-plus-eight);
+  background-color: var(--gp-color-neutral-plus-eight);
   text-align: center;
 
   .opponent-card__name {
@@ -21,12 +21,12 @@
 
   .opponent-card__turn-icon {
     margin-right: var(--op-space-3x-small);
-    color: var(--gf-color-accent-text);
+    color: var(--gp-color-accent-text);
     font-size: var(--op-font-small);
   }
 
   .opponent-card__divider {
-    border-top: var(--op-border-width) solid var(--op-color-border);
+    border-top: var(--op-border-width) solid var(--gp-color-border);
     margin-block: var(--op-space-2x-small);
   }
 
@@ -38,17 +38,17 @@
 
   .opponent-card__mini-card {
     width: var(--op-space-medium);
-    aspect-ratio: var(--gf-card-aspect-ratio);
-    border: var(--op-border-width) solid var(--op-color-border);
+    aspect-ratio: var(--gp-card-aspect-ratio);
+    border: var(--op-border-width) solid var(--gp-color-border);
     border-radius: var(--op-radius-small);
-    background-color: var(--op-color-neutral-plus-five);
+    background-color: var(--gp-color-neutral-plus-five);
   }
 
   &.opponent-card--turn {
-    border-color: var(--gf-color-accent);
-    background-color: var(--gf-color-accent-secondary);
+    border-color: var(--gp-color-accent);
+    background-color: var(--gp-color-accent-secondary);
 
-    /* The default mini-card fill (--op-color-neutral-plus-five) is close enough in
+    /* The default mini-card fill (--gp-color-neutral-plus-five) is close enough in
        lightness to the accent-secondary tint that it nearly vanishes — currentColor
        picks up the same ink color as the name text, which reliably contrasts against
        the tint in both themes (rather than fighting the tint with more coral). */
@@ -60,7 +60,7 @@
     /* Same problem as the mini-cards: the default border color is too close to the
        accent-secondary tint to read as a line — use the solid accent instead. */
     .opponent-card__divider {
-      border-top-color: var(--gf-color-accent);
+      border-top-color: var(--gp-color-accent);
     }
   }
 }

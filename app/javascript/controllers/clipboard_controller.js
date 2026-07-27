@@ -7,8 +7,21 @@ export default class extends Controller {
     async copy() {
         await navigator.clipboard.writeText(this.valueValue)
 
-        const original = this.element.textContent
+        // Capture the label only on the first click — a second click inside the window
+        // would otherwise capture "Copied!" and keep it as the label forever.
+        this.originalLabel ??= this.element.textContent
         this.element.textContent = "Copied!"
-        setTimeout(() => { this.element.textContent = original }, 1500)
+
+        clearTimeout(this.resetTimer)
+        this.resetTimer = setTimeout(() => this.restore(), 1500)
+    }
+
+    disconnect() {
+        clearTimeout(this.resetTimer)
+    }
+
+    restore() {
+        this.element.textContent = this.originalLabel
+        this.originalLabel = undefined
     }
 }

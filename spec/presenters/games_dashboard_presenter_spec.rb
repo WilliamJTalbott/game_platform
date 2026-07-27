@@ -21,6 +21,16 @@ RSpec.describe GamesDashboardPresenter, type: :presenter do
     it "includes only my unfinished, undeleted games" do
       expect(presenter.your_games.map(&:title)).to eq [ "Mine" ]
     end
+
+    context "when another of my games is waiting on my turn" do
+      before do
+        create(:started_game, :go_fish, :users_turn, :many_participants, user: user, name: "Waiting On Me")
+      end
+
+      it "sorts the game waiting on me first" do
+        expect(presenter.your_games.map(&:title)).to eq [ "Waiting On Me", "Mine" ]
+      end
+    end
   end
 
   describe "#open_games" do

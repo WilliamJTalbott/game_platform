@@ -1,0 +1,171 @@
+/* The lobby a game sits in before it starts — deliberately the *same room* the board
+   will arrive in, so pressing Start reads as the table lighting up rather than a page
+   swap. It therefore borrows the game page's felt vocabulary wholesale (see felt.css):
+   a flat --gp-felt stage with one raised --gp-felt-bright panel on it, and seats built
+   from the meld pattern (--gp-felt-brighter wash + raised shadow when taken, dashed
+   muted outline when open, exactly like .meld / .meld--new).
+
+   Green is the game page's accent and this *is* the game page, so no new color is
+   claimed. Coral stays the only signal: the Start action, and "You". */
+.waiting-room {
+  /* Wide enough that a two-word game name never breaks mid-phrase at headline size. */
+  --_gp-waiting-room-width: 480px;
+
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--op-space-x-large);
+  background-color: var(--gp-color-neutral-plus-max);
+
+  .waiting-room__stage {
+    width: min(var(--_gp-waiting-room-width), 100%);
+    padding: var(--op-space-medium);
+    border-radius: var(--op-radius-2x-large);
+    background-color: var(--gp-felt);
+  }
+
+  .waiting-room__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--op-space-large);
+    padding: var(--op-space-large);
+    border-radius: var(--op-radius-x-large);
+    background-color: var(--gp-felt-bright);
+    box-shadow: var(--op-shadow-small);
+  }
+
+  .waiting-room__title {
+    margin: 0;
+    font-size: var(--op-font-2x-large);
+    font-weight: var(--op-font-weight-bold);
+    text-wrap: balance;
+  }
+
+  .waiting-room__meta {
+    margin: var(--op-space-3x-small) 0 0;
+    color: var(--gp-color-muted);
+    font-size: var(--op-font-small);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .waiting-room__seating {
+    display: flex;
+    flex-direction: column;
+    gap: var(--op-space-x-small);
+  }
+
+  .waiting-room__seating-label {
+    margin: 0;
+    color: var(--gp-color-muted);
+    font-size: var(--op-font-x-small);
+    font-weight: var(--op-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--op-letter-spacing-label);
+  }
+
+  .waiting-room__seats {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--op-space-x-small);
+  }
+
+  .waiting-room__seat {
+    display: flex;
+    align-items: center;
+    gap: var(--op-space-x-small);
+    padding: var(--op-space-x-small) var(--op-space-small);
+    /* Transparent here so a taken seat and an open one — which carries a real dashed
+       border below — stay exactly the same height. */
+    border: var(--op-border-width) solid transparent;
+    border-radius: var(--op-radius-large);
+    background-color: var(--gp-felt-brighter);
+    box-shadow: var(--gp-lobby-bar-shadow);
+
+    &.waiting-room__seat--open {
+      border-style: dashed;
+      border-color: var(--gp-color-muted);
+      background-color: transparent;
+      box-shadow: none;
+
+      .waiting-room__seat-name {
+        color: var(--gp-color-muted);
+        font-weight: var(--op-font-weight-normal);
+      }
+    }
+  }
+
+  .waiting-room__seat-name {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--op-font-medium);
+    font-weight: var(--op-font-weight-semi-bold);
+    /* break-word, not anywhere: a long name may only split when it genuinely cannot
+       fit, never mid-word while there's still room. */
+    overflow-wrap: break-word;
+  }
+
+  /* Host is a role, not a signal — it stays muted label voice. "You" is identity, which
+     is a coral job (see DESIGN.md's One Signal Rule), so it takes the turn-badge chip. */
+  .waiting-room__role {
+    flex: none;
+    color: var(--gp-color-muted);
+    font-size: var(--op-font-2x-small);
+    font-weight: var(--op-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--op-letter-spacing-label);
+  }
+
+  .waiting-room__you {
+    flex: none;
+    padding: var(--op-space-3x-small) var(--op-space-x-small);
+    border: var(--op-border-width) solid var(--gp-color-accent);
+    border-radius: var(--op-radius-pill);
+    background-color: var(--gp-color-accent-secondary);
+    color: var(--gp-color-accent-text);
+    font-size: var(--op-font-2x-small);
+    font-weight: var(--op-font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: var(--op-letter-spacing-label);
+  }
+
+  /* There is no status line — the Start button's own label reports what the lobby is
+     waiting on (see GameLobbyPresenter#start_label), so the state and the action it
+     gates are one object rather than two. */
+  .waiting-room__actions {
+    display: flex;
+    gap: var(--op-space-x-small);
+  }
+
+  /* button_to wraps its <button> in a form; keep the form out of the flex row so the
+     Start button sizes exactly like the Copy button beside it. */
+  .waiting-room__action {
+    display: contents;
+  }
+
+  /* Both CTAs split the row evenly, so the Copy button's label swap ("Copied!") can't
+     resize anything. */
+  .waiting-room__cta {
+    flex: 1;
+    justify-content: center;
+    white-space: nowrap;
+  }
+
+  /* The sidebar's icon rail leaves ~300px of main here, so the desktop padding stack
+     (page + stage + panel) would squeeze names into mid-word breaks and push the CTA
+     pair past the panel's edge. Give the width back, and stack the actions.
+     NB: --gp-breakpoint-tablet can't be read inside @media — keep 768px in sync by hand. */
+  @media (max-width: 768px) {
+    padding: var(--op-space-small);
+
+    .waiting-room__panel {
+      padding: var(--op-space-medium);
+    }
+
+    .waiting-room__actions {
+      flex-direction: column;
+    }
+  }
+}

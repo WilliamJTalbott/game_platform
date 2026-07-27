@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: end;
-    background-color: var(--op-color-neutral-plus-seven);
+    background-color: var(--gp-color-neutral-plus-seven);
     padding: var(--op-space-small);
     border-radius: var(--op-radius-large);
 }

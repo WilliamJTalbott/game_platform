@@ -1,12 +1,12 @@
 .game {
   height: 100dvh;
-  background-color: var(--op-color-neutral-plus-max);
-  --gf-side-size: calc(83 * var(--op-size-unit));
-  --gf-base-size: calc(65 * var(--op-size-unit));
+  background-color: var(--gp-color-neutral-plus-max);
+  --gp-side-size: calc(83 * var(--op-size-unit));
+  --gp-base-size: calc(65 * var(--op-size-unit));
 
   display: grid;
-  grid-template-columns: 1fr var(--gf-side-size);
-  grid-template-rows: 1fr var(--gf-base-size);
+  grid-template-columns: 1fr var(--gp-side-size);
+  grid-template-rows: 1fr var(--gp-base-size);
 
   grid-template-areas:
     "board feed"

@@ -10,7 +10,7 @@
 
 /* The felt is the muted board surface; each felt-zone is a raised, brighter panel on
    top of it (piles on the left, shared melds filling the rest). Board tokens live in
-   theme.css (--gf-felt / --gf-felt-bright) since the board is a game concern, not an
+   theme.css (--gp-felt / --gp-felt-bright) since the board is a game concern, not an
    Optics re-skin. */
 .felt {
   position: relative;
@@ -21,7 +21,7 @@
   margin-top: var(--op-space-medium);
   padding: var(--op-space-medium);
   border-radius: var(--op-radius-2x-large);
-  background-color: var(--gf-felt);
+  background-color: var(--gp-felt);
   overflow: hidden;
 }
 
@@ -31,7 +31,7 @@
   gap: var(--op-space-small);
   padding: var(--op-space-small) var(--op-space-medium);
   border-radius: var(--op-radius-x-large);
-  background-color: var(--gf-felt-bright);
+  background-color: var(--gp-felt-bright);
   box-shadow: var(--op-shadow-small);
 
   .felt-zone__label {
@@ -39,7 +39,7 @@
     font-weight: var(--op-font-weight-bold);
     text-transform: uppercase;
     letter-spacing: var(--op-letter-spacing-label);
-    color: var(--gf-color-muted);
+    color: var(--gp-color-muted);
   }
 
   .felt-zone__body {

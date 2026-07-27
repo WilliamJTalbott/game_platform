@@ -1,74 +1,238 @@
+/* ==========================================================================
+   Game Platform — design tokens
+
+   COLOR IS OURS. Every color in this app is defined here as a --gp-* token and
+   never taken from Optics. Optics still owns every *non-color* measurement
+   (spacing, type, radii, shadows, borders), which stay on --op-*. See
+   DESIGN.md, "Color Ownership", for the decision and its reasoning, and
+   docs/frontend.md for the token tiers.
+
+   Read this file in three parts:
+     1. The color system    — the --gp-color-* ramp and the accents. Ours.
+     2. The Optics bridge   — points Optics' internal --op-color-* tokens at
+                              our values, so its own components are painted by
+                              this palette instead of its defaults.
+     3. Non-color overrides — the handful of --op-* measurements we change.
+   ========================================================================== */
+
 :root {
 
-    /* Color model: see DESIGN.md ("Colors"). Optics owns only the neutral chrome;
-       every actual color (the coral accent, the felt/lobby page accents) is
-       hand-picked below, never derived from --op-color-primary-*. Primary
-       is pointed at coral's hue solely so Optics' own internal chrome (focus rings,
-       focused Simple Form inputs) reads coral instead of a stray default. */
-    --op-color-primary-h: 16;    /* coral, matches --gf-color-accent */
-    --op-color-primary-s: 70%;
-    --op-color-primary-l: 40%;   /* nearly inert — Optics hardcodes the base lightness */
+  /* ========================================================================
+     1. THE COLOR SYSTEM  (ours)
+     ======================================================================== */
 
-    /* Chrome hue/sat — decoupled from primary (which it tracks by default) to a warm
-       "yellow slate gray" per the mockups. neutral-l is left at its primary-l default. */
-    --op-color-neutral-h: 49;
-    --op-color-neutral-s: 14%;
+  /* ---- Neutral: the room ------------------------------------------------
+     One warm hue at 30° — a soft, warm gray leaning toward the coral accent
+     rather than yellow. Pulled down from an earlier 41°/14% (and 49° before
+     that), both of which read too yellow-olive at these saturations instead
+     of like lamplight.
 
-    /* One step down from Optics' near-white default so near-white surfaces (panels,
-       lobby tray) sit visibly raised off the page instead of blending into it. */
-    --op-color-background: var(--op-color-neutral-plus-max);
+     The ramp keeps Optics' plus/minus structure, which is a genuinely good
+     shape: plus-* steps are *surfaces* (plus-max is the page floor, climbing
+     toward the viewer), minus-* steps are *ink* on those surfaces, and base
+     sits between them. Only the values are ours.
 
-    --op-border-width: 1.8px;
-    --op-border-width-large: 3px;
+     Saturation and lightness move in OPPOSITE directions across the dark
+     surface steps, and that pairing is load-bearing rather than decorative.
+     Chroma is nearly imperceptible at 13% lightness and very visible at 40%,
+     so one saturation cannot serve both ends: a flat 24% made the page
+     properly warm but turned the lighter surfaces (stat blocks, card faces)
+     into khaki cardboard, and a flat 14% made the page a 5-level channel
+     spread — a warm room that was true on paper and neutral black on screen.
+     High chroma where it is barely perceptible, low where it would shout.
+     See DESIGN.md's Tapered Chroma Rule before changing any pair.
 
-    /* Optics tops out at 16px; the mockups' big surfaces (felt, lobby tray, modals)
-       want 20px. Every other radius step matches Optics' native scale already. */
-    --op-radius-2x-large: 20px;
+     The dark lightness values are also re-spaced relative to Optics' own
+     (which compress all chrome into 8–14%): the floor sits ~5 points higher
+     and adjacent steps are pushed apart, so stacked surfaces separate on tone
+     instead of relying entirely on shadow.
 
-    --gf-card-hover-lift: 50px;
-    --gf-card-aspect-ratio: 5 / 7;
+     Light values are Optics' original lightness at a flat 14% saturation —
+     incidental output, not a designed palette, per the Dark-First Rule. */
+  --gp-color-neutral-h: 30;
+  --gp-color-neutral-s: 8%;    /* ink + anything without its own saturation */
 
-    --gf-color-overlay: rgb(0 0 0 / 0.5);
-    --gf-color-shadow: rgb(0 0 0 / 0.6);
+  /* Surfaces: page floor → nearest the viewer.        light  |  dark (designed) */
+  --gp-color-neutral-plus-max:   light-dark(hsl(var(--gp-color-neutral-h) 14% 100%), hsl(var(--gp-color-neutral-h) 18% 11%));
+  --gp-color-neutral-plus-eight: light-dark(hsl(var(--gp-color-neutral-h) 14%  98%), hsl(var(--gp-color-neutral-h) 15% 15%));
+  --gp-color-neutral-plus-seven: light-dark(hsl(var(--gp-color-neutral-h) 14%  96%), hsl(var(--gp-color-neutral-h) 10% 19%));
+  --gp-color-neutral-plus-six:   light-dark(hsl(var(--gp-color-neutral-h) 14%  94%), hsl(var(--gp-color-neutral-h)  9% 22%));
+  --gp-color-neutral-plus-five:  light-dark(hsl(var(--gp-color-neutral-h) 14%  90%), hsl(var(--gp-color-neutral-h)  7% 25%));
+  --gp-color-neutral-plus-four:  light-dark(hsl(var(--gp-color-neutral-h) 14%  84%), hsl(var(--gp-color-neutral-h)  6% 28%));
+  --gp-color-neutral-plus-three: light-dark(hsl(var(--gp-color-neutral-h) 14%  70%), hsl(var(--gp-color-neutral-h)  6% 32%));
+  --gp-color-neutral-plus-two:   light-dark(hsl(var(--gp-color-neutral-h) 14%  64%), hsl(var(--gp-color-neutral-h)  5% 35%));
+  --gp-color-neutral-plus-one:   light-dark(hsl(var(--gp-color-neutral-h) 14%  44%), hsl(var(--gp-color-neutral-h)  5% 39%));
 
-    /* The card face + border are Optics neutrals applied directly (see
-       playing_card.css); only the selected-card tint is hand-picked (coral). */
-    --gf-card-face-selected: hsl(16 45% 20%); /* dark/muted coral so ink still reads over it */
-    /* Red-suit ink for the simplified meld chips (rummy melds render cards as a
-       rank+suit glyph, not full art). Matches the red in dark_cards/*.svg; there is
-       no Optics red, so it stays hand-picked. Black suits use the neutral on-color. */
-    --gf-card-ink-red: #dc4d38;
+  --gp-color-neutral-base:       light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 40%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 30%));
 
-    /* Coral — the one brand accent (see DESIGN.md). One hue (16°), a few
-       hand-picked shades, never a derived ramp. */
-    --gf-color-accent: hsl(16 85% 62%);
-    --gf-color-on-accent: #fff;
-    --gf-color-accent-text: light-dark(hsl(16 90% 42%), var(--gf-color-accent)); /* legible on both page bgs */
-    --gf-color-accent-secondary: color-mix(in srgb, var(--gf-color-accent) 20%, var(--op-color-neutral-plus-max));
+  /* Ink: minus-max is the strongest, stepping down toward the surface tone. */
+  --gp-color-neutral-minus-one:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 36%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 36%));
+  --gp-color-neutral-minus-two:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 32%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 40%));
+  --gp-color-neutral-minus-three: light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 28%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 44%));
+  --gp-color-neutral-minus-four:  light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 24%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 52%));
+  --gp-color-neutral-minus-five:  light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 20%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 64%));
+  --gp-color-neutral-minus-six:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 16%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 72%));
+  --gp-color-neutral-minus-seven: light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  8%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 80%));
+  --gp-color-neutral-minus-eight: light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  4%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 88%));
+  --gp-color-neutral-minus-max:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  0%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%));
 
-    /* Felt — the game page's own accent. Green lives only here, never on chrome. */
-    --gf-felt: light-dark(#bfd2c6, #1b2a22);
-    --gf-felt-bright: light-dark(#e6f5ea, #274035);
-    --gf-felt-brighter: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05)); /* translucent white over felt */
+  /* Contrast pairs: the ink to use *on* a given surface step. `-alt` is the
+     muted companion. Only the pairs in use are defined; add a step's pair
+     when a component needs it rather than defining all nineteen up front. */
+  --gp-color-neutral-on-base:            light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%));
+  --gp-color-neutral-on-plus-max:        light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)   0%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%));
+  --gp-color-neutral-on-plus-eight:      light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)   4%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  88%));
+  --gp-color-neutral-on-plus-eight-alt:  light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  34%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  54%));
+  --gp-color-neutral-on-plus-seven:      light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)   8%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  80%));
+  --gp-color-neutral-on-plus-five:       light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  20%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  80%));
+  --gp-color-neutral-on-plus-five-alt:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  40%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  94%));
 
-    /* Lobby — the games-index's page accent, sibling of felt above (see DESIGN.md's
-       "One Page, One Color" rule). Only the raised game bars
-       (components/lobby/game_card.css) carry blue; the tray stays neutral chrome. */
-    --gf-lobby-bar: light-dark(#eef1f5, #262b32);
-    /* light-dark() must wrap only the <color>, not the whole shorthand — see the
-       light-dark() gotcha in docs/frontend.md. */
-    --gf-lobby-tray-border: 1px solid light-dark(rgb(90 80 55 / 0.14), rgb(200 185 140 / 0.09));
-    --gf-lobby-tray-shadow:
-      inset 0 2px 6px light-dark(rgb(70 62 40 / 0.12), rgb(0 0 0 / 0.4)),
-      inset 0 -1px 0 light-dark(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.03));
-    --gf-lobby-bar-shadow:
-      inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.05)),
-      0 2px 7px light-dark(rgb(70 62 40 / 0.13), rgb(0 0 0 / 0.34));
+  /* ---- Semantic neutrals ---------------------------------------------- */
+  --gp-color-background: var(--gp-color-neutral-plus-max);
+  --gp-color-on-background: var(--gp-color-neutral-on-plus-eight);
+  --gp-color-border: var(--gp-color-neutral-plus-five);
+  --gp-color-muted: var(--gp-color-neutral-minus-four); /* counts, captions, metadata */
 
-    --gf-color-muted: var(--op-color-neutral-minus-four); /* closest ramp step to the mockups' muted text in dark mode */
+  --gp-color-overlay: rgb(0 0 0 / 0.5);
+  --gp-color-shadow: rgb(0 0 0 / 0.6);
 
-    /* CSS custom properties can't be read inside @media conditions — this is
-       documentation only; keep any matching @media (max-width: …) in sync by hand. */
-    --gf-breakpoint-tablet: 768px;
+  /* ---- Coral: the one brand accent ------------------------------------
+     One hue (16°), a few hand-picked shades, never a derived ramp — a
+     ramp-darkened coral reads as muddy copper. */
+  --gp-color-accent: hsl(16 85% 62%);
+  --gp-color-on-accent: #fff;
+  --gp-color-accent-text: light-dark(hsl(16 90% 42%), var(--gp-color-accent)); /* coral as ink, legible on either page */
+  --gp-color-accent-secondary: color-mix(in srgb, var(--gp-color-accent) 20%, var(--gp-color-neutral-plus-max));
+
+  /* ---- The lamp -------------------------------------------------------
+     The room's single light source: one warm pool, high and left, falling off
+     into the corners (components/layout/room.css). Alpha stays low; it is
+     meant to be felt rather than seen as a shape. See DESIGN.md's Lamp Rule. */
+  --gp-lamp-warm: rgb(255 190 120 / 0.10);
+  --gp-lamp-mid: rgb(255 175 105 / 0.045);
+
+  /* ---- Page accents ---------------------------------------------------
+     One color per major page, never appearing on another (DESIGN.md's One
+     Page, One Color Rule). */
+
+  /* Felt — the game page. Green lives only here, never on chrome. */
+  --gp-felt: light-dark(#bfd2c6, #1b2a22);
+  --gp-felt-bright: light-dark(#e6f5ea, #274035);
+  --gp-felt-brighter: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05)); /* translucent white over felt */
+
+  /* Lobby slate — the games index. Only the raised game bars carry it; the
+     tray beneath them stays neutral chrome.
+
+     Slate keeps the hue and saturation it always had (#262b32 is
+     hsl(215 14% 17%)) — it is the same cool blue-gray. Only its *lightness*
+     rises, to 26%, because the room rose underneath it: against the lifted
+     tray (17%) the original slate would sit lower than the surface it is
+     meant to rest on, inverting the raised-bar reading and breaking the
+     Matched-Pair Rule. Re-leveling, not recoloring. */
+  --gp-lobby-bar: light-dark(#eef1f5, hsl(215 14% 26%));
+
+  /* ---- Cards ----------------------------------------------------------- */
+  --gp-card-face-selected: hsl(16 45% 20%); /* dark/muted coral so the card's own ink still reads over it */
+  /* Red-suit ink for the simplified meld chips (rummy renders melded cards as
+     a rank+suit glyph, not full art). Matches the red inside dark_cards/*.svg.
+     Black suits use the neutral on-color. */
+  --gp-card-ink-red: #dc4d38;
+
+  /* ---- Warning --------------------------------------------------------
+     THE ONE UNDESIGNED CORNER OF THE PALETTE. These values are Optics' alert
+     hue (47° at full saturation) transcribed so that no color resolves through
+     an Optics token, but they were never chosen for this room — they are a
+     hot yellow in a warm amber house. Used by the copy-link popup and the
+     "not your turn" message. Pick real values when a warning state next gets
+     design attention. */
+  --gp-color-warning-base: light-dark(hsl(47 100% 40%), hsl(47 100% 32%));
+  --gp-color-warning-on-base: light-dark(hsl(47 100% 12%), hsl(47 100% 2%));
+  --gp-color-warning-surface: light-dark(hsl(47 100% 96%), hsl(47 100% 8%));
+  --gp-color-warning-border: light-dark(hsl(47 100% 90%), hsl(47 100% 14%));
+  --gp-color-warning-text: light-dark(hsl(47 100% 28%), hsl(47 100% 60%));
+
+  /* ========================================================================
+     2. THE OPTICS BRIDGE
+
+     Optics' own components (buttons, sidebar, inputs, dropdowns, dialogs) read
+     --op-color-* internally, and we cannot rewrite their stylesheets. Left
+     alone they would paint themselves from Optics' default palette while our
+     hand-written components used the palette above — the same screen in two
+     color systems.
+
+     So the flow is one-directional and this is the only place it happens: our
+     tokens feed Optics, never the reverse. Nothing outside this block should
+     reference --op-color-*; use the --gp-color-* token instead.
+     ======================================================================== */
+
+  --op-color-neutral-h: var(--gp-color-neutral-h);
+  --op-color-neutral-s: var(--gp-color-neutral-s);
+
+  --op-color-neutral-plus-max:   var(--gp-color-neutral-plus-max);
+  --op-color-neutral-plus-eight: var(--gp-color-neutral-plus-eight);
+  --op-color-neutral-plus-seven: var(--gp-color-neutral-plus-seven);
+  --op-color-neutral-plus-six:   var(--gp-color-neutral-plus-six);
+  --op-color-neutral-plus-five:  var(--gp-color-neutral-plus-five);
+  --op-color-neutral-plus-four:  var(--gp-color-neutral-plus-four);
+  --op-color-neutral-plus-three: var(--gp-color-neutral-plus-three);
+  --op-color-neutral-plus-two:   var(--gp-color-neutral-plus-two);
+  --op-color-neutral-plus-one:   var(--gp-color-neutral-plus-one);
+  --op-color-neutral-base:       var(--gp-color-neutral-base);
+
+  --op-color-background: var(--gp-color-background);
+  --op-color-border: var(--gp-color-border);
+
+  /* Optics' primary ramp is pointed at coral's hue for one reason only: so its
+     *internal* chrome (focus rings, focused Simple Form inputs) reads coral
+     rather than a stray default. Never color a component from this ramp — its
+     lightness knob is inert and its base is locked mid-dark in both schemes,
+     so it cannot reach our coral. See DESIGN.md's No-Ramp Rule. */
+  --op-color-primary-h: 16;    /* coral, matches --gp-color-accent */
+  --op-color-primary-s: 70%;
+  --op-color-primary-l: 40%;   /* nearly inert — Optics hardcodes the base lightness */
+
+  /* ========================================================================
+     3. NON-COLOR OVERRIDES
+
+     Optics owns spacing, type, radii, shadows and borders; these are the few
+     measurements we deliberately change. Everything else comes from Optics
+     untouched, on --op-*.
+     ======================================================================== */
+
+  --op-border-width: 1.8px;
+  --op-border-width-large: 3px;
+
+  /* Optics tops out at 16px; the mockups' big surfaces (felt, lobby tray,
+     modals) want 20px. Every other radius step matches Optics' scale. */
+  --op-radius-2x-large: 20px;
+
+  /* ---- Project measurements ------------------------------------------- */
+  --gp-card-hover-lift: 50px;
+  --gp-card-aspect-ratio: 5 / 7;
+
+  /* The Matched-Pair Rule (DESIGN.md): the tray's inset and the bar's lift are
+     one effect and are tuned together. The dark values are deliberately
+     stronger than the light ones — on a near-black tray a black drop shadow
+     has almost no tone left to darken, so depth in dark comes from the *lit*
+     inner edges plus a wider, heavier blur. Judged in dark.
+
+     light-dark() must wrap only the <color>, never the whole shorthand — a
+     shorthand silently invalidates the declaration to `none` with no warning.
+     See docs/frontend.md. */
+  --gp-lobby-tray-border: 1px solid light-dark(rgb(90 80 55 / 0.14), rgb(200 185 140 / 0.09));
+  --gp-lobby-tray-shadow:
+    inset 0 3px 9px light-dark(rgb(70 62 40 / 0.12), rgb(0 0 0 / 0.6)),
+    inset 0 -1px 0 light-dark(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.07));
+  --gp-lobby-bar-shadow:
+    inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.11)),
+    0 3px 10px light-dark(rgb(70 62 40 / 0.13), rgb(0 0 0 / 0.55));
+  /* The one row waiting on you sits highest on the tray — same pair, one step further. */
+  --gp-lobby-bar-shadow-live:
+    inset 0 1px 0 light-dark(rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.14)),
+    0 5px 16px light-dark(rgb(70 62 40 / 0.18), rgb(0 0 0 / 0.62));
+
+  /* CSS custom properties can't be read inside @media conditions — this is
+     documentation only; keep any matching @media (max-width: …) in sync by hand. */
+  --gp-breakpoint-tablet: 768px;
 
 }

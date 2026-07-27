@@ -4,8 +4,8 @@
   gap: var(--op-space-2x-small);
   padding: var(--op-space-x-small);
   border-radius: var(--op-radius-large);
-  background-color: var(--gf-felt-brighter);
-  box-shadow: var(--gf-lobby-bar-shadow);
+  background-color: var(--gp-felt-brighter);
+  box-shadow: var(--gp-lobby-bar-shadow);
 
   .meld__header {
     display: flex;
@@ -15,12 +15,12 @@
 
   .meld__label {
     font-size: var(--op-font-x-small);
-    color: var(--gf-color-muted);
+    color: var(--gp-color-muted);
   }
 
   .meld__owner {
     font-size: var(--op-font-x-small);
-    color: var(--gf-color-accent-text);
+    color: var(--gp-color-accent-text);
   }
 
   .meld__cards {
@@ -30,24 +30,24 @@
 
   /* A simplified placeholder for each melded card — just its rank + suit glyph, far
      more legible at this size than the full card art. It reuses the real card's face
-     tokens (--op-color-neutral-plus-five / -base, see playing_card.css) and its
+     tokens (--gp-color-neutral-plus-five / -base, see playing_card.css) and its
      portrait aspect ratio, so it reads as the same stock — just text instead of art. */
   .meld__card {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: calc(4 * var(--op-space-scale-unit));
-    aspect-ratio: var(--gf-card-aspect-ratio);
+    aspect-ratio: var(--gp-card-aspect-ratio);
     font-size: var(--op-font-x-small);
     font-weight: var(--op-font-weight-semi-bold);
     line-height: 1;
-    color: var(--op-color-neutral-on-plus-five);
-    background-color: var(--op-color-neutral-plus-five);
-    border: var(--op-border-width) solid var(--op-color-neutral-base);
+    color: var(--gp-color-neutral-on-plus-five);
+    background-color: var(--gp-color-neutral-plus-five);
+    border: var(--op-border-width) solid var(--gp-color-neutral-base);
     border-radius: var(--op-radius-medium);
 
     &.meld__card--red {
-      color: var(--gf-card-ink-red);
+      color: var(--gp-card-ink-red);
     }
   }
 }
@@ -59,9 +59,9 @@
      here to taste. */
   min-width: 92px;
   min-height: 92px;
-  /*border: var(--op-border-width-large) dashed var(--gf-color-accent);*/
-  /*background-color: var(--gf-color-accent-secondary);*/
-  border: var(--op-border-width-large) dashed var(--gf-color-muted);
+  /*border: var(--op-border-width-large) dashed var(--gp-color-accent);*/
+  /*background-color: var(--gp-color-accent-secondary);*/
+  border: var(--op-border-width-large) dashed var(--gp-color-muted);
   background-color: transparent;
 
   /* .meld's own `display: flex` (same specificity) would otherwise win the
@@ -72,6 +72,6 @@
 
   .meld__plus {
     font-size: var(--op-font-large);
-    color: var(--gf-color-muted);
+    color: var(--gp-color-muted);
   }
 }

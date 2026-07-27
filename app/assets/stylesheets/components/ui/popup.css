@@ -6,8 +6,8 @@
 
   display: none;
 
-  color: var(--op-color-alerts-warning-on-base);
-  background-color: var(--op-color-alerts-warning-base);
+  color: var(--gp-color-warning-on-base);
+  background-color: var(--gp-color-warning-base);
   padding: var(--op-space-medium);
   border-radius: var(--op-radius-large);
   font-weight: var(--op-font-weight-semi-bold);

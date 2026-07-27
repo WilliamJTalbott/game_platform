@@ -18,6 +18,10 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
       expect(presenter.player_count).to eq "1/#{RummyGame::MAX_PLAYERS}"
     end
 
+    it "counts the seats still open" do
+      expect(presenter.open_seats).to eq RummyGame::MAX_PLAYERS - 1
+    end
+
     it "lists the host as a roster row" do
       row = presenter.players.first
       expect(row.name).to eq "Will"
@@ -25,17 +29,16 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
     end
 
     it "identifies the host" do
-      expect(presenter.host_name).to eq "Will"
       expect(presenter.host?).to be true
     end
 
     it "cannot start yet" do
       expect(presenter.can_start?).to be false
-      expect(presenter.show_start?).to be false
+      expect(presenter.start_enabled?).to be false
     end
 
-    it "reports the waiting-for-more-players status" do
-      expect(presenter.status_line).to eq "Waiting for more players…"
+    it "labels the start action with what the lobby is waiting on" do
+      expect(presenter.start_label).to eq "Waiting for players…"
     end
 
     it "builds an invite url" do
@@ -54,11 +57,11 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
 
     it "is ready to start" do
       expect(presenter.can_start?).to be true
-      expect(presenter.status_line).to eq "Ready when you are."
+      expect(presenter.start_enabled?).to be true
     end
 
-    it "shows the start button" do
-      expect(presenter.show_start?).to be true
+    it "labels the start action as the action itself" do
+      expect(presenter.start_label).to eq "Start Game"
     end
   end
 
@@ -70,12 +73,12 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
       expect(presenter.host?).to be false
     end
 
-    it "hides the start button" do
-      expect(presenter.show_start?).to be false
+    it "cannot use the start button" do
+      expect(presenter.start_enabled?).to be false
     end
 
-    it "names the host in the status line" do
-      expect(presenter.status_line).to eq "Waiting for Will to start…"
+    it "labels the start action as waiting on the host" do
+      expect(presenter.start_label).to eq "Waiting for the host…"
     end
   end
 
@@ -85,8 +88,13 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
 
     before { create_list(:participant, CrazyEightsGame::MAX_PLAYERS - 1, game: game) }
 
-    it "reports the lobby is full" do
-      expect(presenter.status_line).to eq "Lobby is full."
+    it "is still startable" do
+      expect(presenter.start_label).to eq "Start Game"
+      expect(presenter.start_enabled?).to be true
+    end
+
+    it "leaves no seats open" do
+      expect(presenter.open_seats).to eq 0
     end
   end
 end

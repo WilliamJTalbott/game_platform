@@ -18,7 +18,7 @@
         flex: 1;
 
         border-radius: var(--op-radius-2x-large);
-        background-color: var(--op-color-neutral-plus-seven);
+        background-color: var(--gp-color-neutral-plus-seven);
 
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

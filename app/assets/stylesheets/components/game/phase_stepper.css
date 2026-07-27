@@ -5,16 +5,16 @@
   .phase-stepper__step {
     font-size: var(--op-font-2x-small);
     padding: var(--op-space-3x-small) var(--op-space-small);
-    border: var(--op-border-width) solid var(--op-color-border);
+    border: var(--op-border-width) solid var(--gp-color-border);
     border-radius: var(--op-radius-2x-large);
-    color: var(--gf-color-muted);
-    background-color: var(--op-color-neutral-plus-max);
+    color: var(--gp-color-muted);
+    background-color: var(--gp-color-neutral-plus-max);
 
     &.phase-stepper__step--active {
-      border-color: var(--gf-color-accent);
-      color: var(--gf-color-accent-text);
+      border-color: var(--gp-color-accent);
+      color: var(--gp-color-accent-text);
       font-weight: var(--op-font-weight-bold);
-      background-color: var(--op-color-neutral-plus-eight);
+      background-color: var(--gp-color-neutral-plus-eight);
     }
   }
 }

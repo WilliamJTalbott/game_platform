@@ -4,19 +4,19 @@ description: A dark-first, lamp-lit card room for playing turn-based card games 
 colors:
   accent-coral: "hsl(16 85% 62%)"
   accent-coral-deep: "hsl(16 90% 42%)"
-  accent-coral-tint: "color-mix(in srgb, hsl(16 85% 62%) 20%, hsl(49 14% 100%))"
+  accent-coral-tint: "color-mix(in srgb, hsl(16 85% 62%) 20%, hsl(41 14% 100%))"
   on-accent: "#ffffff"
-  warm-neutral-page: "light-dark(hsl(49 14% 100%), hsl(49 14% 8%))"
-  warm-neutral-raised: "light-dark(hsl(49 14% 98%), hsl(49 14% 10%))"
-  warm-neutral-recessed: "light-dark(hsl(49 14% 96%), hsl(49 14% 14%))"
-  warm-neutral-card-face: "light-dark(hsl(49 14% 90%), hsl(49 14% 18%))"
-  border: "light-dark(hsl(49 14% 90%), hsl(49 14% 18%))"
-  ink: "light-dark(hsl(49 14% 0%), hsl(49 14% 100%))"
-  muted-text: "light-dark(hsl(49 14% 24%), hsl(49 14% 52%))"
+  warm-neutral-page: "light-dark(hsl(41 14% 100%), hsl(41 26% 13%))"
+  warm-neutral-raised: "light-dark(hsl(41 14% 98%), hsl(41 21% 17%))"
+  warm-neutral-recessed: "light-dark(hsl(41 14% 96%), hsl(41 14% 21%))"
+  warm-neutral-card-face: "light-dark(hsl(41 14% 90%), hsl(41 10% 27%))"
+  border: "light-dark(hsl(41 14% 90%), hsl(41 10% 27%))"
+  ink: "light-dark(hsl(41 14% 0%), hsl(41 14% 100%))"
+  muted-text: "light-dark(hsl(41 14% 24%), hsl(41 14% 52%))"
   felt-green: "light-dark(#bfd2c6, #1b2a22)"
   felt-green-raised: "light-dark(#e6f5ea, #274035)"
   felt-green-translucent: "light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05))"
-  lobby-slate: "light-dark(#eef1f5, #262b32)"
+  lobby-slate: "light-dark(#eef1f5, hsl(215 14% 26%))"
   card-face-selected: "hsl(16 45% 20%)"
   card-ink-red: "#dc4d38"
   overlay: "rgb(0 0 0 / 0.5)"
@@ -139,10 +139,17 @@ components:
 
 A lamp-lit room in a warm house, late in the evening — and **the lights are low**. This is
 a dark-first system: dark is the scheme that gets designed and judged. The chrome is the
-room itself, a yellow-tinged linen gray that never announces itself, because it is walls
+room itself, an amber-tinged linen gray that never announces itself, because it is walls
 and furniture, not the event. Coral is the single lit signal in that room, everywhere in
 the house: it means *act* — your turn, this button, this link, this name. Nothing else
 glows.
+
+**The lamp is literal.** One warm pool of light sits high and to the left of the main column
+and falls off into the corners, and the neutral ramp's saturation climbs as its surfaces
+darken so the low light actually reads as warm. Both exist because "lights low" and "lights
+off" are the same picture without them: flat fills at 8% lightness and 14% saturation
+rendered a five-level channel spread — a warm room that was true on paper and neutral black
+on screen. See The Lamp Rule and The Tapered Chroma Rule.
 
 **Each major room may be its own color.** Coral is the constant, site-wide; on top of it, a
 major page may claim one accent of its own so that arriving there feels like arriving
@@ -157,15 +164,15 @@ brighter panels laid over it. Depth here is literal furniture logic, not decorat
 if two things are stacked, the stack is visible. Density is comfortable rather than
 compressed: this is a room you spend an evening in, not a dashboard you scan.
 
-The system's one hard discipline is **color scarcity**. Optics supplies neutral chrome
-and every non-color measurement; color is never derived from a ramp. One brand accent, at
+The system's one hard discipline is **color scarcity**. Every color is ours and defined in one
+file; Optics supplies the non-color measurements and nothing else. One brand accent, at
 most one page accent per page, and nothing else. A screen with coral in three unrelated
 places, or with a second page's color bleeding into it, has broken the world.
 
 **Key Characteristics:**
 
 - Dark-first: dark is the designed scheme; light mode is not yet a designed surface
-- Warm linen-gray chrome (hue 49°) that reads as room, not as UI
+- Warm linen-gray chrome (hue 41°) that reads as room, not as UI
 - One permanent coral accent (hue 16°), site-wide, reserved for action, turn, and identity
 - Page accents: a major page may claim one color of its own, and it never leaves that page
 - Literal, stacked depth: recessed trays, raised bars, drop-shadowed cards
@@ -176,6 +183,40 @@ places, or with a second page's color bleeding into it, has broken the world.
 
 A warm-neutral room with one permanent hot accent, plus at most one color per page — the
 palette is small on purpose, and its restraint is what makes coral legible as a signal.
+
+### Color Ownership
+
+**Every color in this app is ours. None of it comes from Optics.** Color lives in
+`core/theme.css` as `--gp-color-*` (Game Platform), and no stylesheet outside that file may
+reference an `--op-color-*` token. Optics remains the foundation and is not replaceable — it
+still owns every *non-color* measurement (spacing, type, radii, shadows, border widths),
+which stay on `--op-*` and are used directly.
+
+*Why.* The palette had already drifted into being hand-picked in practice — coral, the felt,
+the lobby slate — while the neutral chrome was still borrowed from Optics' ramp. That split
+was the source of the flat, cold room: the values that mattered most were the ones nobody had
+chosen, and fixing them meant fighting a vendor's scale rather than editing our own. Naming
+what we own makes the boundary checkable instead of a matter of memory: a `--gp-` prefix means
+we decided it, an `--op-` prefix means we inherited it, and a color on `--op-` is a bug.
+
+*The plus/minus structure is kept deliberately.* Optics' ramp shape is genuinely good and
+survives the move: `plus-*` steps are **surfaces**, climbing from `plus-max` (the page floor)
+toward the viewer; `minus-*` steps are **ink** on those surfaces; `base` sits between them;
+and `on-*` pairs name the ink that belongs on a given surface. We adopted the shape and
+replaced the values. A new surface picks a `plus-*` step, not a new one-off color.
+
+*How Optics still gets painted.* Optics' own components — buttons, sidebar, inputs,
+dropdowns, dialogs — read `--op-color-*` internally, and we cannot rewrite their stylesheets.
+So `theme.css` has one **bridge** block that points those tokens at our values. The flow is
+one-directional and lives in exactly one place: our palette feeds Optics, never the reverse.
+Without it, hand-written components would use our room while Optics-rendered chrome used
+Optics' defaults — one screen in two color systems.
+
+*The one exception, named honestly.* `--gp-color-warning-*` transcribes Optics' alert hue
+(47° at full saturation) so that no color resolves through an Optics token. Those five values
+were never chosen for this room — they are a hot yellow in a warm amber house. They are the
+only undesigned corner of the palette; pick real ones when a warning state next gets
+attention.
 
 **Color scheme: dark is the designed scheme.** Every value below is authored and judged in
 dark mode. Light mode currently renders only because Optics' scale and this project's
@@ -216,7 +257,7 @@ appears nowhere else in the app. Two pages have claimed one so far; the list is 
 
 *Games index — slate:*
 
-- **Lobby Slate** (`#262b32` / `#eef1f5`): the cool blue-gray of the raised game bars on
+- **Lobby Slate** (`hsl(215 14% 26%)` / `#eef1f5`): the cool blue-gray of the raised game bars on
   the home dashboard, and only those bars. The tray beneath them stays warm neutral.
 
 *Unclaimed:* stats, history, and rules have no page accent, and that is a complete state —
@@ -238,23 +279,30 @@ the deployment that fits it.
 
 ### Neutral
 
-All chrome comes from one warm hue (49°) at low saturation (14%) — a yellow-tinged gray,
-deliberately decoupled from the coral hue it would otherwise track.
+All chrome comes from one warm hue (41°) — an amber-tinged gray, deliberately decoupled from
+the coral hue it would otherwise track. 41° rather than a yellower 49°, which reads faintly
+olive at these saturations instead of like lamplight.
+
+**Saturation tapers as lightness rises, and the pairing is load-bearing.** Chroma is nearly
+imperceptible at 13% lightness and very visible at 40%, so a single saturation cannot serve
+both ends of the ramp: the dark surfaces need ~21–26% before they read warm at all, while the
+lighter ones turn to khaki cardboard anywhere near that. Each surface step therefore carries
+its own saturation, high at the floor and low at the top. See The Tapered Chroma Rule.
 
 Values below read **dark / light**, dark first, because dark is the designed scheme. (Note
 this is the reverse of CSS `light-dark()` argument order, which the frontmatter necessarily
 follows.) The light values are Optics' incidental output, not chosen tones.
 
-- **Warm Neutral Page** (`hsl(49 14% 8%)` / `hsl(49 14% 100%)`): the page and the game
+- **Warm Neutral Page** (`hsl(41 26% 13%)` / `hsl(41 14% 100%)`): the page and the game
   shell. Set one step off Optics' default so raised surfaces read as raised.
-- **Warm Neutral Raised** (`hsl(49 14% 10%)` / `hsl(49 14% 98%)`): panel headers, the
+- **Warm Neutral Raised** (`hsl(41 21% 17%)` / `hsl(41 14% 98%)`): panel headers, the
   lobby tray, the sidebar, the Rummy hand dock, opponent cards. The "chrome surface" tone.
-- **Warm Neutral Recessed** (`hsl(49 14% 14%)` / `hsl(49 14% 96%)`): stats grid, modal
+- **Warm Neutral Recessed** (`hsl(41 14% 21%)` / `hsl(41 14% 96%)`): stats grid, modal
   dialogs, the request form, the winner row — surfaces set slightly *into* the page.
-- **Warm Neutral Card Face** (`hsl(49 14% 18%)` / `hsl(49 14% 90%)`): the playing-card
+- **Warm Neutral Card Face** (`hsl(41 10% 27%)` / `hsl(41 14% 90%)`): the playing-card
   face and meld chip stock; doubles as the default border tone.
-- **Ink** (`hsl(49 14% 100%)` / `hsl(49 14% 0%)`): headings and primary text.
-- **Muted Text** (`hsl(49 14% 52%)` / `hsl(49 14% 24%)`): counts, captions, section
+- **Ink** (`hsl(41 14% 100%)` / `hsl(41 14% 0%)`): headings and primary text.
+- **Muted Text** (`hsl(41 14% 52%)` / `hsl(41 14% 24%)`): counts, captions, section
   labels, metadata, the empty-state line.
 
 ### Named Rules
@@ -277,6 +325,27 @@ spreading it further.
 brand identity — nothing else, on every page. A page accent never takes over an action, and
 coral never becomes a page's decoration. A screen where coral also decorates a heading, a
 border, and a divider has spent the signal.
+
+**The Owned Color Rule.** Color is `--gp-color-*` and nothing else. Never reference an
+`--op-color-*` token outside `theme.css`'s bridge block, and never introduce a raw color value
+in a component when a ramp step or accent already covers it. Non-color values are the
+opposite: take them from `--op-*` and don't restate them under `--gp-*`. The prefix is the
+contract — `--gp-` is what we decided, `--op-` is what we inherited.
+
+**The Tapered Chroma Rule.** In dark mode, saturation and lightness move in opposite
+directions across the neutral surface ramp: the page floor sits near 26% saturation, the
+lightest surfaces near 7%. This is not a stylistic flourish — it is the only way one warm hue
+can read as warm at 13% lightness without going olive at 40%. If you add or re-point a
+surface step, give it a saturation that fits its lightness rather than copying a neighbour's.
+Never flatten the ramp to one saturation; that was the original bug, and it produced a page
+whose "warmth" was a five-level channel spread, i.e. neutral black.
+
+**The Lamp Rule.** The room has exactly one light source: a single warm pool, high and left,
+declared on the page shell (`components/layout/room.css`) and echoed on the lobby tray so the
+light continues across the furniture. It is the reason the darkness reads as *lights low*
+rather than *lights off*. Do not add a second light, do not give a component its own glow,
+and do not animate this one. Opaque surfaces laid over it correctly mask it — furniture blocks
+light.
 
 **The Dark-First Rule.** Dark is the designed scheme. Author, review, and screenshot in
 dark mode; that is what "correct" means here. Light mode is currently incidental output
@@ -390,10 +459,13 @@ changing one without the other flattens the effect.
 
 ### Shadow Vocabulary
 
-- **Recessed tray** (`inset 0 2px 6px <warm dark>, inset 0 -1px 0 <bright>`): a container
-  pressed into the page — the lobby tray. Paired with a 1px warm border.
-- **Raised bar** (`inset 0 1px 0 <bright>, 0 2px 7px <warm dark>`): an interactive row
-  lifted off a recessed tray — lobby game bars, and reused for melds on the felt.
+- **Recessed tray** (`inset 0 3px 9px <warm dark>, inset 0 -1px 0 <bright>`): a container
+  pressed into the page — the lobby tray. Paired with a 1px warm border. In dark mode the
+  lit inner edges do most of the work: a black shadow on a near-black surface has little
+  tone left to darken, so the dark values are deliberately stronger than the light ones.
+- **Raised bar** (`inset 0 1px 0 <bright>, 0 3px 10px <warm dark>`): an interactive row
+  lifted off a recessed tray — lobby game bars, and reused for melds on the felt. A `--live`
+  variant (`0 5px 16px`) takes the top of the stack for the one row waiting on the viewer.
 - **Card lift** (`filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.6))`): the playing card's own
   shadow. Applied as a `filter`, not `box-shadow`, so it follows the card's rounded
   silhouette rather than its box.
@@ -476,7 +548,17 @@ free-size a card.
 - **Lobby tray:** `20px` radius, raised-chrome fill, warm hairline border, recessed inset
   shadow. Flexes to fill the dashboard's height.
 - **Game bar:** `12px` radius, Lobby Slate fill, raised shadow. Name leads, game type sits
-  muted beneath it, count and CTA cluster right.
+  muted beneath it, count and CTA cluster right. Its secondary text takes one ramp step
+  lighter than the page's muted tone — slate is the app's one cool surface and the shared
+  step lands under 4.5:1 on it.
+  - *Your-turn variant:* the bar waiting on the viewer drops slate for a 32% coral tint over
+    the page tone and takes the highest lift on the tray, so the actionable game reads before
+    any text does. It does *not* mix coral into slate — the two are near-complements and any
+    blend of them desaturates to plum-brown instead of reading lit. This is coral as turn
+    state, and it is the reason the lobby needs no other ranking device. Its turn badge sits
+    one step deeper than the row with room ink rather than coral ink, because coral-on-coral-
+    tint measures ~3.2:1 at 10px; the badge's coral border and the row's wash carry the accent
+    instead. Rows waiting on the viewer also sort to the top of their section.
 - **Felt zone** (the game page's accent in use): `12px` radius, Felt Green Raised fill,
   ambient shadow, with a
   label-voice caption. The piles zone sizes to content; the melds zone takes the rest and
@@ -537,10 +619,12 @@ Two forms of the same message trail:
 
 ### Do:
 
-- **Do** take every surface, border, and body-text color from the Optics neutral scale, and
-  every non-color value (spacing, type, radius, shadow) from an `--op-*` token.
-- **Do** hand-pick color as a project token: `--gf-color-accent*` for coral, `--gf-felt*`
-  for the game page, `--gf-lobby-bar` for the games index.
+- **Do** take every surface, border, and body-text color from the `--gp-color-neutral-*` ramp,
+  and every non-color value (spacing, type, radius, shadow) from an `--op-*` token.
+- **Do** reach for a `plus-*` step for a new surface and a `minus-*` step for new ink, rather
+  than inventing a one-off color.
+- **Do** name page accents as project tokens too: `--gp-color-accent*` for coral, `--gp-felt*`
+  for the game page, `--gp-lobby-bar` for the games index.
 - **Do** use Accent Coral Deep whenever coral is *text* and Accent Coral whenever coral is
   a *fill*. The deep pair is the one that stays legible on either page background.
 - **Do** design, review, and screenshot in **dark mode** — that is the scheme that counts.
@@ -558,8 +642,13 @@ Two forms of the same message trail:
 
 ### Don't:
 
-- **Don't** color anything from `--op-color-primary-*`. The ramp cannot reach this coral,
-  and the primary hue is pointed at coral only for Optics' internal chrome.
+- **Don't** reference any `--op-color-*` token outside `theme.css`'s bridge block — color is
+  `--gp-color-*`. In particular, don't color anything from `--op-color-primary-*`: the ramp
+  cannot reach this coral, and the primary hue is pointed at coral only so Optics' own
+  internal chrome reads coral instead of a stray default.
+- **Don't** restate an Optics *non-color* value under `--gp-*`. Optics still owns spacing,
+  type, radii, shadows, and border widths; duplicating them forfeits the upstream scale for
+  values we aren't choosing.
 - **Don't** let a page's accent appear on another page: green belongs to the game page,
   Lobby Slate to the games index, and neither belongs in shared chrome.
 - **Don't** give one page two accents, and don't assign a color to stats, history, or rules
@@ -580,5 +669,5 @@ Two forms of the same message trail:
 - **Don't** replace the hidden-checkbox card selection with a click handler on a div.
 - **Don't** port one game's hand-overflow strategy to another. Go Fish and Crazy Eights
   overlap and never scroll; Rummy scrolls and never overlaps. Both choices are load-bearing.
-- **Don't** reference a `--_gf-*` private token from outside its own component file.
+- **Don't** reference a `--_gp-*` private token from outside its own component file.
 - **Don't** use label voice (uppercase + bold + tracking) for anything but naming a region.

@@ -26,18 +26,18 @@
      A *locked* card is NOT disabled — it's still selectable for melding, so it
      keeps the normal card look and only gains the lock badge below. */
   &:has(.hand-card__input:disabled) .playing-card {
-    background-color: var(--op-color-neutral-plus-seven);
-    border-color: var(--op-color-neutral-plus-two);
+    background-color: var(--gp-color-neutral-plus-seven);
+    border-color: var(--gp-color-neutral-plus-two);
   }
 
   &:has(.hand-card__input:enabled) .playing-card {
-    outline: calc(var(--op-border-width-large) - 1px) solid var(--op-color-neutral-base);
+    outline: calc(var(--op-border-width-large) - 1px) solid var(--gp-color-neutral-base);
     outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
   }
 
   &:has(.hand-card__input:focus-visible) .playing-card {
-    outline-color: var(--op-color-neutral-minus-three);
-    background-color: var(--op-color-neutral-plus-three);
+    outline-color: var(--gp-color-neutral-minus-three);
+    background-color: var(--gp-color-neutral-plus-three);
   }
 }
 
@@ -62,7 +62,7 @@
   top: var(--op-space-x-small);
   right: var(--op-space-x-small);
   z-index: 1;
-  color: var(--gf-color-accent);
+  color: var(--gp-color-accent);
   font-size: var(--op-font-size-x-large);
   pointer-events: none;
   transition: transform 0.2s ease-in-out;
@@ -79,8 +79,8 @@
    and deselect here — no keyframe or remount workaround needed. */
 .hand-card__input:checked ~ .card-container .playing-card {
   transform: translateY(calc(-1 * var(--op-space-large)));
-  filter: var(--_gf-playing-card-shadow);
-  background-color: var(--gf-card-face-selected);
-  outline: calc(var(--op-border-width-large) - 1px) solid var(--gf-color-accent);
+  filter: var(--_gp-playing-card-shadow);
+  background-color: var(--gp-card-face-selected);
+  outline: calc(var(--op-border-width-large) - 1px) solid var(--gp-color-accent);
   outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
 }

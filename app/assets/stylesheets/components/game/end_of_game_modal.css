@@ -1,5 +1,5 @@
 .end-of-game-modal {
-  --_gf-end-of-game-modal-width: 560px;
+  --_gp-end-of-game-modal-width: 560px;
 
   position: fixed;
   inset: 0;
@@ -21,16 +21,16 @@
   .end-of-game-modal__backdrop {
     position: absolute;
     inset: 0;
-    background-color: var(--gf-color-overlay);
+    background-color: var(--gp-color-overlay);
     opacity: 0;
   }
 
   .end-of-game-modal__dialog {
     position: relative;
-    background-color: var(--op-color-neutral-plus-seven);
+    background-color: var(--gp-color-neutral-plus-seven);
     border-radius: var(--op-radius-2x-large);
     padding: var(--op-space-3x-large);
-    width: var(--_gf-end-of-game-modal-width);
+    width: var(--_gp-end-of-game-modal-width);
     max-width: 90vw;
     opacity: 0;
     transform: scale(0.9);

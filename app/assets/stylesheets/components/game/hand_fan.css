@@ -20,11 +20,11 @@
   justify-content: flex-start;
   gap: var(--op-space-x-small);
   height: 100%;
-  padding-top: var(--gf-card-hover-lift);
+  padding-top: var(--gp-card-hover-lift);
   overflow-x: auto;
   overflow-y: hidden;
 
   .card-container {
-    --gf-card-overlap: 0px;
+    --gp-card-overlap: 0px;
   }
 }

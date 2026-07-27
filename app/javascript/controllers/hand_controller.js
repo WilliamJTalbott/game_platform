@@ -22,7 +22,7 @@ export default class extends Controller {
     if (cardWidth === 0) return
 
     const overlap = this.overlapFor(this.cardTargets.length, cardWidth)
-    this.element.style.setProperty("--gf-card-overlap", `${-overlap}px`)
+    this.element.style.setProperty("--gp-card-overlap", `${-overlap}px`)
   }
 
   overlapFor(count, cardWidth) {

@@ -2,7 +2,7 @@
 
 .player-dropdown__summary {
 
-    background-color: var(--op-color-neutral-plus-max);
+    background-color: var(--gp-color-neutral-plus-max);
 
     height: var(--op-input-height-large);
 
@@ -44,7 +44,7 @@
 }
 
 .player-dropdown__summary:hover {
-    outline: var(--op-border-width) solid var(--op-color-neutral-plus-six);
+    outline: var(--op-border-width) solid var(--gp-color-neutral-plus-six);
     outline-offset: calc(var(--op-border-width) * -1);
 }
 
@@ -54,9 +54,9 @@
     display: flex;
     justify-content: space-between;
     border-top: 0;
-    border-inline: var(--op-border-width) solid var(--op-color-border);
-    border-bottom: var(--op-border-width) solid var(--op-color-border);
-    background-color: var(--op-color-neutral-plus-eight);
+    border-inline: var(--op-border-width) solid var(--gp-color-border);
+    border-bottom: var(--op-border-width) solid var(--gp-color-border);
+    background-color: var(--gp-color-neutral-plus-eight);
 
     border-bottom-left-radius: var(--op-radius-medium);
     border-bottom-right-radius: var(--op-radius-medium);
@@ -74,14 +74,14 @@
 
 .player-dropdown[open] {
 
-color: var(--op-color-neutral-on-plus-eight);
+color: var(--gp-color-neutral-on-plus-eight);
 
 .player-dropdown__summary {
 
     border-bottom: 0;
-    border-top: var(--op-border-width) solid var(--op-color-neutral-plus-four);
-    border-inline: var(--op-border-width) solid var(--op-color-neutral-plus-four);
-    background-color: var(--op-color-neutral-plus-eight);
+    border-top: var(--op-border-width) solid var(--gp-color-neutral-plus-four);
+    border-inline: var(--op-border-width) solid var(--gp-color-neutral-plus-four);
+    background-color: var(--gp-color-neutral-plus-eight);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
@@ -92,12 +92,12 @@ color: var(--op-color-neutral-on-plus-eight);
     border-radius: var(--op-radius-medium);
     padding: var(--op-space-x-small);
     
-    background-color: var(--op-color-neutral-plus-five);
-    border: var(--op-border-width) solid var(--op-color-neutral-plus-three);
+    background-color: var(--gp-color-neutral-plus-five);
+    border: var(--op-border-width) solid var(--gp-color-neutral-plus-three);
     }
 }
 .player-dropdown__expanded {
-    border-color: var(--op-color-neutral-plus-four);
+    border-color: var(--gp-color-neutral-plus-four);
 }
 }
 

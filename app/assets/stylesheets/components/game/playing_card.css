@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: var(--gf-card-overlap, -20px);
+  margin-left: var(--gp-card-overlap, -20px);
 
   &:first-child {
     margin-left: 0;
@@ -14,18 +14,18 @@
 .card-container--large {
   flex: 0 0 auto;
   height: 100%;
-  aspect-ratio: var(--gf-card-aspect-ratio);
+  aspect-ratio: var(--gp-card-aspect-ratio);
 }
 
 
 .playing-card {
 
-  --_gf-playing-card-shadow: drop-shadow(0 3px 4px var(--gf-color-shadow));
+  --_gp-playing-card-shadow: drop-shadow(0 3px 4px var(--gp-color-shadow));
 
   width: 100%;
   height: auto;
   max-height: 100%;
-  aspect-ratio: var(--gf-card-aspect-ratio);
+  aspect-ratio: var(--gp-card-aspect-ratio);
 
   position: relative;
   z-index: 1;
@@ -34,11 +34,11 @@
      ink and paint on top of this. Keeping the face a real element (rather than
      baked into the SVG) is what lets --selected below just swap a background
      color instead of swapping images. */
-  background-color: var(--op-color-neutral-plus-five);
-  border: var(--op-border-width) solid var(--op-color-neutral-base);
+  background-color: var(--gp-color-neutral-plus-five);
+  border: var(--op-border-width) solid var(--gp-color-neutral-base);
   border-radius: var(--op-radius-medium);
 
-  filter: var(--_gf-playing-card-shadow);
+  filter: var(--_gp-playing-card-shadow);
   transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out, background-color 0.2s ease-in-out;
 
   img {

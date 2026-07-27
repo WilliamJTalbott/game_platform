@@ -90,21 +90,27 @@ Three things a neighboring card-game site could not truthfully copy as a set:
 - **`DESIGN.md` is the binding visual contract** (with `docs/frontend.md` as the CSS
   pipeline reference) and must be read before any styling work. Its non-negotiable parts:
   - **`@rolemodel/optics` (v2.4.0, CDN) is the foundation** and is not replaceable. It
-    owns the neutral chrome and all non-color tokens (spacing, type, radii, shadows).
-  - **Optics contributes no color.** Every actual color is hand-picked. Never color a
-    component from the Optics *primary* ramp (`--op-color-primary-*`) — the ramp's
+    owns all non-color tokens (spacing, type, radii, shadows, border widths).
+  - **Optics contributes no color.** Every color is ours, defined as a `--gp-color-*` token in
+    `core/theme.css`, and no stylesheet outside that file references an `--op-color-*` token.
+    Optics' plus/minus *ramp structure* is kept (surfaces climb `plus-*`, ink steps down
+    `minus-*`) with our own values, and a bridge block in `theme.css` feeds those values back
+    to the `--op-color-*` tokens Optics reads internally so its own components are painted from
+    our palette. Never color a component from the Optics *primary* ramp
+    (`--op-color-primary-*`) — the ramp's
     lightness knob is inert and its base is locked mid-dark in both schemes.
-  - **Coral is the permanent site-wide accent** (`--gf-color-accent*`), carrying every CTA,
+  - **Coral is the permanent site-wide accent** (`--gp-color-accent*`), carrying every CTA,
     link, focus affordance, wordmark, and "it's your turn" signal on every page.
   - **Page accents:** on top of coral, a major page *may* claim one color of its own, and
-    it never appears on another page. Green is the game page (`--gf-felt*`); slate-blue is
-    the games index (`--gf-lobby-bar`). The list is open — a future page may claim its own.
+    it never appears on another page. Green is the game page (`--gp-felt*`); slate-blue is
+    the games index (`--gp-lobby-bar`). The list is open — a future page may claim its own.
     Pages with no accent (stats, history, rules) are complete as they are, and how much of
     a page its color covers is that page's own call.
   - **Dark-first.** Design, review, and screenshot in dark mode. Keep colors as
     `light-dark()` pairs regardless, so the future light palette has a seam to land in.
-  - **Token tiers:** `--op-*` (Optics) → `--gf-*` (shared project, defined in
-    `core/theme.css`) → `--_gf-*` (private to one component). Prefer the outermost tier
+  - **Token tiers:** `--op-*` (Optics, non-color only) → `--gp-*` (shared project, defined in
+    `core/theme.css`; all color lives here) → `--_gp-*` (private to one component). For
+    non-color values prefer the outermost tier
     that covers the need.
   - **BEM, one block per file**, elements/modifiers nested under the block with `&`.
 - `docs/mockups/*.html` (`games-index-final.html`, `rummy-final.html`) are the visual

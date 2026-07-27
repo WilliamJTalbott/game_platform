@@ -1,27 +1,27 @@
 .panel {
-  --gf-navbar-height: 60px ;
+  --gp-navbar-height: 60px ;
 
   display: flex;
   flex-direction: column;
 
-  color: var(--op-color-neutral-on-plus-eight-alt);
+  color: var(--gp-color-neutral-on-plus-eight-alt);
 
   .panel__header {
-    background-color: var(--op-color-neutral-plus-eight);
+    background-color: var(--gp-color-neutral-plus-eight);
     font-size: var(--op-font-large);
     font-weight: var(--op-font-weight-semi-bold);
-    border-bottom: var(--op-border-width) solid var(--op-color-border);
+    border-bottom: var(--op-border-width) solid var(--gp-color-border);
     display: flex;
     align-items: center;
 
     padding: var(--op-space-small) var(--op-space-medium);
 
     &.header--top {
-      height: var(--gf-navbar-height);
+      height: var(--gp-navbar-height);
     }
 
     h2 {
-      color: var(--op-color-neutral-on-plus-max);
+      color: var(--gp-color-neutral-on-plus-max);
       font-size: var(--op-font-large);
       font-weight: var(--op-font-weight-semi-bold);
     }
@@ -35,11 +35,11 @@
   &.panel--side {
     min-height: 0;
     min-width: 0;
-    border-left: var(--op-border-width) solid var(--op-color-border);
+    border-left: var(--op-border-width) solid var(--gp-color-border);
   }
 
   &.panel--base {
-    border-top: var(--op-border-width) solid var(--op-color-border);
+    border-top: var(--op-border-width) solid var(--gp-color-border);
   }
 }
 
@@ -65,19 +65,19 @@
 }
 
 .panel--feed {
-  --gf-feed-background: var(--op-color-neutral-plus-max);
+  --gp-feed-background: var(--gp-color-neutral-plus-max);
 
   grid-area: feed;
-  background-color: var(--gf-feed-background);
+  background-color: var(--gp-feed-background);
 
   .panel__header {
     border-bottom: none;
-    background-color: var(--op-color-neutral-plus-seven);
-    color: var(--op-color-neutral-on-plus-eight-alt);
+    background-color: var(--gp-color-neutral-plus-seven);
+    color: var(--gp-color-neutral-on-plus-eight-alt);
     justify-content: space-between;
 
     .badge {
-      border: var(--op-border-width-x-large) solid var(--op-color-neutral-plus-max);
+      border: var(--op-border-width-x-large) solid var(--gp-color-neutral-plus-max);
       border-radius: var(--op-radius-large);
     }
   }

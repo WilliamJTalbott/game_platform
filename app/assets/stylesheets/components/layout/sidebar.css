@@ -2,7 +2,7 @@
    schemes). Covers the anchor and its inner heading. */
 .sidebar .sidebar__brand {
   &, h1 {
-    color: var(--gf-color-accent-text);
+    color: var(--gp-color-accent-text);
   }
 }
 

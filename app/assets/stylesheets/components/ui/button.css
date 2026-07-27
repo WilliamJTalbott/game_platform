@@ -1,24 +1,24 @@
-/* Primary buttons wear the coral CTA accent (--gf-color-accent) rather than the green
+/* Primary buttons wear the coral CTA accent (--gp-color-accent) rather than the green
    Optics primary. Same 2-class specificity as Optics' own `.btn.btn--primary`, and this
    file loads after Optics via Propshaft `:app`, so it wins. Hover/active dim the *same*
    coral hue with a brightness filter instead of shifting to the green ramp — coral stays
    coral (a darkened coral via the ramp read as muddy copper, which we deliberately avoid). */
 .btn.btn--primary {
-  background-color: var(--gf-color-accent);
-  box-shadow: inset var(--op-border-all) var(--gf-color-accent);
-  color: var(--gf-color-on-accent);
+  background-color: var(--gp-color-accent);
+  box-shadow: inset var(--op-border-all) var(--gp-color-accent);
+  color: var(--gp-color-on-accent);
 
   &:hover {
-    background-color: var(--gf-color-accent);
-    box-shadow: inset var(--op-border-all) var(--gf-color-accent);
+    background-color: var(--gp-color-accent);
+    box-shadow: inset var(--op-border-all) var(--gp-color-accent);
     filter: brightness(0.94);
   }
 
   &:active,
   &.btn--active {
-    background-color: var(--gf-color-accent);
-    box-shadow: inset var(--op-border-all) var(--gf-color-accent);
-    color: var(--gf-color-on-accent);
+    background-color: var(--gp-color-accent);
+    box-shadow: inset var(--op-border-all) var(--gp-color-accent);
+    color: var(--gp-color-on-accent);
     filter: brightness(0.88);
   }
 }
