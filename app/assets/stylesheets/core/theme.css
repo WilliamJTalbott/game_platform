@@ -1,8 +1,8 @@
 :root {
 
-    /* Color model: see docs/frontend.md ("The color model" + "Design tokens"). Optics
-       owns only the neutral chrome; every actual color (coral accent, felt/lobby zone
-       accents) is hand-picked below, never derived from --op-color-primary-*. Primary
+    /* Color model: see DESIGN.md ("Colors"). Optics owns only the neutral chrome;
+       every actual color (the coral accent, the felt/lobby page accents) is
+       hand-picked below, never derived from --op-color-primary-*. Primary
        is pointed at coral's hue solely so Optics' own internal chrome (focus rings,
        focused Simple Form inputs) reads coral instead of a stray default. */
     --op-color-primary-h: 16;    /* coral, matches --gf-color-accent */
@@ -39,20 +39,21 @@
        no Optics red, so it stays hand-picked. Black suits use the neutral on-color. */
     --gf-card-ink-red: #dc4d38;
 
-    /* Coral — the one brand accent (see docs/frontend.md). One hue (16°), a few
+    /* Coral — the one brand accent (see DESIGN.md). One hue (16°), a few
        hand-picked shades, never a derived ramp. */
     --gf-color-accent: hsl(16 85% 62%);
     --gf-color-on-accent: #fff;
     --gf-color-accent-text: light-dark(hsl(16 90% 42%), var(--gf-color-accent)); /* legible on both page bgs */
     --gf-color-accent-secondary: color-mix(in srgb, var(--gf-color-accent) 20%, var(--op-color-neutral-plus-max));
 
-    /* Felt — the game board's zone accent. Green lives only here, never on chrome. */
+    /* Felt — the game page's own accent. Green lives only here, never on chrome. */
     --gf-felt: light-dark(#bfd2c6, #1b2a22);
     --gf-felt-bright: light-dark(#e6f5ea, #274035);
     --gf-felt-brighter: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05)); /* translucent white over felt */
 
-    /* Lobby — the games-index's zone accent, sibling of felt above. Only the raised
-       game bars (components/lobby/game_card.css) carry blue; the tray stays neutral chrome. */
+    /* Lobby — the games-index's page accent, sibling of felt above (see DESIGN.md's
+       "One Page, One Color" rule). Only the raised game bars
+       (components/lobby/game_card.css) carry blue; the tray stays neutral chrome. */
     --gf-lobby-bar: light-dark(#eef1f5, #262b32);
     /* light-dark() must wrap only the <color>, not the whole shorthand — see the
        light-dark() gotcha in docs/frontend.md. */

@@ -1,41 +1,16 @@
-# Frontend styling
+# Frontend mechanics
 
-How CSS is organized and loaded in this app. Three pillars: the **Optics** design
-system, **design tokens** (CSS custom properties), and **BEM** class naming. Read this
-before writing or moving any styles.
+**This file covers the CSS *pipeline* — how stylesheets load, where files live, how classes
+are named, and the gotchas that have cost real time. It does not describe the visual
+system.**
 
-## The color model (read this first)
+> **The visual system lives in [DESIGN.md](../DESIGN.md)** — the color model, the palette
+> and its roles, typography, layout grammar, elevation vocabulary, shapes, component
+> specs, and the named rules that govern all of them. Read DESIGN.md before deciding *what
+> something should look like*; read this file before deciding *where the code goes*.
 
-The single most important thing to understand about styling here: **Optics contributes
-only the neutral chrome — every actual *color* on the site is hand-picked and applied
-explicitly.** No component of ours derives its color from the Optics *primary* ramp; we
-do not use `--op-color-primary-*` tinted surfaces at all.
-
-There are exactly two kinds of color:
-
-1. **Coral — the one brand accent.** It carries every call-to-action, link, focus
-   affordance, brand wordmark, and "it's your turn" signal, on every page. Coral is a
-   handful of **hand-picked shades** (`--gf-color-accent*`), *not* a derived ramp.
-2. **Zone accents — one hand-picked color owned by a single context.** Green is the
-   game **felt** (`--gf-felt*`); blue is the games-index **lobby** (`--gf-lobby-bar`,
-   consumed by the raised game bars in `components/lobby/game_card.css`). A zone accent is
-   applied only inside its zone and never leaks out — green appears *only* on the card
-   table, never on chrome.
-
-Everything that is not coral or a zone accent is **warm-neutral chrome** drawn from
-Optics' neutral scale (`--op-color-neutral-*`). That's the yellow-tinged gray of panels,
-feeds, borders, the sidebar, stat tiles, dropdowns, and message bubbles.
-
-**Why it's built this way:** Optics derives all its color from two hue scales — primary
-(accent) and neutral (chrome) — with no secondary/accent scale, and its primary ramp is
-awkward to bend to a bright hand-picked color (see the gotchas below). Rather than fight
-that, we let Optics own the neutrals and hand-pick every color ourselves. This keeps the
-palette deliberate: coral means "act," green means "you're at the table," and nothing is
-accidentally tinted by whatever hue the primary ramp happens to be.
-
-The **mockups** (`docs/mockups/*.html`, e.g. `games-index-final.html` and the Rummy page)
-are the source of truth for this model — they hand-pick every value and use no Optics at
-all. `core/theme.css` reproduces that model in the real app on top of Optics' neutrals.
+Three pillars: the **Optics** design system, **design tokens** (CSS custom properties), and
+**BEM** class naming.
 
 ## How CSS loads (there is no CSS bundler)
 
@@ -66,6 +41,10 @@ manifest to update, no `@import` to add, and no build step to run.** (A common s
 of confusion: an empty `application.css` and a stale webpack build look broken but are
 irrelevant — the styles you see come from Propshaft serving the files directly.)
 
+Load order matters in exactly one way: our files are linked *after* the Optics CDN link,
+so a selector of equal specificity to an Optics one wins. That's how
+`components/ui/button.css` overrides `.btn.btn--primary` without `!important`.
+
 ## Directory layout
 
 ```
@@ -73,7 +52,7 @@ app/assets/stylesheets/
   application.css          # empty; the webpack CSS entry, unused for styling
   core/
     base.css               # element resets / global defaults
-    theme.css              # ALL design tokens live here (see below)
+    theme.css              # ALL design tokens live here
   components/              # one BEM block per file, grouped by domain
     layout/                # app structure & chrome: page, panel, sidebar, menu, banner, body, overlay
     game/                  # in-game screens: game, felt, cards, hand, pile, meld, feed, opponents, …
@@ -95,18 +74,16 @@ link tag or manifest. Pick the folder by the block's domain; when in doubt, `gam
   **neutral color scale**. Build with these tokens rather than hard-coded values wherever
   one exists.
 
-**We use Optics for the chrome, not the color.** Take Optics' neutral scale
-(`--op-color-neutral-*`) for every surface, border, and body-text color; take its
-non-color tokens freely. But do **not** reach for the Optics *primary* ramp
-(`--op-color-primary-*`) to color a component — accents are hand-picked (see the color
-model above). The one exception is Optics' *own* internal chrome (focus rings, focused
-Simple Form inputs): those read `--op-color-primary-*` internally and we can't stop them,
-so `theme.css` points the primary hue at coral to keep them on-brand — that's the only
-reason the primary knobs are set.
+**We use Optics for the chrome, not the color** — see DESIGN.md's Colors section for the
+full model and the reasons behind it. Mechanically: take Optics' neutral scale and its
+non-color tokens freely; never read `--op-color-primary-*` in our CSS.
 
 Because Optics is loaded from a CDN, its version is pinned in **two** places that must
 stay in sync: the CDN URL in `_head.html.slim` and the `@rolemodel/optics` entry in
 `package.json`.
+
+Optics sets `html { font-size: 62.5% }`, so **1rem = 10px** — every `--op-font-*` and
+`--op-space-*` value reads as tenths of its pixel size (`--op-font-medium: 1.6rem` = 16px).
 
 ## Design tokens
 
@@ -123,53 +100,20 @@ doesn't cover something and the value is shared across features, define a projec
 (`--gf-…`) in `core/theme.css`. The leading underscore (`--_gf-…`) marks a token as
 **local to one component** — do not reference it from another file.
 
-`core/theme.css` configures Optics' neutral scale and defines every hand-picked color.
-Optics derives its color from just **two** hue scales — `--op-color-primary-*` (accent)
-and `--op-color-neutral-*` (chrome/surfaces); there is no built-in secondary/accent
-scale, which is the root reason we hand-pick accents. `--op-color-neutral-h` tracks
-`primary-h` by default, so it's set explicitly to give the chrome its own warm
-(yellow-gray) hue independent of the coral accent.
-
-How each color in the model maps to tokens (see the annotated `core/theme.css`):
-
-- **Chrome is Optics neutral.** `--op-color-neutral-h/s` are tuned to a warm low-sat
-  gray; every panel, feed, border, dropdown, stat tile, and message bubble draws from
-  the `--op-color-neutral-*` `plus-N`/`minus-N`/`on-*` scale. No component pulls the
-  primary ramp for a surface.
-- **Coral is hand-picked project tokens.** `--gf-color-accent` (flat bright fill) +
-  `--gf-color-on-accent` (ink on it) for fills like primary buttons
-  (`components/ui/button.css`) and the directive bubble; `--gf-color-accent-text` (a
-  `light-dark()` pair, contrast-safe on either page background) for accent text/headings/
-  brand (`body`/`info_card`/`profile`/`sidebar`/`meld`); `--gf-color-accent-secondary`
-  (a soft tint) for "accent" surfaces that shouldn't be full-strength. All one hue (16°) —
-  coral is a few chosen shades, never a derived ramp that could drift toward muddy copper.
-- **Green is the felt zone accent.** `--gf-felt`/`--gf-felt-bright`/`--gf-felt-brighter`
-  (`light-dark()` pairs) paint the card table only. Green appears nowhere else.
-- **Blue is the lobby zone accent.** `--gf-lobby-bar` (`light-dark()` pair) is the
-  games-index's raised game-bar surface, consumed by `components/lobby/game_card.css`. Its tray
-  (`components/lobby/lobby.css`) stays warm-neutral chrome via its own dedicated
-  `--gf-lobby-tray-bg`/`--gf-lobby-tray-border` tokens (a step darker than the page, not an
-  Optics ramp step — see the `light-dark()` gotcha below for why that distinction matters);
-  only the bars carry blue. The recessed-tray/raised-bar elevation pair is
-  `--gf-lobby-tray-shadow`/`--gf-lobby-bar-shadow`.
-- **The Optics primary hue is pointed at coral** — solely so Optics' own internal chrome
-  (focus rings, focused inputs) reads coral. Our CSS never reads `--op-color-primary-*`.
-
-**Two Optics gotchas that shaped this model** (learned the hard way — they're *why*
-accents are hand-picked project tokens rather than a re-skin of the primary ramp):
-- `--op-color-primary-l` is **nearly inert** — the scale hardcodes a lightness ramp per
-  step, so the `-l` knob barely does anything. You cannot lighten/flatten the accent
-  through it, so a bright hand-picked coral is unreachable via the ramp.
-- `--op-color-primary-base` is a `light-dark()` pair fixed at ~40%/38% lightness — Optics
-  **keeps the accent mid-dark in both schemes** and never lifts it to a light tone in
-  dark mode. This is why pointing primary at coral yields a *muted* coral for Optics
-  internals, and why the bright CTA coral must be its own project token. (An earlier
-  attempt overrode `base` directly to coral; it worked but hijacked a token many Optics
-  components read — hence the cleaner project-token approach.)
-
 Tokens may also be scoped to a block rather than `:root` when only that block needs them
 (e.g. `--gf-navbar-height` is declared on `.panel`, `--gf-feed-background` on
 `.panel--feed`).
+
+`core/theme.css` also **overrides a few Optics tokens** rather than defining new ones:
+`--op-color-primary-h/s/l` (pointed at coral's hue, for Optics' internal chrome only),
+`--op-color-neutral-h/s` (the warm chrome hue), `--op-color-background`,
+`--op-border-width` (1.8px) / `--op-border-width-large` (3px), and
+`--op-radius-2x-large` (20px, up from Optics' 16px). Overriding an Optics token affects
+every Optics component that reads it — prefer a new `--gf-*` token unless the global
+change is the point.
+
+**What each token *means* visually — which color carries actions, which surface tone goes
+where, which radius belongs to which surface size — is DESIGN.md's job, not this file's.**
 
 ## BEM naming
 
@@ -208,13 +152,10 @@ as one component:
    domain subfolder (`layout/`, `game/`, `lobby/`, `ui/`) by what the block is for.
 2. Name the root class after the block; add elements/modifiers with `__`/`--`, nested
    under the block with `&`.
-3. Color it per the color model: **neutrals** (surfaces, borders, body text) come from
-   `--op-color-neutral-*`; **accent** color comes from the hand-picked tokens
-   (`--gf-color-accent*` for coral, `--gf-felt*` for the table) — never from
-   `--op-color-primary-*`. For non-color values (spacing, radii, type, shadows) use
-   `--op-*` first, adding a `--gf-*` token in `core/theme.css` only if Optics has no
-   equivalent and the value is reused. Keep one-off private values as `--_gf-*` inside
-   the block.
+3. Color and shape it per **[DESIGN.md](../DESIGN.md)** — its Colors, Shapes, and
+   Elevation sections decide which token to reach for. Mechanically: `--op-*` first, a new
+   `--gf-*` in `core/theme.css` only if Optics has no equivalent and the value is reused,
+   and `--_gf-*` for one-off private values inside the block.
 4. That's it — Propshaft serves the file automatically via `:app`. No registration.
 
 ## Gotchas
@@ -232,10 +173,12 @@ as one component:
   number is darker in light mode but *lighter* in dark mode (Material-style elevation: more
   "elevated" surfaces get lighter in dark mode) — the two modes trade off in opposite
   directions along the same scale, so "one token darker" doesn't mean darker in both
-  schemes simultaneously. Never substitute a raw hex/rgb for one of these tokens expecting
-  a fixed color — it will look wrong in the color scheme you didn't test. Always verify
-  both schemes (`page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }`
-  in a system spec) before shipping a color-token change.
+  schemes simultaneously. **Pick the step that's right in dark mode** — dark is the designed
+  scheme (see DESIGN.md's Dark-First Rule) — and screenshot it with
+  `page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }` in a
+  system spec. Never substitute a raw hex/rgb for one of these tokens: hard-coding a fixed
+  color breaks light mode outright *and* removes the seam the planned hand-picked light
+  palette will be written into. Keep the pair, even though only one half is designed today.
 - **Card face SVGs (`app/assets/images/dark_cards/*.svg`) carry their own theme-aware ink.**
   They're loaded via `<img>`, so page CSS (and `--op-*` tokens) can't reach inside them.
   The card *face* is a real CSS element (`.playing-card` / `.meld__card` background), but the
