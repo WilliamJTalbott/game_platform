@@ -24,13 +24,6 @@
     font-weight: var(--op-font-weight-bold);
   }
 
-  .lobby__stats {
-    margin: var(--op-space-3x-small) 0 0;
-    color: var(--gp-color-muted);
-    font-size: var(--op-font-small);
-    font-variant-numeric: tabular-nums;
-  }
-
   .lobby__new-game {
     white-space: nowrap;
 
@@ -47,18 +40,14 @@
     padding: var(--op-space-medium) var(--op-space-large);
     border-radius: var(--op-radius-2x-large);
     /* The tray is the largest surface in the app, so a flat fill here is most of what made
-       the page read flat. It catches the shell's lamp (layout/room.css) from the same
-       direction — brighter at the top-left, falling to its own tone — so the light in the
-       room is continuous across the furniture instead of stopping at its edge. The
-       background-color stays as the fallback and as the gradient's base tone. */
+       the page read flat. It catches the same top-to-bottom fade as the room's lamp
+       (layout/room.css), starting one shade darker than the page's own top
+       (neutral-plus-ten, theme.css) since it's recessed a level further into the room — so
+       the light continues across the furniture, dimming further with each surface back,
+       instead of stopping at its edge. The background-color stays as the fallback and as
+       the gradient's base tone. */
     background-color: var(--gp-color-neutral-plus-max);
-    background-image:
-      radial-gradient(
-        90ch 70ch at 18% -20%,
-        var(--gp-lamp-warm) 0%,
-        var(--gp-lamp-mid) 50%,
-        transparent 80%
-      );
+    background-image: linear-gradient(to bottom, var(--gp-color-neutral-plus-ten), var(--gp-color-neutral-plus-max));
     border: var(--gp-lobby-tray-border);
     box-shadow: var(--gp-lobby-tray-shadow);
   }

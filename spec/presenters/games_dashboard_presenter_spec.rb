@@ -4,13 +4,6 @@ RSpec.describe GamesDashboardPresenter, type: :presenter do
   let(:user) { create(:user) }
   subject(:presenter) { described_class.new(user) }
 
-  describe "#stats_line" do
-    it "reads from the user's own tallies" do
-      expect(presenter.stats_line)
-        .to eq "#{user.games_played} played · #{user.games_won} won · #{user.win_percentage}% win rate"
-    end
-  end
-
   describe "#your_games" do
     let!(:mine) { create(:game, :has_user, user: user, name: "Mine") }
     before do

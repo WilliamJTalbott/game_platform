@@ -7,7 +7,6 @@
   .lobby__head
     div
       h1.lobby__greeting Welcome back, #{@dashboard.greeting_name}
-      p.lobby__stats = @dashboard.stats_line
     = link_to new_game_path, class: "btn btn--primary lobby__new-game" do
       span.lobby__spade ♠
       | New Game
