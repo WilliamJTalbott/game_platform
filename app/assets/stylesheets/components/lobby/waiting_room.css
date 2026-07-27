@@ -1,0 +1,52 @@
+.waiting-room {
+  --_gf-waiting-room-width: 360px;
+
+  width: var(--_gf-waiting-room-width);
+  max-width: 90vw;
+  gap: var(--op-space-medium);
+
+  .waiting-room__title {
+    margin: 0;
+  }
+
+  .waiting-room__meta {
+    margin: 0;
+    color: var(--gf-color-muted);
+    font-size: var(--op-font-small);
+  }
+
+  .waiting-room__roster {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--op-space-3x-small);
+  }
+
+  .waiting-room__player {
+    display: flex;
+    align-items: center;
+    gap: var(--op-space-x-small);
+  }
+
+  .waiting-room__badge {
+    color: var(--gf-color-accent-text);
+    font-size: var(--op-font-2x-small);
+    font-weight: var(--op-font-weight-semi-bold);
+  }
+
+  .waiting-room__status {
+    margin: 0;
+    color: var(--gf-color-muted);
+    font-size: var(--op-font-small);
+  }
+
+  .waiting-room__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--op-space-x-small);
+    width: 100%;
+  }
+}

@@ -9,8 +9,8 @@ class GameRowPresenter
 
   def title = game.name
   def type_label = game.class.label
-  def player_count = "#{seat_count}/#{game.max_players}"
-  def full? = seat_count >= game.max_players
+  def player_count = "#{game.seat_count}/#{game.max_players}"
+  def full? = game.full?
   def mine? = game.users.include?(user)
   def your_turn? = mine? && game.status == "started" && game.user_turn?(user)
 
@@ -19,8 +19,4 @@ class GameRowPresenter
 
     full? ? :full : :join
   end
-
-  private
-
-  def seat_count = game.participants.size
 end

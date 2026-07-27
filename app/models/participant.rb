@@ -3,8 +3,10 @@ class Participant < ApplicationRecord
   belongs_to :user
 
   after_create_commit -> { broadcast_refresh_to "games" }
+  after_create_commit -> { broadcast_refresh_to game }
 
   validates :game_id, uniqueness: { scope: :user }
+  validates :host, uniqueness: { scope: :game_id }, if: :host?
   validate :not_started, on: :create
   validate :not_full, on: :create
 

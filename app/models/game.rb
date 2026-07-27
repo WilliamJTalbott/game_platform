@@ -5,6 +5,7 @@ class Game < ApplicationRecord
 
   after_create_commit -> { broadcast_refresh_to "games" }
   after_update_commit -> { broadcast_refresh_to "games" }, if: :saved_change_to_started_at?
+  after_update_commit -> { broadcast_refresh_to self }, if: :saved_change_to_started_at?
 
   has_many :participants
   has_many :users, through: :participants
@@ -19,7 +20,11 @@ class Game < ApplicationRecord
   def self.permitted_turn_params = []
 
   def max_players = self.class::MAX_PLAYERS
-  def full? = participants.count >= max_players
+  def seat_count = participants.count
+  def full? = seat_count >= max_players
+
+  def host = participants.find_by(host: true)&.user
+  def host?(user) = host == user
 
   def start
     return false unless can_start?

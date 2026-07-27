@@ -1,11 +1,15 @@
+= turbo_stream_from @game
 = turbo_stream_from @game, Current.session.user
 
 div data-controller="offline-alert" data-action="online@window->offline-alert#goOnline offline@window->offline-alert#goOffline"
   div id="offline-popup" data-offline-alert-target="popup" class="popup"
     p You are offline
 
-= render @game_info, game_info: @game_info
+- if @lobby
+  = render "games/waiting_room", lobby: @lobby
+- else
+  = render @game_info, game_info: @game_info
 
-= turbo_frame_tag "end_of_game_modal", target: "_top" do
-  - if @game_info.finished?
-    = render "games/end_of_game_modal", game_info: @game_info
+  = turbo_frame_tag "end_of_game_modal", target: "_top" do
+    - if @game_info.finished?
+      = render "games/end_of_game_modal", game_info: @game_info

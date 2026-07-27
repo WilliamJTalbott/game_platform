@@ -36,4 +36,12 @@ RSpec.describe "Participant", type: :model do
       expect(build(:participant, game: full_game, user: user)).to be_invalid
     end
   end
+
+  context "When the game already has a host" do
+    let!(:host_participant) { create(:participant, :host, game: game) }
+
+    it "is invalid for a second host" do
+      expect(build(:participant, :host, game: game, user: user)).to be_invalid
+    end
+  end
 end

@@ -8,23 +8,21 @@
 
       .op-stack.items-stretch.gap-xs
         p Players
-        - if game_info.started?
-          = render partial: "go_fish_games/opponent", collection: game_info.opponents, as: :opponent
+        = render partial: "go_fish_games/opponent", collection: game_info.opponents, as: :opponent
 
   / Feed
   .panel.panel--feed.panel--side
 
     .panel__header.header--top
-      - if game_info.started? && game_info.user_turn?
+      - if game_info.user_turn?
         div data-controller="turn-timer" data-turn-timer-duration-value="#{game_info.wait_time}"
           h2 data-turn-timer-target="display"
 
       p Game Feed
 
     .panel__body
-      - if game_info.started?
-        .feed__messages
-          = render partial: "go_fish_games/message", collection: game_info.messages, as: :message
+      .feed__messages
+        = render partial: "go_fish_games/message", collection: game_info.messages, as: :message
 
       - if game_info.playable?
         = simple_form_for game_info.form,
@@ -55,10 +53,9 @@
       p Your Hand
 
     .panel__body
-      - if game_info.started?
-        .hand-wrap
-          .hand-fan
-            = render partial: "go_fish_games/hand_card", collection: game_info.cards, as: :hand_card
+      .hand-wrap
+        .hand-fan
+          = render partial: "go_fish_games/hand_card", collection: game_info.cards, as: :hand_card
 
   / Books
   .panel.panel--books.panel--side.panel--base
@@ -66,10 +63,4 @@
       p Books
 
     .panel__body
-      - if game_info.started?
-        = render partial: "go_fish_games/book", collection: game_info.books, as: :book
-
-  - unless game_info.started?
-    .overlay.card
-      h1 Waiting for players...
-      = button_to "Start Game", start_game_path(game_info.game), method: :post, class: "btn btn--primary"
+      = render partial: "go_fish_games/book", collection: game_info.books, as: :book

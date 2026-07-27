@@ -1,39 +1,34 @@
 .game.game--rummy id=dom_id(game_info.game)
-  - if game_info.started?
-    = simple_form_for game_info.form,
-            as: :turn,
-            url: game_turns_path(game_info.game),
-            data: { controller: "rummy-turn", "rummy-turn-phase-value": game_info.phase },
-            html: { class: "rummy-turn-form" } do |f|
+  = simple_form_for game_info.form,
+          as: :turn,
+          url: game_turns_path(game_info.game),
+          data: { controller: "rummy-turn", "rummy-turn-phase-value": game_info.phase },
+          html: { class: "rummy-turn-form" } do |f|
 
-      = f.hidden_field :action, data: { "rummy-turn-target": "action" }
-      = f.hidden_field :meld_index, data: { "rummy-turn-target": "meldIndex" }
+    = f.hidden_field :action, data: { "rummy-turn-target": "action" }
+    = f.hidden_field :meld_index, data: { "rummy-turn-target": "meldIndex" }
 
-      / Board — opponents strip + the felt (piles & shared melds)
-      .panel.panel--board
-        .panel__body
-          .opponent-strip
-            = render partial: "rummy_games/opponent", collection: game_info.players_in_turn_order, as: :opponent
+    / Board — opponents strip + the felt (piles & shared melds)
+    .panel.panel--board
+      .panel__body
+        .opponent-strip
+          = render partial: "rummy_games/opponent", collection: game_info.players_in_turn_order, as: :opponent
 
-          = render "rummy_games/felt",
-                  discard_top: game_info.discard_top,
-                  melds: game_info.melds,
-                  can_draw: game_info.can_draw?,
-                  can_select: game_info.can_select?
-
-      / Feed — floating message bubbles, pinned over the top-right of the board
-      = render "rummy_games/bubble_stack",
-              messages: game_info.messages,
-              phase: game_info.phase,
-              user_turn: game_info.user_turn?
-
-      / Hand — turn-phase stepper, your cards, and the contextual confirm popup
-      .panel.panel--hand.panel--base
-        = render "rummy_games/hand_dock",
-                hand_cards: game_info.hand_cards,
-                phase: game_info.phase,
+        = render "rummy_games/felt",
+                discard_top: game_info.discard_top,
+                melds: game_info.melds,
+                can_draw: game_info.can_draw?,
                 can_select: game_info.can_select?
-  - else
-    .overlay.card
-      h1 Waiting for players...
-      = button_to "Start Game", start_game_path(game_info.game), method: :post, class: "btn btn--primary"
+
+    / Feed — floating message bubbles, pinned over the top-right of the board
+    = render "rummy_games/bubble_stack",
+            messages: game_info.messages,
+            phase: game_info.phase,
+            user_turn: game_info.user_turn?
+
+    / Hand — turn-phase stepper, your cards, and the contextual confirm popup
+    .panel.panel--hand.panel--base
+      = render "rummy_games/hand_dock",
+              hand_cards: game_info.hand_cards,
+              phase: game_info.phase,
+              can_select: game_info.can_select?

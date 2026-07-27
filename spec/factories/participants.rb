@@ -6,5 +6,9 @@ FactoryBot.define do
     trait :winner do
       winner { true }
     end
+
+    trait :host do
+      host { true }
+    end
   end
 end

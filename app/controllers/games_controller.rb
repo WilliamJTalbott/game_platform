@@ -13,7 +13,13 @@ class GamesController < ApplicationController
 
   def show
     @game = Game.find(params[:id])
-    @game_info = @game.presenter(Current.session.user)
+    return redirect_to root_path unless viewer_can_access?
+
+    if @game.started_at
+      @game_info = @game.presenter(Current.session.user)
+    else
+      @lobby = GameLobbyPresenter.new(@game, Current.session.user)
+    end
   end
 
   def create
@@ -25,16 +31,23 @@ class GamesController < ApplicationController
 
   def start
     @game = Game.find(params[:id])
-    return redirect_to game_path(@game) if @game.start
+    return redirect_to game_path(@game), alert: "Only the host can start this game." unless @game.host?(current_user)
+    return redirect_to game_path(@game), alert: "Need at least 2 players to start." unless @game.start
 
-    render :show, status: :unprocessable_content
+    redirect_to game_path(@game)
   end
 
   private
 
+  def viewer_can_access?
+    return true if @game.users.include?(Current.session.user)
+
+    @game.participants.create(user: Current.session.user).persisted?
+  end
+
   def build_and_save_game(type_class)
     @game = type_class.new(game_params)
-    @participant = @game.participants.new(user: Current.session.user)
+    @participant = @game.participants.new(user: Current.session.user, host: true)
     return redirect_to game_path(@game) if @game.save
 
     unprocessable_new(@game)

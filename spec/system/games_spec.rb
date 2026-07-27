@@ -46,24 +46,24 @@ RSpec.describe 'Games', type: :system do
     context "go_fish game" do
       let!(:game) { create(:game, :go_fish, :has_user, user: user) }
 
-      it "lets user view a game" do
+      it "lets user view a game's waiting room" do
         visit games_path
         click_on "View"
 
         expect(page).to have_current_path(game_path(game))
-        expect(page).to have_content("Books")
+        expect(page).to have_css(".waiting-room")
       end
     end
 
     context "crazy_eights game" do
       let!(:game) { create(:game, :crazy_eights, :has_user, user: user) }
 
-      it "lets user view a game" do
+      it "lets user view a game's waiting room" do
         visit games_path
         click_on "View"
 
         expect(page).to have_current_path(game_path(game))
-        expect(page).to have_content("Table")
+        expect(page).to have_css(".waiting-room")
       end
     end
   end
@@ -78,25 +78,58 @@ RSpec.describe 'Games', type: :system do
       create(:participant, game: open_game)
       expect(page).to have_css(".game-card", text: "1/#{GoFishGame::MAX_PLAYERS}")
     end
+
+    context "the waiting room" do
+      let!(:game) { create(:game, :go_fish, :has_user, user: user) }
+
+      it "updates the roster and count when another player joins", :js do
+        visit game_path(game)
+        expect(page).to have_css(".waiting-room", text: "1/#{GoFishGame::MAX_PLAYERS}")
+
+        create(:participant, game: game)
+        expect(page).to have_css(".waiting-room", text: "2/#{GoFishGame::MAX_PLAYERS}")
+      end
+
+      it "drops a non-host player into the board when the host starts", :js do
+        host_user = create(:user)
+        guest_game = create(:game, :go_fish, :has_user, user: host_user)
+        create(:participant, game: guest_game, user: user)
+
+        visit game_path(guest_game)
+        expect(page).to have_css(".waiting-room")
+
+        guest_game.start
+        expect(page).to have_no_css(".waiting-room")
+      end
+    end
   end
 
   context "[ Start ]" do
     context "go_fish game" do
       let!(:game) { create(:game, :go_fish, :has_user, :many_participants, user: user) }
-      it "lets user start a game" do
+      it "lets the host start a game" do
         visit game_path(game)
         click_on "Start Game"
-        expect(page).to_not have_content("Waiting for players...")
+        expect(page).to have_no_css(".waiting-room")
         expect(page).to have_http_status(:ok)
+      end
+    end
+
+    context "a non-host guest" do
+      let!(:game) { create(:game, :go_fish, :has_participants, users: [ create(:user), user ]) }
+
+      it "sees no Start button" do
+        visit game_path(game)
+        expect(page).to have_no_button("Start Game")
       end
     end
 
     context "crazy_eights game" do
       let!(:game) { create(:game, :crazy_eights, :has_user, :many_participants, user: user) }
-      it "lets user start a game" do
+      it "lets the host start a game" do
         visit game_path(game)
         click_on "Start Game"
-        expect(page).to_not have_content("Waiting for players...")
+        expect(page).to have_no_css(".waiting-room")
         expect(page).to have_http_status(:ok)
       end
     end

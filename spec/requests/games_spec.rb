@@ -76,6 +76,37 @@ RSpec.describe "Games", type: :request do
     end
   end
 
+  describe "POST start" do
+    context "when the current user is not the host" do
+      let(:game) { create(:game, :go_fish, :many_participants) }
+
+      it "redirects without starting the game" do
+        post start_game_path(game)
+        expect(game.reload.started_at).to be_nil
+        expect(response).to redirect_to game_path(game)
+      end
+    end
+
+    context "when the host starts with fewer than 2 players" do
+      let(:game) { create(:game, :go_fish, :has_user, user: user) }
+
+      it "redirects with an alert instead of crashing" do
+        post start_game_path(game)
+        expect(game.reload.started_at).to be_nil
+        expect(response).to redirect_to game_path(game)
+      end
+    end
+
+    context "when the host starts with 2+ players" do
+      let(:game) { create(:game, :go_fish, :has_user, :many_participants, user: user) }
+
+      it "starts the game" do
+        post start_game_path(game)
+        expect(game.reload.started_at).to be_present
+      end
+    end
+  end
+
   describe "GET a game's show page" do
     context "when the game is finished" do
       let(:game) { create(:finished_game, :go_fish, :user_won, :many_participants, user: user) }
@@ -101,6 +132,49 @@ RSpec.describe "Games", type: :request do
       it "does not render the end-of-game modal" do
         get game_path(game)
         expect(response.body).to_not include("Return to main page")
+      end
+    end
+
+    context "when the viewer is not yet a participant" do
+      context "and the game has room" do
+        let(:game) { create(:game, :go_fish) }
+
+        it "joins the viewer as a participant" do
+          expect { get game_path(game) }.to change { game.participants.count }.by(1)
+          expect(game.users.reload).to include(user)
+        end
+
+        it "renders the waiting room" do
+          get game_path(game)
+          expect(response.body).to include(game.name)
+        end
+      end
+
+      context "and the game is full" do
+        let(:game) { create(:game, :crazy_eights) }
+        before { create_list(:participant, CrazyEightsGame::MAX_PLAYERS, game: game) }
+
+        it "does not add the viewer" do
+          expect { get game_path(game) }.to_not change { game.participants.count }
+        end
+
+        it "redirects to the root path" do
+          get game_path(game)
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      context "and the game has already started" do
+        let(:game) { create(:started_game, :go_fish, :many_participants) }
+
+        it "does not add the viewer" do
+          expect { get game_path(game) }.to_not change { game.participants.count }
+        end
+
+        it "redirects to the root path" do
+          get game_path(game)
+          expect(response).to redirect_to root_path
+        end
       end
     end
   end

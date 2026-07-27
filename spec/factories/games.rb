@@ -23,7 +23,7 @@ FactoryBot.define do
 
     trait :has_user do
       after(:build) do |game, evaluator|
-        game.participants << build(:participant, game: game, user: evaluator.user)
+        game.participants << build(:participant, :host, game: game, user: evaluator.user)
       end
     end
 

@@ -76,6 +76,29 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  context "#host" do
+    let(:host_user) { create(:user) }
+    let(:game) { create(:game, :has_user, user: host_user) }
+
+    it "returns the hosting user" do
+      expect(game.host).to eq host_user
+    end
+  end
+
+  context "#host?" do
+    let(:host_user) { create(:user) }
+    let(:other_user) { create(:user) }
+    let(:game) { create(:game, :has_user, user: host_user) }
+
+    it "is true for the hosting user" do
+      expect(game.host?(host_user)).to be true
+    end
+
+    it "is false for a non-hosting user" do
+      expect(game.host?(other_user)).to be false
+    end
+  end
+
   context "#playable" do
     it "returns every registered game subclass" do
       expect(Game.playable).to match_array([ GoFishGame, CrazyEightsGame, RummyGame ])
