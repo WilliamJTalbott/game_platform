@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   resources :stats, only: [ :index ]
   resources :history, only: [ :index ]
   resources :rules, only: [ :index ]
+  resources :leaderboard, only: [ :index ]
 
   resources :offline, only: [ :index ]
 end

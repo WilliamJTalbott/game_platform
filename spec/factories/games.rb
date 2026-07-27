@@ -77,6 +77,16 @@ FactoryBot.define do
           end
         end
 
+        trait :with_duration do
+          transient do
+            duration { 1.hour }
+          end
+
+          after(:create) do |game, evaluator|
+            game.update!(started_at: evaluator.duration.ago, finished_at: Time.current)
+          end
+        end
+
         after(:create) do |game|
           game.finish
         end
