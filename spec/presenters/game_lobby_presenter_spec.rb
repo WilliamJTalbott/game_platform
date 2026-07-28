@@ -47,7 +47,7 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
   end
 
   describe "a game with two players, viewed by the host" do
-    let(:game) { create(:game, :rummy, :has_user, user: host_user).tap { |g| create(:participant, game: g, user: guest_user) } }
+    let(:game) { create(:game, :rummy, :has_user, user: host_user).tap { |g| create(:participant, game: g, user: guest_user) }.reload }
     let(:viewer) { host_user }
 
     it "marks the viewer's own row" do
@@ -66,7 +66,7 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
   end
 
   describe "a game with two players, viewed by a guest" do
-    let(:game) { create(:game, :rummy, :has_user, user: host_user).tap { |g| create(:participant, game: g, user: guest_user) } }
+    let(:game) { create(:game, :rummy, :has_user, user: host_user).tap { |g| create(:participant, game: g, user: guest_user) }.reload }
     let(:viewer) { guest_user }
 
     it "does not identify the viewer as host" do
@@ -86,7 +86,10 @@ RSpec.describe GameLobbyPresenter, type: :presenter do
     let(:game) { create(:game, :crazy_eights, :has_user, user: host_user) }
     let(:viewer) { host_user }
 
-    before { create_list(:participant, CrazyEightsGame::MAX_PLAYERS - 1, game: game) }
+    before do
+      create_list(:participant, CrazyEightsGame::MAX_PLAYERS - 1, game: game)
+      game.reload
+    end
 
     it "is still startable" do
       expect(presenter.start_label).to eq "Start Game"

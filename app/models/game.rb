@@ -20,7 +20,7 @@ class Game < ApplicationRecord
   def self.permitted_turn_params = []
 
   def max_players = self.class::MAX_PLAYERS
-  def seat_count = participants.count
+  def seat_count = participants.select(&:persisted?).size
   def full? = seat_count >= max_players
 
   def host = participants.find_by(host: true)&.user
@@ -47,7 +47,7 @@ class Game < ApplicationRecord
   end
 
   def can_start?
-    participants.count >= 2 && started_at.nil?
+    seat_count >= 2 && started_at.nil?
   end
 
   def finish
@@ -92,7 +92,7 @@ class Game < ApplicationRecord
   private
 
   def create_players
-    users.map { |user| player_class.new(user.id, user.name) }
+    participants.includes(:user).map { |participant| player_class.new(participant.user_id, participant.user.name) }
   end
 
   def turn_target(**params)

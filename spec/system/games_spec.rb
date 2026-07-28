@@ -94,6 +94,7 @@ RSpec.describe 'Games', type: :system do
         host_user = create(:user)
         guest_game = create(:game, :go_fish, :has_user, user: host_user)
         create(:participant, game: guest_game, user: user)
+        guest_game.reload
 
         visit game_path(guest_game)
         expect(page).to have_css(".waiting-room")
