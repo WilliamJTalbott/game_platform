@@ -164,19 +164,11 @@
   --gp-n-minus-9:  oklch(calc(var(--gp-n-l-base) +  9 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  9 * var(--gp-n-hue-drift)));
   --gp-n-minus-10: oklch(calc(var(--gp-n-l-base) + 10 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) + 10 * var(--gp-n-hue-drift)));
 
-  /* The Lamp — a HALF step above THE PAGE FLOOR, deliberately off the surface
-     scale. DESIGN.md's Lamp Rule treats the room's light as light, not
-     furniture: the page gradient is a wash over the floor, not a surface
-     something sits on. Giving it a whole step put it level with the recessed
-     surface and made every recessed surface — the leaderboard's header band,
-     the stats grid — vanish into the page. Half a step keeps the wash and
-     keeps the step free.
-
-     The floor is plus-1, so the lamp is a half step above that: base - 0.5.
-     Its chroma takes the matching half-taper (0.875, midway between base's 1.0
-     and plus-1's 0.75) — otherwise the wash would read warmer than the floor
-     it lies on, which is the one direction a light source must not go. */
-  --gp-n-lamp: oklch(calc(var(--gp-n-l-base) - 0.5 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.875) calc(var(--gp-n-hue) - 0.5 * var(--gp-n-hue-drift)));
+  /* There was a half-step "lamp" tone here, off the surface scale, feeding the
+     page and lobby-tray gradients. Both gradients are gone (see The Lamp Rule —
+     retired, DESIGN.md); every background in this app is now a flat ramp step,
+     so a half step has nothing to be. If a wash is ever wanted again it comes
+     back with the rule, not ahead of it. */
 
   /* ========================================================================
      3. THE ABSOLUTES, AND THE WARMED WHITES
@@ -280,25 +272,51 @@
      had (#262b32 is hsl(215 14% 17%)); only its lightness rises, to 26%,
      because the room rose underneath it. Re-leveling, not recoloring. */
   --gp-lobby-bar: hsl(215 14% 26%);
+  /* The viewer's OWN games. Slate above is now only for games they haven't joined, so
+     the two tones split the lobby by ownership: warm coral tint is mine, cool slate is
+     someone else's. Not a shade of slate — coral and slate are near-complements and any
+     blend of them desaturates to plum-brown instead of reading lit, so these rows leave
+     the page accent behind entirely.
 
-  /* ---- Cards ----------------------------------------------------------- */
-  --gp-card-face-selected: hsl(16 45% 20%); /* dark/muted coral so the card's own ink still reads over it */
-  /* Red-suit ink for the simplified meld chips (rummy renders melded cards as
-     a rank+suit glyph, not full art). Matches the red inside dark_cards/*.svg.
-     Black suits use the neutral on-color. */
-  --gp-card-ink-red: #dc4d38;
+     Was color-mix(coral 32%, floor), which The Owned Color Rule forbids and which hid
+     the rendered color behind a formula; resolved to the literal it produced, exactly as
+     --gp-color-accent-secondary above was. That token is the turn badge that sits ON
+     these rows, and it is deliberately one step deeper (#4b2e22) so the chip reads as
+     resting on the row rather than dissolving into it. */
+  --gp-lobby-bar-mine: #5c3222;
 
-  /* ---- Warning --------------------------------------------------------
-     THE ONE UNDESIGNED CORNER OF THE PALETTE. Optics' alert hue (47° at full
-     saturation), transcribed so no color resolves through an Optics token, but
-     never chosen for this room — a hot yellow in a warm amber house. Used by
-     the copy-link popup and the "not your turn" message. Pick real values when
-     a warning state next gets design attention. */
-  --gp-color-warning-base: hsl(47 100% 32%);
-  --gp-color-warning-on-base: hsl(47 100% 2%);
-  --gp-color-warning-surface: hsl(47 100% 8%);
-  --gp-color-warning-border: hsl(47 100% 14%);
-  --gp-color-warning-text: hsl(47 100% 60%);
+  /* ---- Cards -----------------------------------------------------------
+     The card palette moved to core/tokens/cards.css, which owns the whole
+     --gp-card-* color family (face, edge, ink, ring, selected) so that every
+     card-shaped thing in the app agrees by name rather than by coincidence.
+     The card's non-color measurements are still below, with the other
+     measurements. */
+
+  /* ---- Warning: amber ---------------------------------------------------
+     A SECOND HAND-PICKED ACCENT, chosen for this room. It used to be Optics'
+     alert hue transcribed verbatim (47° at 100% saturation) — a hot lemon
+     yellow that belonged to no other color on the page.
+
+     Amber at 40° is the deliberate choice: far enough off coral's 16° to never
+     be mistaken for it (gold vs. red-orange), close enough to the room's own
+     warmth to belong. Saturation drops from 100% to the 55–80% band, because
+     full saturation is what made the old yellow read as a browser chrome
+     warning rather than something built for this house.
+
+     --text sits at 62% lightness — the SAME lightness as --gp-color-accent, so
+     amber-as-ink and coral-as-ink weigh identically in a line of text and the
+     only thing separating them is hue. That pairing is the point; if one moves,
+     move the other.
+
+     Carries "something needs your attention" ONLY. It is not a page accent and
+     not an action — coral still owns "act" (DESIGN.md's One Signal Rule). Spent
+     by the drop-down popup (offline alert, copy link, rejected turns) and the
+     warning message bubble. */
+  --gp-color-warning-base: hsl(40 78% 42%);   /* solid fill — the popup */
+  --gp-color-warning-on-base: hsl(40 90% 6%); /* near-black ink on that fill, 6.5:1 */
+  --gp-color-warning-surface: hsl(40 55% 10%); /* dark amber surface on the page */
+  --gp-color-warning-border: hsl(40 55% 20%);
+  --gp-color-warning-text: hsl(40 80% 62%);   /* amber as ink — matches accent's lightness */
 
   /* ========================================================================
      6. THE OPTICS BRIDGE
@@ -377,15 +395,23 @@
   --gp-card-hover-lift: 50px;
   --gp-card-aspect-ratio: 5 / 7;
 
-  /* The Matched-Pair Rule (DESIGN.md): the tray's inset and the bar's lift are
-     one effect and are tuned together. On a near-black tray a black drop
-     shadow has almost no tone left to darken, so depth comes from the *lit*
-     inner edges plus a wider, heavier blur. Dark-only now — the light arms
-     these carried were never designed. */
-  --gp-lobby-tray-border: 1px solid rgb(200 185 140 / 0.09);
+  /* The Matched-Pair Rule (DESIGN.md): the tray's lift and the bar's lift are one
+     effect and are tuned together. Both are now RAISED — the tray sits out from the
+     page and the bars sit out from the tray, a two-step stack rather than a well with
+     things in it. Same vocabulary at two scales: a lit inner top edge to catch the
+     leading edge, plus an outward drop shadow whose blur tracks the surface's size
+     (20px under the tray, 10px under a bar). The tray's lit edge stays fainter than a
+     bar's — it is the larger, calmer surface, and the bars have to read as the
+     brighter thing sitting on it. Dark-only; the light arms these carried were never
+     designed.
+
+     The tray needs no border now: it is a ramp step lighter than the page AND
+     drop-shadowed, so the edge is stated twice over already. It carried a hairline
+     only because a recessed tray shared the page's exact tone and had nothing else to
+     separate it. */
   --gp-lobby-tray-shadow:
-    inset 0 3px 9px rgb(0 0 0 / 0.6),
-    inset 0 -1px 0 rgb(255 255 255 / 0.07);
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    0 6px 20px rgb(0 0 0 / 0.55);
   --gp-lobby-bar-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.11),
     0 3px 10px rgb(0 0 0 / 0.55);

@@ -1,4 +1,6 @@
-.game-card class=("game-card--your-turn" if row.your_turn?)
+/ --mine colors the row (whose game), --your-turn lifts it (whose move). A row waiting on
+  the viewer is always theirs, so it carries both.
+.game-card class=("game-card--mine" if row.mine?) class=("game-card--your-turn" if row.your_turn?)
   div
     .game-card__name
       = row.title

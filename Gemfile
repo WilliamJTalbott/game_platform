@@ -96,3 +96,5 @@ gem 'bullet', group: %w[development test]
 gem "scenic"
 
 gem 'kaminari'
+
+gem 'ransack'

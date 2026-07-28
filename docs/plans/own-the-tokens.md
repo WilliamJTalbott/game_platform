@@ -370,8 +370,9 @@ session's changes (login-redirect/leaderboard issues unrelated to CSS) — no ne
 
 ### Phase 2 — Introduce roles ✅
 1. Wrote `core/tokens/roles.css`: **6 surface roles** (`floor`/`recessed`/`raised`/`card`/
-   `outline`/`dim`, plus a `--gp-wash-lamp` for the page gradient, which is deliberately off
-   the surface scale) and **5 ink roles**, not 3 — measuring actual usage found 5 distinct
+   `outline`/`dim`, plus a `--gp-wash-lamp` for the page gradient, which was deliberately off
+   the surface scale — since removed along with the gradients themselves, see The Lamp Rule —
+   retired) and **5 ink roles**, not 3 — measuring actual usage found 5 distinct
    contrast-pair values in play (`--gp-ink`, `--gp-ink-on-raised`, `--gp-ink-muted`,
    `--gp-ink-on-card`, `--gp-ink-dim`), not the 3 originally guessed in §3. Lines and muted
    text keep their existing names (`--gp-color-border`, `--gp-color-muted`) — already

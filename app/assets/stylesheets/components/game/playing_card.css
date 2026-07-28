@@ -33,9 +33,12 @@
   /* The card face itself — the SVGs (dark_cards/*.svg) hold only the rank/suit
      ink and paint on top of this. Keeping the face a real element (rather than
      baked into the SVG) is what lets --selected below just swap a background
-     color instead of swapping images. */
-  background-color: var(--gp-surface-card);
-  border: var(--gp-border-width) solid var(--gp-surface-outline);
+     color instead of swapping images.
+
+     Face and edge come from the card family (core/tokens/cards.css), not from
+     surface roles, so a pile, a meld chip and this card cannot drift apart. */
+  background-color: var(--gp-card-face);
+  border: var(--gp-border-width) solid var(--gp-card-edge);
   border-radius: var(--gp-radius-medium);
 
   filter: var(--_gp-playing-card-shadow);

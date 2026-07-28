@@ -88,7 +88,7 @@ These are things you would *not* infer from a quick read:
 
 - **[docs/architecture.md](docs/architecture.md)** — the two `Game` layers, jsonb serialization, the turn/broadcast cycle, adding a game type.
 - **[docs/serialization.md](docs/serialization.md)** — the `Serializable` concern that generates `as_json`/`self.load` from a `serializes` schema, and its gotchas.
-- **[DESIGN.md](DESIGN.md)** — the visual system: "The Warm Card Room" north star, the permanent coral accent + per-page accent color model, dark-first stance, type scale, layout grammar, elevation vocabulary, component specs, and the named rules (Owned Color, Tapered Chroma, Lamp, No-Ramp, One Page One Color, One Signal, Dark-First, Pair, Matched-Pair, …). Machine-readable tokens live in its YAML frontmatter, with the extensions Stitch's schema can't hold in `.impeccable/design.json`.
+- **[DESIGN.md](DESIGN.md)** — the visual system: "The Warm Card Room" north star, the permanent coral accent + per-page accent color model, dark-first stance, type scale, layout grammar, elevation vocabulary, component specs, and the named rules (Owned Color, Tapered Chroma, No-Ramp, One Page One Color, One Signal, Dark-First, Pair, Matched-Pair, …). Machine-readable tokens live in its YAML frontmatter, with the extensions Stitch's schema can't hold in `.impeccable/design.json`.
 - **[docs/frontend.md](docs/frontend.md)** — CSS mechanics: how stylesheets load (Propshaft `:app`, no bundler), directory layout, token tiers, BEM conventions, and the gotchas.
 - **[PRODUCT.md](PRODUCT.md)** — durable product truth: users, purpose, positioning, operating context, constraints, and brand commitments.
 - **[docs/games/go-fish.md](docs/games/go-fish.md)** — Go Fish rules and how `GoFish::Game` implements them.

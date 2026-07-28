@@ -33,13 +33,18 @@ class TurnsController < ApplicationController
     head :no_content
   end
 
+  # Two streams: the game re-renders from unchanged state, and the flash says why
+  # the turn was refused. Without the second one the form's errors are computed,
+  # handed to the presenter, and never shown — the turn just fails silently.
   def render_invalid_turn
-    render turbo_stream: GameTurboUpdate.stream(
-      turbo_stream,
-      @game,
-      current_user,
-      form: @form
-    ), status: :unprocessable_content
+    render turbo_stream: [
+      GameTurboUpdate.stream(turbo_stream, @game, current_user, form: @form),
+      flash_stream(@form.errors.full_messages.to_sentence.upcase_first)
+    ], status: :unprocessable_content
+  end
+
+  def flash_stream(message)
+    turbo_stream.replace("flash", partial: "shared/flash", locals: { message: message })
   end
 
   def render_finished_game

@@ -1,10 +1,38 @@
+/* .popup is the transient notice that slides in from the top centre of the
+   viewport and slides back out: the offline alert, the copy-link confirmation,
+   and a rejected turn's reason. It is shown by adding .show and hidden by
+   removing it again, from a Stimulus controller (offline-alert, flash).
+
+   BOTH DIRECTIONS ARE TRANSITIONS, not an entry keyframe. This used to animate
+   in with a `slideDown` keyframe and leave via `display: none`, which meant it
+   vanished instantly — `display` is not an animatable property, so there was no
+   exit at all. Driving entry and exit off the same two transitioned properties
+   is what makes the notice leave the way it arrived.
+
+   `visibility` is the third property and carries the delay: on the way IN it
+   flips immediately so the fade has something to reveal, and on the way OUT it
+   waits the full duration so the notice stays rendered while it animates away.
+   It is doing real work beyond opacity — Capybara treats `visibility: hidden`
+   as invisible but ignores `opacity: 0`, and spec/system/games_spec.rb asserts
+   the offline notice is absent until you go offline. Without it that assertion
+   sees the parked text and fails.
+
+   Centring is done with auto inline margins rather than `translateX(-50%)`
+   because `transform` is spent on the slide. This file used to set `left: 50%`
+   with no compensating offset at all, so the notice began at the horizontal
+   midpoint and ran off to the right — it was never actually centred. */
 .popup {
+  --_gp-popup-inset: var(--gp-space-large);
+  --_gp-popup-duration: 0.3s;
+
   position: fixed;
-  top: -100px;
-  left: 50%;
+  top: var(--_gp-popup-inset);
+  inset-inline: 0;
   z-index: 9999;
 
-  display: none;
+  width: fit-content;
+  max-width: calc(100% - 2 * var(--_gp-popup-inset));
+  margin-inline: auto;
 
   color: var(--gp-color-warning-on-base);
   background-color: var(--gp-color-warning-base);
@@ -12,23 +40,29 @@
   border-radius: var(--gp-radius-large);
   font-weight: var(--gp-weight-semi-bold);
   box-shadow: var(--gp-shadow-medium);
+  text-align: center;
 
+  /* Parked flush above the viewport's top edge: its own height plus the inset
+     it would otherwise sit at. */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(calc(-100% - var(--_gp-popup-inset)));
+  pointer-events: none;
 
-  transition: all 0.4s ease-in-out;
+  transition:
+    opacity var(--_gp-popup-duration) ease-in-out,
+    transform var(--_gp-popup-duration) ease-in-out,
+    visibility 0s linear var(--_gp-popup-duration);
 
   &.show {
-    top: 20px;
-    animation: slideDown 0.2s ease-out forwards;
-    display: block;
-  }
-}
-
-
-@keyframes slideDown {
-  0% {
-    transform: translateY(-100%);
-  }
-  100% {
+    opacity: 1;
+    visibility: visible;
     transform: translateY(0);
+    pointer-events: auto;
+
+    transition:
+      opacity var(--_gp-popup-duration) ease-in-out,
+      transform var(--_gp-popup-duration) ease-in-out,
+      visibility 0s linear;
   }
 }

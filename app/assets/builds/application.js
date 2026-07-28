@@ -9401,6 +9401,41 @@ __webpack_require__.dn(__WEBPACK_DEFAULT_EXPORT__);
 
 /***/ },
 
+/***/ "./app/javascript/controllers/flash_controller.js"
+/*!********************************************************!*\
+  !*** ./app/javascript/controllers/flash_controller.js ***!
+  \********************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ flash_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+class flash_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  connect() {
+    this.frame = requestAnimationFrame(() => {
+      this.frame = requestAnimationFrame(() => this.element.classList.add("show"));
+    });
+    this.timeout = setTimeout(() => this.dismiss(), this.durationValue);
+  }
+  disconnect() {
+    cancelAnimationFrame(this.frame);
+    clearTimeout(this.timeout);
+  }
+  dismiss() {
+    this.element.classList.remove("show");
+  }
+}
+__publicField(flash_controller_default, "values", { duration: { type: Number, default: 4e3 } });
+
+
+/***/ },
+
 /***/ "./app/javascript/controllers/game_form_controller.js"
 /*!************************************************************!*\
   !*** ./app/javascript/controllers/game_form_controller.js ***!
@@ -9507,35 +9542,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _application__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./application */ "./app/javascript/controllers/application.js");
 /* harmony import */ var _clipboard_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./clipboard_controller */ "./app/javascript/controllers/clipboard_controller.js");
 /* harmony import */ var _dialog_controller__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dialog_controller */ "./app/javascript/controllers/dialog_controller.js");
-/* harmony import */ var _game_form_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game_form_controller */ "./app/javascript/controllers/game_form_controller.js");
-/* harmony import */ var _hand_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./hand_controller */ "./app/javascript/controllers/hand_controller.js");
-/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
-/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
-/* harmony import */ var _offline_alert_controller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./offline_alert_controller */ "./app/javascript/controllers/offline_alert_controller.js");
-/* harmony import */ var _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./rummy_turn_controller */ "./app/javascript/controllers/rummy_turn_controller.js");
-/* harmony import */ var _service_worker_controller__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./service_worker_controller */ "./app/javascript/controllers/service_worker_controller.js");
-/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
+/* harmony import */ var _flash_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./flash_controller */ "./app/javascript/controllers/flash_controller.js");
+/* harmony import */ var _game_form_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./game_form_controller */ "./app/javascript/controllers/game_form_controller.js");
+/* harmony import */ var _hand_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hand_controller */ "./app/javascript/controllers/hand_controller.js");
+/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
+/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
+/* harmony import */ var _offline_alert_controller__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./offline_alert_controller */ "./app/javascript/controllers/offline_alert_controller.js");
+/* harmony import */ var _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./rummy_turn_controller */ "./app/javascript/controllers/rummy_turn_controller.js");
+/* harmony import */ var _service_worker_controller__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./service_worker_controller */ "./app/javascript/controllers/service_worker_controller.js");
+/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
 
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("clipboard", _clipboard_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("dialog", _dialog_controller__WEBPACK_IMPORTED_MODULE_2__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("game-form", _game_form_controller__WEBPACK_IMPORTED_MODULE_3__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("flash", _flash_controller__WEBPACK_IMPORTED_MODULE_3__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hand", _hand_controller__WEBPACK_IMPORTED_MODULE_4__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("game-form", _game_form_controller__WEBPACK_IMPORTED_MODULE_4__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_5__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hand", _hand_controller__WEBPACK_IMPORTED_MODULE_5__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_6__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_6__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("offline-alert", _offline_alert_controller__WEBPACK_IMPORTED_MODULE_7__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_7__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("rummy-turn", _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_8__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("offline-alert", _offline_alert_controller__WEBPACK_IMPORTED_MODULE_8__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("service-worker", _service_worker_controller__WEBPACK_IMPORTED_MODULE_9__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("rummy-turn", _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_9__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_10__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("service-worker", _service_worker_controller__WEBPACK_IMPORTED_MODULE_10__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_11__["default"]);
 
 
 /***/ },
@@ -9641,6 +9679,9 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
   refresh() {
     const checked = this.checkedInputs;
     this.meldPlaceholderTarget.hidden = checked.length < 3;
+    this.meldTargets.forEach((meld) => {
+      meld.disabled = checked.length === 0;
+    });
     if (this.phaseValue === "meld") {
       const lockedAlone = checked.length === 1 && checked[0].dataset.locked === "true";
       this.discardPileTarget.disabled = checked.length !== 1 || lockedAlone;
@@ -9655,7 +9696,8 @@ __publicField(rummy_turn_controller_default, "targets", [
   "meldIndex",
   "cardInput",
   "discardPile",
-  "meldPlaceholder"
+  "meldPlaceholder",
+  "meld"
 ]);
 __publicField(rummy_turn_controller_default, "values", { phase: String });
 

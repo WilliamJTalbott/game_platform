@@ -5,8 +5,6 @@
    hands (Go Fish, Crazy Eights) omit it and so match none of the affordance rules
    below — they render as plain, static cards. */
 .hand-card {
-  --_gp-hand-card-focus-outline: var(--gp-n-minus-7);
-
   position: relative;
   display: block;
   flex: 0 0 auto;
@@ -21,25 +19,29 @@
     cursor: default;
   }
 
-  /* Rather than fading a disabled card (which skews the ink toward off colors),
-     darken just the face a shade and its border a bit more. The SVG ink paints on
-     top and stays true to color. NB: this is tuned for dark mode, where higher
-     `plus-*` neutrals read darker (the scale flips between schemes).
-     A *locked* card is NOT disabled — it's still selectable for melding, so it
-     keeps the normal card look and only gains the lock badge below. */
-  &:has(.hand-card__input:disabled) .playing-card {
-    background-color: var(--gp-surface-recessed);
-    border-color: var(--gp-surface-dim);
-  }
+  /* A DISABLED CARD IS NOT MARKED AT ALL. It keeps the full-strength face and
+     ink of every other card; the only difference is that it does not get the
+     selectable ring below, and its cursor stays default.
+
+     This is deliberate, and it replaces two earlier attempts. Fading a disabled
+     card skewed its printed ink off-color, so that became "darken the face a
+     shade" instead — which still read as something being wrong with the card
+     rather than something being unavailable. The signal is now positive-only:
+     we mark what you CAN touch and leave everything else alone. In the hand that
+     costs nothing, because during the meld phase every card is selectable, so a
+     per-card mark would stamp the same information on all ten.
+
+     A *locked* card is not disabled either — it stays selectable for melding and
+     only gains the lock badge below. */
 
   &:has(.hand-card__input:enabled) .playing-card {
-    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-surface-outline);
+    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-card-ring);
     outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
   }
 
   &:has(.hand-card__input:focus-visible) .playing-card {
-    outline-color: var(--_gp-hand-card-focus-outline);
-    background-color: var(--gp-surface-outline);
+    outline-color: var(--gp-card-ring-focus);
+    background-color: var(--gp-card-face-focus);
   }
 }
 
@@ -65,7 +67,10 @@
   right: var(--gp-space-x-small);
   z-index: 1;
   color: var(--gp-color-accent);
-  font-size: var(--gp-font-size-x-large);
+  /* Was --gp-font-size-x-large, which is not a token in this app (scale.css
+     defines --gp-font-x-large; --op-font-size-x-large is Optics' name). The
+     declaration was invalid, so the badge silently inherited its size. */
+  font-size: var(--gp-font-x-large);
   pointer-events: none;
   transition: transform 0.2s ease-in-out;
 }
@@ -83,6 +88,6 @@
   transform: translateY(calc(-1 * var(--gp-space-large)));
   filter: var(--_gp-playing-card-shadow);
   background-color: var(--gp-card-face-selected);
-  outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-color-accent);
+  outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-card-edge-selected);
   outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
 }

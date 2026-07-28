@@ -18,6 +18,7 @@ colors:
   felt-green-raised: "#274035"
   felt-green-translucent: "rgb(255 255 255 / 0.05)"
   lobby-slate: "hsl(215 14% 26%)"
+  lobby-mine: "#5c3222"
   card-face-selected: "hsl(16 45% 20%)"
   card-ink-red: "#dc4d38"
   overlay: "rgb(0 0 0 / 0.5)"
@@ -98,7 +99,7 @@ components:
     rounded: "{rounded.pill}"
     padding: "2px 8px"
   lobby-tray:
-    backgroundColor: "{colors.warm-neutral-page}"
+    backgroundColor: "{colors.warm-neutral-recessed}"
     rounded: "{rounded.2x-large}"
     padding: "16px 20px"
   game-bar:
@@ -145,11 +146,11 @@ announces itself, because it is walls and furniture, not the event. Coral is the
 signal in that room, everywhere in the house: it means *act* — your turn, this button, this
 link, this name. Nothing else glows.
 
-**The lamp is literal.** One warm pool of light sits high and to the left of the main column
-and falls off into the corners, and the neutral ramp drifts warmer (redder) as its surfaces
-darken toward the floor, so the low light actually reads as warm rather than as a flat gray
-turned down. Both exist because "lights low" and "lights off" are the same picture without
-them. See The Lamp Rule.
+**The lamp is in the color, not in a gradient.** The neutral ramp drifts warmer (redder) as its
+surfaces darken toward the floor, so the low light reads as warm rather than as a flat gray
+turned down — that hue drift is what keeps "lights low" from becoming "lights off." There was
+once a literal warm wash over the page as well; it is retired, and every background is a flat
+ramp step. Depth now comes entirely from the elevation vocabulary. See The Lamp Rule — retired.
 
 **Each major room may be its own color.** Coral is the constant, site-wide; on top of it, a
 major page may claim one accent of its own so that arriving there feels like arriving
@@ -158,7 +159,7 @@ cool slate and became the hallway. Neither color is allowed anywhere else, and n
 the whole list — the next page that earns one picks its own. Pages that don't claim a color
 are not unfinished; warm chrome plus coral is a complete page.
 
-The room is **physical, not flat**. Trays are recessed into surfaces and bars sit raised
+The room is **physical, not flat**. Trays stand off the page and bars sit raised
 on top of them; cards cast real shadows and lift when you touch them; the felt has
 brighter panels laid over it. Depth here is literal furniture logic, not decoration —
 if two things are stacked, the stack is visible. Density is comfortable rather than
@@ -258,17 +259,20 @@ Dark-First Rule below.
 
 Coral is **permanent** and **site-wide** — it is the identity, not a phase.
 
-- **Accent Coral** (`hsl(16 85% 62%)`): the one brand accent, and the *only* color that
-  means "act." Solid fills for primary buttons, the lobby's View CTA, the directive feed
-  bubble, the hand's lock badge, and the turn-badge outline — and, as ink, the brand
-  wordmark, section headings, the History link, meld owners, and the "your turn" icon. One
-  hue, hand-picked — never a derived ramp, because a ramp-darkened coral reads as muddy
-  copper. (There used to be a separate, lighter "Accent Coral Deep" for text on a light
-  background; now that light mode is gone, ink and fill are the same value.)
+- **Accent Coral** (`hsl(16 85% 62%)`): the one brand accent, and the color that means
+  "act." Solid fills for primary buttons, the lobby's View CTA, the directive feed bubble,
+  the hand's lock badge, and the lobby turn badge — and, as ink, the brand wordmark, section
+  headings, the History link, meld owners, and the "your turn" icon. One hue, hand-picked —
+  never a derived ramp, because a ramp-darkened coral reads as muddy copper. (There used to
+  be a separate, lighter "Accent Coral Deep" for text on a light background; now that light
+  mode is gone, ink and fill are the same value.) The three solid-fill-plus-white-ink objects
+  — primary button, directive bubble, turn badge — are one deliberate family: this is what
+  the system does when something must be the loudest thing on screen.
 - **Accent Coral Tint** (`#4b2e22`, a hand-picked dark muted coral): a soft coral surface for
-  things that should read as accent-adjacent without shouting — the turn badge, the Join
-  CTA, the active opponent card. Resolved to this literal after retiring a `color-mix()`
-  that used to produce it — see The Owned Color Rule.
+  things that should read as accent-adjacent without shouting — the Join CTA and the active
+  opponent card. (The lobby turn badge used to be here; it was promoted to the solid fill
+  when the row beneath it stopped carrying turn state.) Resolved to this literal after
+  retiring a `color-mix()` that used to produce it — see The Owned Color Rule.
 
 ### Secondary
 
@@ -286,8 +290,19 @@ appears nowhere else in the app. Two pages have claimed one so far; the list is 
 
 *Games index — slate:*
 
-- **Lobby Slate** (`hsl(215 14% 26%)` / `#eef1f5`): the cool blue-gray of the raised game bars on
-  the home dashboard, and only those bars. The tray beneath them stays warm neutral.
+- **Lobby Slate** (`hsl(215 14% 26%)`): the cool blue-gray of the raised game bars on the home
+  dashboard — and only the bars for games the viewer has **not** joined. The tray beneath them
+  stays warm neutral.
+- **Lobby Mine** (`#5c3222`, `--gp-lobby-bar-mine`): the same bars for games that *are* the
+  viewer's. A picked coral tint, not a shade of slate — the two are near-complements and any
+  blend of them desaturates to plum-brown instead of reading lit, so these rows leave the page
+  accent behind rather than tinting it.
+
+  *The pair is the point.* Slate alone was the page's accent; now slate and this tint are a
+  two-tone axis, and the axis is ownership. Because the lobby's two sections split on exactly
+  that condition, each section comes out one temperature — your games warm, open games cool —
+  which is the fastest thing on the page to read. This is the One Signal Rule's single
+  documented exception; see it for why coral is allowed to mean "yours" here.
 
 *Unclaimed:* stats, history, and rules have no page accent, and that is a complete state —
 warm chrome plus coral. Give one a color only when the page benefits from feeling like its
@@ -338,13 +353,15 @@ taking the endpoints off the ramp — a patch turned into a structure.
 
 Every step below is a single, dark-only value — there is no light arm.
 
-- **Warm Neutral Page** (`oklch(18.29% 0.0105 53.9)`, `plus-1`): the page, the lobby tray, and
-  the game shell — the floor you stand on, one step sunk into the room.
+- **Warm Neutral Page** (`oklch(18.29% 0.0105 53.9)`, `plus-1`): the page and the game shell —
+  the floor you stand on, one step sunk into the room.
 - **Warm Neutral Recessed** (`oklch(23.1% 0.014 54.7)`, `base`): the sidebar, the Rummy hand
-  dock, stats grid, modal dialogs, the request form, the winner row. The room's own tone, and
-  the first surface above the floor. "Recessed" names the intent, not the direction — it is a
-  step *lighter* than the page, which is what makes the sidebar read as a lit panel. The dock
-  shares it deliberately, so the sidebar and the hand read as one continuous band of chrome.
+  dock, the lobby tray, stats grid, modal dialogs, the request form, the winner row. The room's
+  own tone, and the first surface above the floor. "Recessed" names the intent, not the
+  direction — it is a step *lighter* than the page, which is what makes the sidebar read as a
+  lit panel. The dock shares it deliberately, so the sidebar and the hand read as one
+  continuous band of chrome; the lobby tray joined it for the same reason, so the app's large
+  chrome slabs are one tone rather than three.
 
 *A note on the cellar.* `plus-2` (`oklch(13.48% 0.007 53.1)`) is currently unused. The game
 page briefly took it as a deeper floor, to open a tone between the floor and the sidebar for
@@ -398,6 +415,20 @@ brand identity — nothing else, on every page. A page accent never takes over a
 coral never becomes a page's decoration. A screen where coral also decorates a heading, a
 border, and a divider has spent the signal.
 
+*One documented exception: the lobby's game bars.* There, a coral **tint surface** means "this
+game is yours," and turn state is carried by lift, badge, and sort order instead. Coral is
+still not decoration — it is still answering a question about the viewer — but the question is
+*whose* rather than *when*. The exception is granted because the lobby's central job is telling
+your games apart from strangers' games, that split is binary, and temperature reads faster than
+any label: your half of the page is warm, the other half is cool. Coral-as-action survives
+intact in the same rows' CTAs, which is why the row can say "mine" without the column losing
+its meaning.
+
+Do not generalize this. The exception is a *tint surface on one component*, not a license for
+coral to mean ownership anywhere else, and a second page claiming it would put the app back to
+having no reliable signal at all. If a third fact ever needs stating in these rows, it gets a
+channel that isn't color.
+
 **The Owned Color Rule.** Color is `--gp-color-*` and nothing else — never a raw hex/hsl in a
 component when a ramp step or accent already covers it, and never a `color-mix()` (it hides
 the resulting color behind an opaque formula and desaturates toward gray instead of staying
@@ -423,12 +454,26 @@ white end needed the same correction until white came off the ramp entirely; now
 the warmed-white family's definition, not a taper.) If a *middle* step ever needs its own
 chroma, that would be the signal the original rule was watching for.
 
-**The Lamp Rule.** The room has exactly one light source: a single warm pool, high and left,
-declared on the page shell (`components/layout/room.css`) and echoed on the lobby tray so the
-light continues across the furniture. It is the reason the darkness reads as *lights low*
-rather than *lights off*. Do not add a second light, do not give a component its own glow,
-and do not animate this one. Opaque surfaces laid over it correctly mask it — furniture blocks
-light.
+**The Lamp Rule — retired.** The room used to carry one authored light: a top-to-bottom warm
+wash declared on the page shell (`components/layout/room.css`) and echoed on the lobby tray, so
+the light continued across the furniture. It was there because "lights low" and "lights off" are
+the same picture without it.
+
+*It is gone, and every background in this app is now a flat ramp step.* No `linear-gradient` fill
+survives outside `panel.css`'s feed `mask-image`, which is a fade of content, not of a surface.
+The half-step lamp tone (`--gp-n-lamp`) and its `--gp-wash-lamp` role are deleted, `room.css` with
+them.
+
+*What now carries the low light.* The warmth itself — the ramp's own hue and its per-step drift —
+and the elevation vocabulary below, which was always doing more of the work than the wash was: a
+tray is legible because it takes a ramp step of its own and casts onto the page, not because it
+sat under a gradient. Removing the wash is in fact what surfaced the lobby tray's real problem:
+it had been sharing the page's exact tone and leaning on the gradient to separate the two. It is
+now a step lighter and raised. See the Matched-Pair Rule.
+
+If a wash is ever wanted again, it returns as a rule first — one light, high and left, never a
+second one, never a per-component glow, never animated — and the token comes back with it, not
+ahead of it.
 
 **The Dark-First Rule — now Dark-Only.** There is no light mode. `color-scheme: dark` is set
 on `:root` and no `light-dark()` pair survives in the neutral ramp — author, review, and
@@ -532,20 +577,32 @@ children, and cards float above everything they sit on. Tonal shifts alone are u
 for the subtlest chrome distinctions (panel header vs. panel body); anything that is
 meaningfully "on top of" something else gets a shadow.
 
-The signature move is the **recessed-tray / raised-bar pair** on the lobby: the tray
-carries an inset shadow plus a bright inner bottom edge (so it reads as pressed into the
-page), and each bar on it carries a bright inner *top* edge plus an outward drop shadow
-(so it reads as lifted off the tray). The two shadows are designed as a matched set;
-changing one without the other flattens the effect.
+The signature move is the **two-step raised stack** on the lobby: the tray sits a ramp step
+above the page with a bright inner top edge and a wide outward drop shadow, and each bar on
+it repeats the same treatment at a smaller scale — same lit-edge-plus-drop-shadow
+vocabulary, a tighter blur, a brighter edge. Page → tray → bar reads as three surfaces
+stacked front to back, each one lighter and each one casting onto what's behind it.
+
+*It used to be a recessed tray holding raised bars* — the tray on the page's own tone with an
+inset shadow and a lit inner *bottom* edge, so it read as pressed into the page. That worked,
+but it made the tray's edge depend entirely on the shadow (there was no tonal difference to
+fall back on) and it put the lobby's largest surface at the bottom of the stack while every
+other big chrome slab in the app — Rummy's hand dock, the sidebar — sits above the floor. The
+tray now takes the dock's exact tone, and the two read as the same kind of object.
+
+The two shadows are still designed as a matched set at two scales; changing one without the
+other flattens the effect.
 
 ### Shadow Vocabulary
 
-- **Recessed tray** (`inset 0 3px 9px <warm dark>, inset 0 -1px 0 <bright>`): a container
-  pressed into the page — the lobby tray. Paired with a 1px warm border. The lit inner edges
-  do most of the work here: a black shadow on a near-black surface has little tone left to
-  darken, so depth comes from a wider, heavier blur on the lit edge rather than the shadow.
+- **Raised tray** (`inset 0 1px 0 <bright>, 0 6px 20px <warm dark>`): a large chrome slab
+  standing off the page — the lobby tray. No border: it is already a ramp step lighter than
+  the page, and a hairline under a wide soft shadow states the same edge a third time. Its
+  lit top edge is deliberately fainter than a bar's, because it is the calmer surface and the
+  bars have to read as the brighter things sitting on it.
 - **Raised bar** (`inset 0 1px 0 <bright>, 0 3px 10px <warm dark>`): an interactive row
-  lifted off a recessed tray — lobby game bars, and reused for melds on the felt. A `--live`
+  lifted off the tray — lobby game bars, and reused for melds on the felt. The same
+  vocabulary as the raised tray at a smaller scale: blur tracks surface size. A `--live`
   variant (`0 5px 16px`) takes the top of the stack for the one row waiting on the viewer.
 - **Card lift** (`filter: drop-shadow(0 3px 4px rgb(0 0 0 / 0.6))`): the playing card's own
   shadow. Applied as a `filter`, not `box-shadow`, so it follows the card's rounded
@@ -557,8 +614,11 @@ changing one without the other flattens the effect.
 
 ### Named Rules
 
-**The Matched-Pair Rule.** Recessed and raised shadows ship together. A raised bar with no
-recessed tray beneath it, or a tray with flat children, loses the entire effect.
+**The Matched-Pair Rule.** A stack's shadows ship together and are tuned against each other.
+The lobby's tray and bars are one effect at two scales: blur tracks surface size, and the
+brighter lit edge belongs to the smaller, nearer surface. A bar sitting on a flat tray, or a
+tray with flat children, loses the entire effect. Never re-level one without re-checking the
+other — the whole point is that each surface is legibly in front of the one behind it.
 
 **The Filter-Not-Box Rule.** Card shadows use `filter: drop-shadow(...)`. Cards are
 rounded, occasionally rotated, and layered — a `box-shadow` would trace the wrong outline.
@@ -612,8 +672,10 @@ free-size a card.
 
 ### Chips
 
-- **Turn badge:** pill-shaped, coral-tint fill, coral outline, coral-deep micro-uppercase
-  label, with a `0.45em` dot in `currentColor`. The canonical "it's your turn" object.
+- **Turn badge:** pill-shaped, **solid Accent Coral fill, white micro-uppercase label**, no
+  border, with a `0.45em` dot in `currentColor` (so the dot is white too). The canonical
+  "it's your turn" object, and the loudest thing on the lobby — deliberately, since the row
+  it sits on now marks ownership rather than turn state.
 - **Phase stepper step:** `20px`-radius pill-ish chip, muted by default; the active step
   takes a coral border, coral-deep bold ink, and a raised chrome fill.
 - **Lock badge:** a coral glyph pinned to a card's top-right corner, marking the card that
@@ -626,20 +688,38 @@ free-size a card.
   chrome with a hairline bottom border; the body is the inset well beneath it. Variants
   reshape it per area (`--board`, `--feed`, `--hand`, `--books`), and Rummy's board and
   hand panels drop the boxed header entirely.
-- **Lobby tray:** `20px` radius, raised-chrome fill, warm hairline border, recessed inset
-  shadow. Flexes to fill the dashboard's height.
-- **Game bar:** `12px` radius, Lobby Slate fill, raised shadow. Name leads, game type sits
-  muted beneath it, count and CTA cluster right. Its secondary text takes one ramp step
-  lighter than the page's muted tone — slate is the app's one cool surface and the shared
-  step lands under 4.5:1 on it.
-  - *Your-turn variant:* the bar waiting on the viewer drops slate for a 32% coral tint over
-    the page tone and takes the highest lift on the tray, so the actionable game reads before
-    any text does. It does *not* mix coral into slate — the two are near-complements and any
-    blend of them desaturates to plum-brown instead of reading lit. This is coral as turn
-    state, and it is the reason the lobby needs no other ranking device. Its turn badge sits
-    one step deeper than the row with room ink rather than coral ink, because coral-on-coral-
-    tint measures ~3.2:1 at 10px; the badge's coral border and the row's wash carry the accent
-    instead. Rows waiting on the viewer also sort to the top of their section.
+- **Lobby tray:** `20px` radius, recessed-chrome fill (a step above the page, the same tone
+  as Rummy's hand dock), no border, raised-tray shadow. Flexes to fill the dashboard's
+  height.
+- **Game bar:** `12px` radius, raised shadow. Name leads, game type sits muted beneath it,
+  count and CTA cluster right. **It states two independent facts on two independent channels,
+  and that separation is the component's whole design:**
+  - *Surface = whose game.* **Lobby Mine** (`#5c3222`, `--gp-lobby-bar-mine`) for the viewer's
+    own; **Lobby Slate** for one they haven't joined. Since the lobby's two sections split on
+    exactly this, each section reads as a single temperature. (It was a `color-mix()` of coral
+    over the page tone until the Owned Color Rule caught it; it is now the literal that mix
+    produced.)
+  - *Badge and height = whose move.* Turn state used to own the coral surface; once ownership
+    took it, the signal was rebuilt on two other channels. The **solid-coral turn badge** is
+    the loud half — see Chips. The **lift** is the quiet structural half: the deepest shadow on
+    the tray (`0 5px 16px`, `--gp-lobby-bar-shadow-live`), plus sorting to the top of the
+    section. **Don't give the your-turn row a brighter coral instead** — a third tone in one
+    column reads as a heat map, *and* it would close the lightness gap the badge depends on to
+    pop off the row. The row's tint has to stay dim for the badge to stay loud; those two are
+    now a pair.
+  - *Secondary text* takes one ramp step lighter than the page's muted tone (`--gp-n-minus-10`),
+    measured at **4.2:1 on Lobby Mine and 4.0:1 on slate** — both just under 4.5:1. Deliberate
+    and unresolved; see Accessibility in PRODUCT.md for why it isn't being chased.
+  - *The turn badge* is **solid Accent Coral with white ink** and no border — the same
+    treatment as a primary button and the feed's directive bubble, which is this system's
+    vocabulary for the loudest object on a screen. Against the row's dim coral tint that is a
+    3.9:1 surface jump, which is what lets it carry turn state by itself now that the tint
+    marks ownership. It was previously a *deeper* tint with room ink and a coral outline,
+    reading as recessed into the row — correct while the coral row was itself the signal,
+    wrong once it became the only one. The fill now carries the accent, so the outline is
+    gone (coral on coral is invisible). **Cost, stated:** white on coral is ~2.8:1 at 10px,
+    the lowest-contrast text on the page. That is the app's standing white-on-coral trade,
+    not a new exception — but if the badge is ever revisited, this is the number to revisit.
 - **Felt zone** (the game page's accent in use): `12px` radius, Felt Green Raised fill,
   ambient shadow, with a
   label-voice caption. The piles zone sizes to content; the melds zone takes the rest and
@@ -711,7 +791,8 @@ Two forms of the same message trail:
 - **Do** design, review, and screenshot in dark mode — it's the only mode there is.
 - **Do** give a new page its own accent when it genuinely benefits from feeling like its own
   place — and put it wherever suits that page.
-- **Do** pair recessed and raised shadows as a set.
+- **Do** tune a stack's shadows as a set — blur tracks surface size, and the brighter lit edge
+  belongs to the nearer surface.
 - **Do** give every card representation the `5 / 7` ratio, at every scale.
 - **Do** use `filter: drop-shadow()` for card shadows and `box-shadow` for boxes.
 - **Do** reserve space for a lift before animating one.

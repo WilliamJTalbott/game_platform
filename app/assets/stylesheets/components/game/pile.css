@@ -1,4 +1,7 @@
+/* .pile is a draw/discard pile on the felt — a button wrapping one .playing-card
+   and a caption. `position: relative` anchors the badge below. */
 .pile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -8,19 +11,27 @@
   background: none;
   border: 0;
 
+  /* A DISABLED PILE GETS NO TREATMENT BEYOND ITS CURSOR — it is simply a card
+     resting on the felt. It used to fade to `opacity: 0.75` and desaturate to
+     `saturate(0.55)`, which dulled the card art itself and read as damaged rather
+     than unavailable. Everything visual below hangs off :not(:disabled): we mark
+     the live target and leave the resting one alone. */
   &:disabled {
-    opacity: 0.75;
-    filter: saturate(0.55);
     cursor: default;
   }
 
+  /* The live pile takes a coral ring, because when it is your turn to draw these
+     two cards ARE the action. */
   &:not(:disabled) .playing-card {
-    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-surface-outline);
+    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-card-ring-live);
     outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
   }
 
+  /* Focus brightens the FACE rather than recoloring the ring, which is already
+     coral at rest — a focus ring has to differ from the resting state to say
+     anything, and there is nothing louder than coral to escalate to. */
   &:not(:disabled):focus-visible .playing-card {
-    outline-color: var(--gp-color-accent);
+    background-color: var(--gp-card-face-focus);
   }
 
   .pile__caption {
@@ -28,4 +39,37 @@
     color: var(--gp-color-muted);
     text-align: center;
   }
+}
+
+/* The coral + badge marks a pile you can draw from, mirroring .hand-card__lock's
+   corner placement and scale.
+
+   Visibility is driven by CSS off :disabled rather than rendered conditionally in
+   the partial, and that is load-bearing: rummy_turn_controller toggles the
+   discard pile's `disabled` attribute client-side as the selection changes, so a
+   server-rendered `- if enabled` would go stale the moment you picked a card. */
+.pile__badge {
+  position: absolute;
+  /* Measured from .pile's border box, which sits --gp-space-2x-small outside the
+     card — so the gap to the card's own edge is this minus 4px. */
+  top: var(--gp-space-small);
+  right: var(--gp-space-small);
+  /* Above .playing-card, which is itself z-index: 1 — at an equal index the card
+     would win the tie on DOM order and hide this. The partial also renders the
+     badge after the card for the same reason; belt and braces, because the two
+     failure modes look identical (a badge that is simply not there). */
+  z-index: 2;
+  color: var(--gp-color-accent);
+  font-size: var(--gp-font-x-large);
+  /* ph-bold is already Phosphor's heaviest STROKE family — the weight classes map
+     to separate font files (Phosphor-Thin … Phosphor-Bold), so font-weight does
+     nothing here and ph-fill would swap to a solid glyph rather than a heavier
+     line. Painting an outline in the glyph's own color is what actually thickens
+     the strokes past bold. */
+  -webkit-text-stroke: 1px currentColor;
+  pointer-events: none;
+}
+
+.pile:disabled .pile__badge {
+  display: none;
 }

@@ -6,4 +6,10 @@ button.pile type="button" disabled=(!enabled) data-action="click->rummy-turn#dra
       - else
         = image_tag("dark_cards/card_back.svg")
 
+  / AFTER .card-container, like .hand-card__lock is: .playing-card carries its own
+  / z-index, so a badge placed before it loses the paint-order tie and vanishes.
+  / Always rendered — pile.css hides it while the button is disabled, so it tracks
+  / rummy_turn_controller toggling the discard pile as the selection changes.
+  i.pile__badge.ph-bold.ph-plus aria-hidden="true"
+
   p.pile__caption = label

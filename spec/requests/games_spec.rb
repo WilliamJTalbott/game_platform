@@ -80,6 +80,31 @@ RSpec.describe "Games", type: :request do
     end
   end
 
+  describe "row ownership" do
+    context "when the viewer has both a live game and an idle one" do
+      before do
+        create(:started_game, :go_fish, :users_turn, :many_participants, user: user)
+        create(:game, :crazy_eights, :has_user, user: user)
+        get games_path
+      end
+
+      it "marks both rows as theirs, not only the live one" do
+        expect(response.body.scan("game-card--mine").size).to eq 2
+      end
+    end
+
+    context "when the game belongs to someone else" do
+      before do
+        create(:game, :go_fish)
+        get games_path
+      end
+
+      it "leaves the row unmarked" do
+        expect(response.body).to_not include("game-card--mine")
+      end
+    end
+  end
+
   describe "POST join a full game" do
     let(:game) { create(:game, :crazy_eights) }
     before { create_list(:participant, CrazyEightsGame::MAX_PLAYERS, game: game) }

@@ -63,6 +63,13 @@ RSpec.describe "Rummy turns", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       expect(game.reload.state.melds).to be_empty
     end
+
+    it "flashes the reason the meld was rejected" do
+      post game_turns_path(game), params: { turn: { action: "draw_stock" } }
+      post game_turns_path(game), params: { turn: { action: "meld", cards: %w[9-Hearts 2-Spades 7-Clubs] } }
+
+      expect(response.body).to include("Select 3 or more cards that form a run or set")
+    end
   end
 
   context "when the active player lays a card off onto an opponent's meld" do
@@ -94,6 +101,29 @@ RSpec.describe "Rummy turns", type: :request do
       expect(response).to have_http_status(:no_content)
       expect(game.reload.state.melds.first.cards).to include(CardGame::Card.new("7", "Hearts"))
       expect(game.state.phase).to eq "meld"
+    end
+  end
+
+  context "when the active player lays off before laying down a meld of their own" do
+    let(:opponent_meld) do
+      Rummy::Meld.new(
+        kind: "run", owner: waiting_user.id,
+        cards: [ CardGame::Card.new("4", "Hearts"), CardGame::Card.new("5", "Hearts"), CardGame::Card.new("6", "Hearts") ]
+      )
+    end
+
+    before do
+      sign_in(active_user)
+      game.state.melds = [ opponent_meld ]
+      game.state.active_player.cards << CardGame::Card.new("7", "Hearts")
+      game.save!
+    end
+
+    it "flashes the reason the lay off was rejected" do
+      post game_turns_path(game), params: { turn: { action: "draw_stock" } }
+      post game_turns_path(game), params: { turn: { action: "lay_off", cards: [ "7-Hearts" ], meld_index: "0" } }
+
+      expect(response.body).to include("Lay down a meld of your own before laying off")
     end
   end
 

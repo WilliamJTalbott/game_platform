@@ -1,0 +1,10 @@
+/ #flash is rendered empty by the layout and replaced by a turbo_stream when
+/ there is something to say. .flash carries `display: contents` because .op-page
+/ is a grid and a real box here would displace the sidebar — see ui/flash.css.
+/
+/ The .popup is deliberately rendered WITHOUT .show: flash_controller adds it a
+/ frame later so the notice animates in rather than appearing already arrived.
+#flash.flash
+  - if message.present?
+    .popup data-controller="flash" data-action="click->flash#dismiss"
+      p = message

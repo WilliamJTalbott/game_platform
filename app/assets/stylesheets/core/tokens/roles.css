@@ -26,12 +26,18 @@
      ramp the page was the darkest step in existence, so nothing could sit below
      it even if a design wanted it to. The cellar (plus-2, below the floor) is
      where a genuinely sunk surface would go if one is ever designed. */
+  /* Card-shaped things no longer appear in this list. Playing cards, the
+     stock/discard piles and the meld chips spend the --gp-card-* family
+     (core/tokens/cards.css) so they cannot drift apart from each other; these
+     roles keep only their non-card consumers. --gp-surface-card is now a
+     slight misnomer for that reason — it is the tone a card face HAPPENS to
+     share, not the card's own token. */
   --gp-surface-floor: var(--gp-n-plus-1); /* the page itself */
-  --gp-surface-recessed: var(--gp-n-base); /* trays sunk into the page: the sidebar, hand dock, modals, stats grid, menu, disabled cards */
+  --gp-surface-recessed: var(--gp-n-base); /* trays sunk into the page: the sidebar, hand dock, modals, stats grid, menu */
   --gp-surface-raised: var(--gp-n-minus-1); /* panel headers, opponent cards */
-  --gp-surface-card: var(--gp-n-minus-3); /* card faces, meld chips, message bubbles */
-  --gp-surface-outline: var(--gp-n-minus-4); /* the ring/outline tone one step up from a card face */
-  --gp-surface-dim: var(--gp-n-minus-5); /* a subtler background than recessed — the rules banner, a disabled card's border */
+  --gp-surface-card: var(--gp-n-minus-3); /* message bubbles, opponent mini-cards, dropdown panels */
+  --gp-surface-outline: var(--gp-n-minus-4); /* the ring/outline tone one step up from that surface */
+  --gp-surface-dim: var(--gp-n-minus-5); /* a subtler background than recessed — the rules banner */
 
   /* There is no role between --gp-surface-floor and --gp-surface-recessed, and
      there cannot be one without re-leveling a page: they are ADJACENT ramp steps.
@@ -40,11 +46,6 @@
      back, and the token lost its only consumer. If a surface ever needs to sit
      between the floor and the sidebar again, sinking that page's floor is the
      move; the cellar (plus-2) is still there for it. */
-
-  /* The lamp wash (see The Lamp Rule, DESIGN.md) is deliberately off the surface
-     scale — a gradient stop, not a surface something sits on. Roled here only so
-     components still read a role rather than a raw ramp token. */
-  --gp-wash-lamp: var(--gp-n-lamp);
 
   /* ---- Ink — the ink that belongs on a given surface ---------------------
      Five positions are in active use, not three: a surface-coupled ink
@@ -58,6 +59,6 @@
   --gp-ink: var(--gp-white); /* strongest ink — headings on the floor */
   --gp-ink-dim: var(--gp-w-1); /* the dimmest ink — muted captions on a card face */
   --gp-ink-on-raised: var(--gp-w-2); /* ink on a raised surface */
-  --gp-ink-on-card: var(--gp-w-3); /* ink on a recessed surface or a card face */
+  --gp-ink-on-card: var(--gp-w-3); /* ink on a recessed surface (a real card face uses --gp-card-ink) */
   --gp-ink-muted: var(--gp-n-minus-8); /* the muted companion on a raised surface */
 }

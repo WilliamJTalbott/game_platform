@@ -124,6 +124,14 @@ RSpec.describe "Playing Rummy", type: :system do
 
       expect(find(".meld", text: "Run")).to have_css(".meld__card", count: 4)
     end
+
+    it "only enables an existing meld once at least one card is selected", :js do
+      draw_from_stock!
+      expect(page).to have_css(".meld[disabled]", text: "Run")
+
+      click_hand_card("7-Hearts")
+      expect(page).to have_no_css(".meld[disabled]", text: "Run")
+    end
   end
 
   context "with only the winning meld left in hand" do
@@ -166,6 +174,32 @@ RSpec.describe "Playing Rummy", type: :system do
 
       click_hand_card("K-Diamonds")
       expect(page).to have_css(".pile[disabled]", text: "Discard")
+    end
+  end
+
+  context "when the selected cards don't form a run or a set" do
+    let(:mismatched) do
+      [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("2", "Spades"), CardGame::Card.new("7", "Clubs") ]
+    end
+
+    before do
+      remove_cards_from_play(*mismatched)
+      game.state.active_player.cards = mismatched + game.state.active_player.cards
+      game.save!
+    end
+
+    it "drops a flash naming the reason instead of failing silently", :js do
+      page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }
+      draw_from_stock!
+      mismatched.each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
+      find(".meld--new").click
+
+      expect(page).to have_css(".popup.show", text: "Select 3 or more cards that form a run or set")
+      screenshot("rummy-invalid-meld-flash", fullPage: true)
+
+      # Slides back out on its own — `visible: true` so this asserts the notice
+      # really is hidden, not merely that the selector stopped matching.
+      expect(page).to have_no_css(".popup", visible: true, wait: 6)
     end
   end
 

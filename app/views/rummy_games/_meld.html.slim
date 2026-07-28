@@ -1,4 +1,8 @@
-button.meld type="button" disabled=(!can_select) data-action="click->rummy-turn#layOff" data-rummy-turn-meld-index-param=index
+/ Always renders disabled: laying off needs cards selected, and a fresh render
+/ never has a selection (a turbo re-render resets the checkboxes). rummy-turn
+/ enables it as soon as something is picked. Failing closed also means a broken
+/ JS bundle leaves melds unclickable rather than clickable-but-useless.
+button.meld type="button" disabled=true data-action="click->rummy-turn#layOff" data-rummy-turn-target="meld" data-rummy-turn-meld-index-param=index
   .meld__header
     span.meld__label = meld.label
     span.meld__owner = meld.owner

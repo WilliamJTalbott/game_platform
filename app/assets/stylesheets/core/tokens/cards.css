@@ -1,0 +1,75 @@
+/* ==========================================================================
+   Card colors — a component-scoped token family
+
+   HOW THIS DIFFERS FROM A ROLE. Roles (core/tokens/roles.css) are named for a
+   JOB that any component can want: a raised surface, ink on a card face. This
+   family is named for one OBJECT — the playing card — and only card-shaped
+   things spend it. It sits BESIDE the roles rather than downstream of them, and
+   it is the one sanctioned exception to "components spend roles, never a raw
+   primitive": these tokens reach the ramp (--gp-n-*) and the warmed whites
+   (--gp-w-*) directly, because they are themselves the naming layer.
+
+   WHY CARDS GET THIS AND OTHER COMPONENTS DO NOT. The card is this app's
+   signature object and the only one drawn at a dozen sizes across four
+   components that must agree exactly — a real card face, a stock/discard pile,
+   a meld chip, and an opponent's fanned back. While those spent surface roles,
+   they agreed only by COINCIDENCE: .meld__card matched a real card because both
+   happened to reference --gp-surface-card, so re-leveling a page's surfaces
+   would have silently split the card stock in two. Now they agree by NAME, and
+   retuning every card-shaped thing in the app is one edit here.
+
+   Do not add a second family like this for a component that has one consumer.
+   The bar for owning a token family is "several components must render the same
+   material and cannot be allowed to drift," not "this component has colors."
+
+   The card's NON-COLOR tokens (--gp-card-aspect-ratio, --gp-card-hover-lift)
+   deliberately stay with the other measurements in core/theme.css — this file
+   is the card's palette, not everything the card owns.
+   ========================================================================== */
+
+:root {
+  /* ---- The card's own material ------------------------------------------
+     Face and edge are what makes something read as card stock. The edge is one
+     ramp step up from the face so a card sitting on a card still has a visible
+     seam. */
+  --gp-card-face: var(--gp-n-minus-3);
+  --gp-card-edge: var(--gp-n-minus-4);
+
+  /* Ink on a card face. Only the meld chips use it today — a real card's
+     rank/suit is painted by the SVG art, not by CSS — but a chip IS a card face
+     with text on it, so the ink it uses belongs to the card, not to the chip. */
+  --gp-card-ink: var(--gp-w-3);
+  /* Red-suit ink for the chips, matched to the red inside dark_cards/*.svg.
+     Black suits take --gp-card-ink above. Hand-picked to match the art; it is
+     not a step on any ramp and must not become one. */
+  --gp-card-ink-red: #dc4d38;
+
+  /* ---- Interaction ------------------------------------------------------
+     --ring is the affordance outline that marks a card as SELECTABLE; --edge is
+     the hairline every card has whether or not you can touch it. They resolve
+     to the same step today and are still two names, because they answer
+     different questions and will not necessarily move together.
+
+     --ring-focus is deliberately far up the ramp (minus-7, well clear of the
+     face at minus-3): keyboard focus has to be obvious, and this is the one
+     card state a mouse user never sees. */
+  --gp-card-ring: var(--gp-n-minus-4);
+  --gp-card-ring-focus: var(--gp-n-minus-7);
+  --gp-card-face-focus: var(--gp-n-minus-4);
+
+  /* A card that is a LIVE TARGET right now — the stock and discard piles when it
+     is your turn to draw. Coral, because this is "act" in the One Signal Rule's
+     sense, not card material. Distinct from --ring above (which says "this is
+     selectable" in the calm, ten-cards-in-your-hand sense) and from
+     --edge-selected below (which says "you have already picked this one"). Same
+     value as --edge-selected today; different question, so a different name. */
+  --gp-card-ring-live: var(--gp-color-accent);
+
+  /* ---- Selected ---------------------------------------------------------
+     The one place a card leaves the neutral ramp. Coral means "act" (DESIGN.md's
+     One Signal Rule) and a selected card is the thing you are about to act with.
+     The face is a dark, muted coral rather than the accent itself so the card's
+     own printed ink still reads over it; the edge takes the full accent. */
+  --gp-card-face-selected: hsl(16 45% 20%);
+  --gp-card-edge-selected: var(--gp-color-accent);
+}

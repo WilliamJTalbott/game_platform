@@ -10,6 +10,9 @@ application.register("clipboard", ClipboardController)
 import DialogController from "./dialog_controller"
 application.register("dialog", DialogController)
 
+import FlashController from "./flash_controller"
+application.register("flash", FlashController)
+
 import GameFormController from "./game_form_controller"
 application.register("game-form", GameFormController)
 

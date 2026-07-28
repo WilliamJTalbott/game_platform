@@ -16,7 +16,7 @@
 
     .felt-zone__body
       - melds.each_with_index do |meld, index|
-        = render "rummy_games/meld", meld: meld, index: index, can_select: can_select
+        = render "rummy_games/meld", meld: meld, index: index
 
       button.meld.meld--new hidden="hidden" type="button" data-rummy-turn-target="meldPlaceholder" data-action="click->rummy-turn#meld"
         span.meld__plus +

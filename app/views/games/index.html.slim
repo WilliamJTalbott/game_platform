@@ -30,11 +30,16 @@
         span.lobby__spade ♠
         | Open Games to Join
       span.lobby__section-count = "#{open_games.size} open"
-    - if open_games.any?
-      .lobby__cards#games
-        = render partial: "games/game_card", collection: open_games, as: :row
-    - else
-      p.lobby__empty#games No open games.
+    / #games is the Turbo target the "games" stream refreshes (Game/Participant
+      broadcast_refresh_to "games"). It wraps both branches rather than moving with them:
+      morphing matches on id, and the same id on a .lobby__cards div in one state and a
+      <p> in the other gives it two different elements to reconcile.
+    #games
+      - if open_games.any?
+        .lobby__cards
+          = render partial: "games/game_card", collection: open_games, as: :row
+      - else
+        p.lobby__empty No open games.
 
   .lobby__foot
     = link_to "View History →", history_index_path, class: "lobby__history"

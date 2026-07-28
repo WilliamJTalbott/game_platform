@@ -39,15 +39,17 @@
     gap: var(--gp-space-small);
     padding: var(--gp-space-medium) var(--gp-space-large);
     border-radius: var(--gp-radius-2x-large);
-    /* The tray is the largest surface in the app, so a flat fill here is most of what made
-       the page read flat. It catches the same top-to-bottom fade as the room's lamp
-       (layout/room.css), reusing the same lamp wash (--gp-wash-lamp, theme.css) since it's
-       recessed a level further into the room — so the light continues across the furniture,
-       dimming further with each surface back, instead of stopping at its edge. The
-       background-color stays as the fallback and as the gradient's base tone. */
-    background-color: var(--gp-surface-floor);
-    background-image: linear-gradient(to bottom, var(--gp-wash-lamp), var(--gp-surface-floor));
-    border: var(--gp-lobby-tray-border);
+    /* The tray sits OUT from the page, not sunk into it: one ramp step lighter than the
+       floor plus an outward drop shadow. Same treatment as Rummy's hand dock, which takes
+       this exact tone — the two are the app's large chrome slabs and should read as the
+       same kind of object.
+
+       It used to be recessed, on the page's own tone, which forced its edge to come
+       entirely from a hairline border and an inset shadow. Now the tone carries the
+       separation and the shadow confirms it, so the border is gone rather than stating
+       the same edge a third time. The bars then lift off THIS surface instead of out of a
+       well — a two-step stack (DESIGN.md's Matched-Pair Rule). */
+    background-color: var(--gp-surface-recessed);
     box-shadow: var(--gp-lobby-tray-shadow);
   }
 

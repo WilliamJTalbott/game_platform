@@ -1,0 +1,15 @@
+/* .flash is the layout-level slot that a turbo_stream replaces to raise a
+   .popup notice. It holds no styling of its own — the notice inside it is
+   .popup (see popup.css).
+
+   `display: contents` is LOAD-BEARING, not tidiness. `.op-page` is a grid and
+   `.sidebar` is one of its items (see layout/sidebar.css), so any element added
+   as a child of <body> claims a grid cell. An ordinary empty <div> here takes
+   the first column and shoves the sidebar into the second one — the sidebar
+   lands on the right-hand side of every page in the app. `display: contents`
+   makes this wrapper generate no box at all, so the grid sees exactly the two
+   items it did before, and the .popup inside is `position: fixed` anyway and so
+   never wanted a cell in the first place. */
+.flash {
+  display: contents;
+}

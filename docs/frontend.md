@@ -283,8 +283,9 @@ as one component:
   `inset 0 2px 5px light-dark(rgb(...), rgb(...))`), or wrap the entire value if every
   argument truly is a plain color. Check `getComputedStyle(el).boxShadow`/`.border` when a
   shadow/border token seems to have no effect. This is how `--gp-lobby-tray-shadow`/
-  `--gp-lobby-bar-shadow`/`--gp-lobby-tray-border` shipped invisibly broken for a full
-  session before being caught — they're flat dark-only values now, not `light-dark()`.
+  `--gp-lobby-bar-shadow` (and a since-removed `--gp-lobby-tray-border`) shipped invisibly
+  broken for a full session before being caught — they're flat dark-only values now, not
+  `light-dark()`.
 - **CSS custom properties can't be read inside `@media` conditions.** Breakpoint values
   (e.g. `--gp-breakpoint-tablet` in `core/theme.css`) are documentation only — every
   `@media (max-width: …)` query using that breakpoint must repeat the literal pixel value

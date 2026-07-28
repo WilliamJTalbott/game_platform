@@ -1,4 +1,14 @@
 .meld {
+  /* The exact inverse of --gp-lobby-bar-shadow (theme.css), which this component
+     spends when it is live: that one lights the TOP edge and drops a shadow
+     outward, so the bar reads as standing off the felt. This one shadows inward
+     from the top and lights the BOTTOM edge, so the same object reads as pressed
+     into it. Private to melds — the lobby's bars have no disabled state, so
+     there is no second consumer to promote it for. */
+  --_gp-meld-shadow-pressed:
+    inset 0 2px 4px rgb(0 0 0 / 0.45),
+    inset 0 -1px 0 rgb(255 255 255 / 0.06);
+
   display: flex;
   flex-direction: column;
   gap: var(--gp-space-2x-small);
@@ -6,6 +16,20 @@
   border-radius: var(--gp-radius-large);
   background-color: var(--gp-felt-brighter);
   box-shadow: var(--gp-lobby-bar-shadow);
+
+  /* A meld sits INSET while it can't be laid off onto — which, in practice, means
+     "you haven't selected a card yet", since rummy_turn_controller enables these
+     the moment anything in your hand is picked. Same object, pushed into the felt,
+     the way a disabled button reads as already pressed. Full-strength chips and
+     labels throughout; only the elevation changes.
+
+     So the resting state of the felt IS inset, and melds rise as you select. That
+     is deliberate: it makes "pick a card first" the thing the felt is saying. */
+  &:disabled {
+    background-color: var(--gp-felt);
+    box-shadow: var(--_gp-meld-shadow-pressed);
+    cursor: default;
+  }
 
   .meld__header {
     display: flex;
@@ -29,9 +53,10 @@
   }
 
   /* A simplified placeholder for each melded card — just its rank + suit glyph, far
-     more legible at this size than the full card art. It reuses the real card's face
-     tokens (--gp-surface-card / --gp-surface-outline, see playing_card.css) and its
-     portrait aspect ratio, so it reads as the same stock — just text instead of art. */
+     more legible at this size than the full card art. It spends the same card
+     family as a real .playing-card (core/tokens/cards.css) and the same portrait
+     aspect ratio, so it reads as the same stock — just text instead of art.
+     That match is now by name: retuning --gp-card-face moves both together. */
   .meld__card {
     display: inline-flex;
     align-items: center;
@@ -41,9 +66,9 @@
     font-size: var(--gp-font-x-small);
     font-weight: var(--gp-weight-semi-bold);
     line-height: 1;
-    color: var(--gp-ink-on-card);
-    background-color: var(--gp-surface-card);
-    border: var(--gp-border-width) solid var(--gp-surface-outline);
+    color: var(--gp-card-ink);
+    background-color: var(--gp-card-face);
+    border: var(--gp-border-width) solid var(--gp-card-edge);
     border-radius: var(--gp-radius-medium);
 
     &.meld__card--red {
