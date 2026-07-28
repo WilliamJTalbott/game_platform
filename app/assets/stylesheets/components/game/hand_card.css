@@ -5,7 +5,7 @@
    hands (Go Fish, Crazy Eights) omit it and so match none of the affordance rules
    below — they render as plain, static cards. */
 .hand-card {
-  --_gp-hand-card-focus-outline: var(--gp-n-plus-1);
+  --_gp-hand-card-focus-outline: var(--gp-n-minus-7);
 
   position: relative;
   display: block;

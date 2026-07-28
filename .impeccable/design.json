@@ -186,23 +186,41 @@
       }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "The single big number on a stat block. One per tile, centered." },
-      "headline": { "displayName": "Headline", "purpose": "Lobby greeting and board panel title — names the screen you're on." },
-      "title": { "displayName": "Title", "purpose": "Panel headers throughout the game shell." },
-      "body": { "displayName": "Body", "purpose": "Default text, message bubbles, form content." },
-      "label": { "displayName": "Label", "purpose": "Label voice — names a region (section heads, felt zone labels). Uppercase, bold, tracked." },
-      "micro": { "displayName": "Micro", "purpose": "Turn badge and phase stepper steps only." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single big number on a stat block. One per tile, centered."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Lobby greeting and board panel title \u2014 names the screen you're on."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Panel headers throughout the game shell."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default text, message bubbles, form content."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Label voice \u2014 names a region (section heads, felt zone labels). Uppercase, bold, tracked."
+      },
+      "micro": {
+        "displayName": "Micro",
+        "purpose": "Turn badge and phase stepper steps only."
+      }
     },
     "shadows": [
       {
         "name": "recessed-tray",
         "value": "inset 0 2px 6px light-dark(rgb(70 62 40 / 0.12), rgb(0 0 0 / 0.4)), inset 0 -1px 0 light-dark(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.03))",
-        "purpose": "A container pressed into the page — the lobby tray. Pairs with a 1px warm border."
+        "purpose": "A container pressed into the page \u2014 the lobby tray. Pairs with a 1px warm border."
       },
       {
         "name": "raised-bar",
         "value": "inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.05)), 0 2px 7px light-dark(rgb(70 62 40 / 0.13), rgb(0 0 0 / 0.34))",
-        "purpose": "An interactive row lifted off a recessed tray — lobby game bars, reused for melds on the felt."
+        "purpose": "An interactive row lifted off a recessed tray \u2014 lobby game bars, reused for melds on the felt."
       },
       {
         "name": "card-lift",
@@ -221,14 +239,37 @@
       }
     ],
     "motion": [
-      { "name": "card-transition", "value": "transform 0.2s ease-in-out, filter 0.2s ease-in-out, background-color 0.2s ease-in-out", "purpose": "Card select/deselect, hover lift, and face swap. Shared by the lock badge so it travels with the card." },
-      { "name": "modal-backdrop-fade", "value": "0.2s ease-out", "purpose": "End-of-game modal backdrop fading in." },
-      { "name": "modal-pop-in", "value": "0.3s ease-out (overshoots to scale 1.03 at 70%)", "purpose": "End-of-game dialog entrance." },
-      { "name": "popup-slide", "value": "all 0.4s ease-in-out", "purpose": "Transient warning popup dropping in from the top of the viewport." },
-      { "name": "card-hover-lift", "value": "50px", "purpose": "The reserved lift distance. Space is padded in advance so a raised card is never clipped." }
+      {
+        "name": "card-transition",
+        "value": "transform 0.2s ease-in-out, filter 0.2s ease-in-out, background-color 0.2s ease-in-out",
+        "purpose": "Card select/deselect, hover lift, and face swap. Shared by the lock badge so it travels with the card."
+      },
+      {
+        "name": "modal-backdrop-fade",
+        "value": "0.2s ease-out",
+        "purpose": "End-of-game modal backdrop fading in."
+      },
+      {
+        "name": "modal-pop-in",
+        "value": "0.3s ease-out (overshoots to scale 1.03 at 70%)",
+        "purpose": "End-of-game dialog entrance."
+      },
+      {
+        "name": "popup-slide",
+        "value": "all 0.4s ease-in-out",
+        "purpose": "Transient warning popup dropping in from the top of the viewport."
+      },
+      {
+        "name": "card-hover-lift",
+        "value": "50px",
+        "purpose": "The reserved lift distance. Space is padded in advance so a raised card is never clipped."
+      }
     ],
     "breakpoints": [
-      { "name": "tablet", "value": "768px" }
+      {
+        "name": "tablet",
+        "value": "768px"
+      }
     ]
   },
   "components": [
@@ -241,7 +282,7 @@
       "css": ".ds-btn-primary { background-color: hsl(16 85% 62%); color: #fff; box-shadow: inset 0 0 0 1.8px hsl(16 85% 62%); border: none; border-radius: 4px; padding: 8px 16px; font-family: 'Noto Sans', sans-serif; font-size: 16px; font-weight: 600; cursor: pointer; transition: filter 0.2s ease-in-out; } .ds-btn-primary:hover { filter: brightness(0.94); } .ds-btn-primary:active { filter: brightness(0.88); } .ds-btn-primary:focus-visible { outline: 2px solid hsl(16 85% 62%); outline-offset: 2px; }"
     },
     {
-      "name": "CTA — View",
+      "name": "CTA \u2014 View",
       "kind": "button",
       "refersTo": "cta-view",
       "description": "The lobby's primary row action: solid coral. Shares a min-width with Join and Full so rows stay aligned.",
@@ -249,7 +290,7 @@
       "css": ".ds-cta { display: inline-flex; align-items: center; justify-content: center; min-width: 4.5rem; padding: 8px 12px; border: 1.8px solid transparent; border-radius: 8px; font-family: 'Noto Sans', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; } .ds-cta-view { background-color: hsl(16 85% 62%); border-color: hsl(16 85% 62%); color: #fff; font-weight: 700; transition: filter 0.2s ease-in-out; } .ds-cta-view:hover { filter: brightness(0.94); } .ds-cta-view:focus-visible { outline: 2px solid hsl(16 85% 62%); outline-offset: 2px; }"
     },
     {
-      "name": "CTA — Join",
+      "name": "CTA \u2014 Join",
       "kind": "button",
       "refersTo": "cta-join",
       "description": "Secondary row action: coral tint with a coral outline and coral-deep ink.",
@@ -257,7 +298,7 @@
       "css": ".ds-cta { display: inline-flex; align-items: center; justify-content: center; min-width: 4.5rem; padding: 8px 12px; border: 1.8px solid transparent; border-radius: 8px; font-family: 'Noto Sans', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer; } .ds-cta-join { background-color: color-mix(in srgb, hsl(16 85% 62%) 20%, light-dark(hsl(49 14% 100%), hsl(49 14% 8%))); border-color: hsl(16 85% 62%); color: light-dark(hsl(16 90% 42%), hsl(16 85% 62%)); transition: filter 0.2s ease-in-out; } .ds-cta-join:hover { filter: brightness(0.97); } .ds-cta-join:focus-visible { outline: 2px solid hsl(16 85% 62%); outline-offset: 2px; }"
     },
     {
-      "name": "CTA — Full",
+      "name": "CTA \u2014 Full",
       "kind": "chip",
       "refersTo": "cta-full",
       "description": "Deliberately inert: a muted chip that occupies the CTA slot when a game has no room. Not a disabled button.",
@@ -292,7 +333,7 @@
       "name": "Felt Zone",
       "kind": "card",
       "refersTo": "felt-zone",
-      "description": "A brighter panel laid on the green felt. Green exists only inside this zone — never on chrome.",
+      "description": "A brighter panel laid on the green felt. Green exists only inside this zone \u2014 never on chrome.",
       "html": "<div class=\"ds-felt\"><div class=\"ds-felt-zone\"><div class=\"ds-felt-label\">Melds</div><div class=\"ds-felt-body\">Shared melds go here</div></div></div>",
       "css": ".ds-felt { padding: 16px; border-radius: 20px; background-color: light-dark(#bfd2c6, #1b2a22); font-family: 'Noto Sans', sans-serif; } .ds-felt-zone { display: flex; flex-direction: column; gap: 12px; padding: 12px 16px; border-radius: 12px; background-color: light-dark(#e6f5ea, #274035); box-shadow: 0 1px 2px hsl(0deg 0% 0% / 3%), 0 2px 6px hsl(0deg 0% 0% / 15%); color: light-dark(hsl(49 14% 0%), hsl(49 14% 100%)); } .ds-felt-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04rem; color: light-dark(hsl(49 14% 24%), hsl(49 14% 52%)); } .ds-felt-body { font-size: 14px; }"
     },
@@ -315,38 +356,90 @@
   ],
   "narrative": {
     "northStar": "The Warm Card Room",
-    "overview": "A lamp-lit room in a warm house, late in the evening — and the lights are low. This is a dark-first system: dark is the scheme that gets designed and judged. The chrome is the room itself, a yellow-tinged linen gray that never announces itself, because it is walls and furniture, not the event. Coral is the single lit signal in that room, everywhere in the house: it means act — your turn, this button, this link, this name. Nothing else glows.\n\nEach major room may be its own color. Coral is the constant, site-wide; on top of it, a major page may claim one accent of its own so that arriving there feels like arriving somewhere. The game page claimed green and became a felt table. The games index claimed a cool slate and became the hallway. Neither color is allowed anywhere else, and neither is the whole list — the next page that earns one picks its own. Pages that don't claim a color are not unfinished; warm chrome plus coral is a complete page.\n\nThe room is physical, not flat. Trays are recessed into surfaces and bars sit raised on top of them; cards cast real shadows and lift when you touch them; the felt has brighter panels laid over it. Depth here is literal furniture logic, not decoration — if two things are stacked, the stack is visible. Density is comfortable rather than compressed: this is a room you spend an evening in, not a dashboard you scan.\n\nThe system's one hard discipline is color scarcity. Optics supplies neutral chrome and every non-color measurement; color is never derived from a ramp. One brand accent, at most one page accent per page, and nothing else. A screen with coral in three unrelated places, or with a second page's color bleeding into it, has broken the world.",
+    "overview": "A lamp-lit room in a warm house, late in the evening \u2014 and the lights are low. This is a dark-first system: dark is the scheme that gets designed and judged. The chrome is the room itself, a yellow-tinged linen gray that never announces itself, because it is walls and furniture, not the event. Coral is the single lit signal in that room, everywhere in the house: it means act \u2014 your turn, this button, this link, this name. Nothing else glows.\n\nEach major room may be its own color. Coral is the constant, site-wide; on top of it, a major page may claim one accent of its own so that arriving there feels like arriving somewhere. The game page claimed green and became a felt table. The games index claimed a cool slate and became the hallway. Neither color is allowed anywhere else, and neither is the whole list \u2014 the next page that earns one picks its own. Pages that don't claim a color are not unfinished; warm chrome plus coral is a complete page.\n\nThe room is physical, not flat. Trays are recessed into surfaces and bars sit raised on top of them; cards cast real shadows and lift when you touch them; the felt has brighter panels laid over it. Depth here is literal furniture logic, not decoration \u2014 if two things are stacked, the stack is visible. Density is comfortable rather than compressed: this is a room you spend an evening in, not a dashboard you scan.\n\nThe system's one hard discipline is color scarcity. Optics supplies neutral chrome and every non-color measurement; color is never derived from a ramp. One brand accent, at most one page accent per page, and nothing else. A screen with coral in three unrelated places, or with a second page's color bleeding into it, has broken the world.",
     "keyCharacteristics": [
       "Dark-first: dark is the designed scheme; light mode is not yet a designed surface",
-      "Warm linen-gray chrome (hue 49°) that reads as room, not as UI",
-      "One permanent coral accent (hue 16°), site-wide, reserved for action, turn, and identity",
+      "Warm linen-gray chrome (hue 49\u00b0) that reads as room, not as UI",
+      "One permanent coral accent (hue 16\u00b0), site-wide, reserved for action, turn, and identity",
       "Page accents: a major page may claim one color of its own, and it never leaves that page",
       "Literal, stacked depth: recessed trays, raised bars, drop-shadowed cards",
       "Cards are real elements with real stock, not images",
       "Comfortable density on a desktop-first canvas"
     ],
     "rules": [
-      { "name": "The No-Ramp Rule", "body": "Never color a component from Optics' primary ramp (--op-color-primary-*). Its lightness knob is inert and its base is locked mid-dark in both schemes, so it cannot reach a bright hand-picked accent. Optics owns neutrals and non-color tokens; every actual color is hand-picked. The primary hue is pointed at coral for one reason only — so Optics' own internal chrome (focus rings, focused inputs) reads coral instead of a stray default.", "section": "colors" },
-      { "name": "The One Page, One Color Rule", "body": "A major page may claim exactly one accent of its own, and that color may not appear on any other page. One is the ceiling, not the target: pages with no accent are complete. Where the color lands within the page — the stage, the rows, a single surface — is that page's own call and is deliberately not systematized. If a page color shows up in shared chrome or on a second page, it has leaked; remove it rather than spreading it further.", "section": "colors" },
-      { "name": "The One Signal Rule", "body": "Coral means 'act.' Turn state, primary actions, links, focus, and brand identity — nothing else, on every page. A page accent never takes over an action, and coral never becomes a page's decoration. A screen where coral also decorates a heading, a border, and a divider has spent the signal.", "section": "colors" },
-      { "name": "The Dark-First Rule", "body": "Dark is the designed scheme. Author, review, and screenshot in dark mode; that is what 'correct' means here. Light mode is currently incidental output from Optics' light-dark() pairs, so a light-mode oddity is a known state, not a bug worth chasing — a hand-picked light palette is planned and will replace the dynamic switching with explicit values. Until then, don't tune light values, and don't block on them.", "section": "colors" },
-      { "name": "The Pair Rule", "body": "Even though only dark is designed, keep every color a light-dark() pair or an Optics pair — never substitute a raw hex for one. Hard-coding a fixed color both breaks light mode outright and forfeits the seam the future light palette will be written into. Note that Optics' plus-N steps trade direction between schemes (a lower number is darker in light mode but lighter in dark mode, Material-style elevation), so 'one step darker' is not one thing — pick the step that's right in dark, and let light fall where it falls.", "section": "colors" },
-      { "name": "The Label Voice Rule", "body": "Uppercase + bold + letter-spacing is reserved for naming a region (section heads, felt zone labels, scoreboard columns, status chips). Never use it for a sentence, a button, or body copy.", "section": "typography" },
-      { "name": "The Tabular Rule", "body": "Any figure that updates live — card counts, player counts, stats — gets font-variant-numeric: tabular-nums. Digits changing width mid-game reads as jitter.", "section": "typography" },
-      { "name": "The Definite Height Rule", "body": "Card sizing cascades down from a definite height, not up from content. .hand-wrap establishes the band, .hand-fan fills it, .hand-card carries height: 100%, and the card resolves its width from aspect-ratio: 5 / 7. Rummy's hand panel is capped to clamp(140px, 22vh, 220px) plus the hover-lift allowance for exactly this reason. Break the chain and cards collapse.", "section": "layout" },
-      { "name": "The Reserved Lift Rule", "body": "Wherever a card can lift, the room for the lift is reserved in advance — .hand-fan pads its top by the lift distance (50px) so a raised card isn't clipped by its own scroll container.", "section": "layout" },
-      { "name": "The Matched-Pair Rule", "body": "Recessed and raised shadows ship together. A raised bar with no recessed tray beneath it, or a tray with flat children, loses the entire effect.", "section": "elevation" },
-      { "name": "The Filter-Not-Box Rule", "body": "Card shadows use filter: drop-shadow(...). Cards are rounded, occasionally rotated, and layered — a box-shadow would trace the wrong outline.", "section": "elevation" },
-      { "name": "The Radius-Tracks-Size Rule", "body": "Pick radius by surface scale, not by taste: chip 2–4px, control 8px, container 12px, stage 20px. A 20px radius on a small chip reads as a lozenge; a 4px radius on the felt reads as a bug.", "section": "shapes" },
-      { "name": "The One Aspect Rule", "body": "Every card representation is 5 / 7, at every scale. Never free-size a card.", "section": "shapes" }
+      {
+        "name": "The No-Ramp Rule",
+        "body": "Never color a component from Optics' primary ramp (--op-color-primary-*). Its lightness knob is inert and its base is locked mid-dark in both schemes, so it cannot reach a bright hand-picked accent. Optics owns neutrals and non-color tokens; every actual color is hand-picked. The primary hue is pointed at coral for one reason only \u2014 so Optics' own internal chrome (focus rings, focused inputs) reads coral instead of a stray default.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Page, One Color Rule",
+        "body": "A major page may claim exactly one accent of its own, and that color may not appear on any other page. One is the ceiling, not the target: pages with no accent are complete. Where the color lands within the page \u2014 the stage, the rows, a single surface \u2014 is that page's own call and is deliberately not systematized. If a page color shows up in shared chrome or on a second page, it has leaked; remove it rather than spreading it further.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Signal Rule",
+        "body": "Coral means 'act.' Turn state, primary actions, links, focus, and brand identity \u2014 nothing else, on every page. A page accent never takes over an action, and coral never becomes a page's decoration. A screen where coral also decorates a heading, a border, and a divider has spent the signal.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dark-First Rule",
+        "body": "Dark is the designed scheme. Author, review, and screenshot in dark mode; that is what 'correct' means here. Light mode is currently incidental output from Optics' light-dark() pairs, so a light-mode oddity is a known state, not a bug worth chasing \u2014 a hand-picked light palette is planned and will replace the dynamic switching with explicit values. Until then, don't tune light values, and don't block on them.",
+        "section": "colors"
+      },
+      {
+        "name": "The Pair Rule \u2014 retired",
+        "body": "This rule told authors to keep every color a light-dark() pair so a future light palette would have a seam to be written into. It is retired and its advice is now WRONG. The app is dark-only: color-scheme: dark is set on :root and no light-dark() pair survives in the neutrals. A light palette, if it ever ships, will be a separate hand-picked set \u2014 never an inversion of this one \u2014 so there is no seam to preserve. Every neutral is a single OKLCH value. Its replacement is The Dark-First Rule. Note also that its Optics plus-N reasoning no longer applies: our own plus-N is one direction only (plus is darker, always), and white/black are not ramp steps at all.",
+        "section": "colors"
+      },
+      {
+        "name": "The Label Voice Rule",
+        "body": "Uppercase + bold + letter-spacing is reserved for naming a region (section heads, felt zone labels, scoreboard columns, status chips). Never use it for a sentence, a button, or body copy.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Any figure that updates live \u2014 card counts, player counts, stats \u2014 gets font-variant-numeric: tabular-nums. Digits changing width mid-game reads as jitter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Definite Height Rule",
+        "body": "Card sizing cascades down from a definite height, not up from content. .hand-wrap establishes the band, .hand-fan fills it, .hand-card carries height: 100%, and the card resolves its width from aspect-ratio: 5 / 7. Rummy's hand panel is capped to clamp(140px, 22vh, 220px) plus the hover-lift allowance for exactly this reason. Break the chain and cards collapse.",
+        "section": "layout"
+      },
+      {
+        "name": "The Reserved Lift Rule",
+        "body": "Wherever a card can lift, the room for the lift is reserved in advance \u2014 .hand-fan pads its top by the lift distance (50px) so a raised card isn't clipped by its own scroll container.",
+        "section": "layout"
+      },
+      {
+        "name": "The Matched-Pair Rule",
+        "body": "Recessed and raised shadows ship together. A raised bar with no recessed tray beneath it, or a tray with flat children, loses the entire effect.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Filter-Not-Box Rule",
+        "body": "Card shadows use filter: drop-shadow(...). Cards are rounded, occasionally rotated, and layered \u2014 a box-shadow would trace the wrong outline.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Radius-Tracks-Size Rule",
+        "body": "Pick radius by surface scale, not by taste: chip 2\u20134px, control 8px, container 12px, stage 20px. A 20px radius on a small chip reads as a lozenge; a 4px radius on the felt reads as a bug.",
+        "section": "shapes"
+      },
+      {
+        "name": "The One Aspect Rule",
+        "body": "Every card representation is 5 / 7, at every scale. Never free-size a card.",
+        "section": "shapes"
+      }
     ],
     "dos": [
       "Do take every surface, border, and body-text color from the Optics neutral scale, and every non-color value (spacing, type, radius, shadow) from an --op-* token.",
       "Do hand-pick color as a project token: --gf-color-accent* for coral, --gf-felt* for the game page, --gf-lobby-bar for the games index.",
       "Do use Accent Coral Deep whenever coral is text and Accent Coral whenever coral is a fill. The deep pair is the one that stays legible on either page background.",
-      "Do design, review, and screenshot in dark mode — that is the scheme that counts.",
-      "Do keep colors as light-dark() pairs anyway, so the future light palette has a seam to be written into.",
-      "Do give a new page its own accent when it genuinely benefits from feeling like its own place — and put it wherever suits that page.",
+      "Do design, review, and screenshot in dark mode \u2014 that is the scheme that counts.",
+      "Do take every neutral from one of the three families in core/theme.css \u2014 the ramp (--gp-n-*, the room and its shades), the named absolutes (--gp-white / --gp-black), or the warmed whites (--gp-w-1..3, what all ink is made of) \u2014 and spend them through a role in core/tokens/roles.css, never raw.",
+      "Do give a new page its own accent when it genuinely benefits from feeling like its own place \u2014 and put it wherever suits that page.",
       "Do pair recessed and raised shadows as a set.",
       "Do give every card representation the 5 / 7 ratio, at every scale.",
       "Do use filter: drop-shadow() for card shadows and box-shadow for boxes.",
@@ -358,13 +451,13 @@
     "donts": [
       "Don't color anything from --op-color-primary-*. The ramp cannot reach this coral, and the primary hue is pointed at coral only for Optics' internal chrome.",
       "Don't let a page's accent appear on another page: green belongs to the game page, Lobby Slate to the games index, and neither belongs in shared chrome.",
-      "Don't give one page two accents, and don't assign a color to stats, history, or rules just to complete the pattern — no accent is a finished state.",
+      "Don't give one page two accents, and don't assign a color to stats, history, or rules just to complete the pattern \u2014 no accent is a finished state.",
       "Don't spend coral on decoration. If it isn't action, turn state, focus, or brand, it isn't coral. And never let a page accent take over a coral job.",
       "Don't treat a light-mode oddity as a bug to fix today. Light is undesigned until it gets its hand-picked palette.",
-      "Don't substitute a raw hex for an Optics plus-N/minus-N token — those are light-dark() pairs, and hard-coding one forfeits the seam the light palette needs.",
+      "Don't treat white or black as ramp steps, and don't color-mix() toward them. They are named absolutes precisely because they carry no hue; while they were ramp steps the step size was pinned to whatever made sixteen steps land on white.",
       "Don't wrap a full shadow or border shorthand in light-dark(). It accepts two <color> arguments only; a shorthand silently invalidates the whole declaration to none with no console warning. Wrap only the color portion of each layer.",
-      "Don't derive a coral ramp. Coral is a few chosen shades at 16°; a generated ramp drifts toward muddy copper.",
-      "Don't fade a disabled card with opacity — darken its face instead, so the ink stays true.",
+      "Don't derive a coral ramp. Coral is a few chosen shades at 16\u00b0; a generated ramp drifts toward muddy copper.",
+      "Don't fade a disabled card with opacity \u2014 darken its face instead, so the ink stays true.",
       "Don't replace the hidden-checkbox card selection with a click handler on a div.",
       "Don't port one game's hand-overflow strategy to another. Go Fish and Crazy Eights overlap and never scroll; Rummy scrolls and never overlaps. Both choices are load-bearing.",
       "Don't reference a --_gf-* private token from outside its own component file.",

@@ -10,10 +10,9 @@
    `fixed` attachment keeps the gradient anchored to the room instead of scrolling with the
    content — light doesn't move when you scroll. Opaque surfaces laid on top (the sidebar,
    the lobby tray, panels, the felt) mask it, which is correct: furniture blocks light. The
-   sidebar instead takes the raised surface tone directly as its own flat background (Optics'
-   default sidebar color, bridged to --gp-surface-raised) — one shade brighter than this
-   gradient's own top, so it reads as the room's actual light source rather than just another
-   patch of the same fade (see sidebar.css). */
+   sidebar instead takes --gp-surface-recessed directly as its own flat background — still a
+   half-step brighter than this gradient's own top, so it reads as the room's actual light
+   source rather than just another patch of the same fade (see sidebar.css). */
 body.op-page {
   background-image: linear-gradient(to bottom, var(--gp-wash-lamp), var(--gp-surface-floor));
   background-attachment: fixed;

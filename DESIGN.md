@@ -5,12 +5,14 @@ colors:
   accent-coral: "hsl(16 85% 62%)"
   accent-coral-tint: "#4b2e22"
   on-accent: "#ffffff"
-  warm-neutral-page: "oklch(23.1% 0.014 54.7)"
-  warm-neutral-raised: "oklch(32.72% 0.014 56.3)"
-  warm-neutral-recessed: "oklch(27.91% 0.014 55.5)"
+  warm-neutral-page: "oklch(18.29% 0.0105 53.9)"
+  warm-neutral-raised: "oklch(27.91% 0.014 55.5)"
+  warm-neutral-recessed: "oklch(23.1% 0.014 54.7)"
   warm-neutral-card-face: "oklch(37.53% 0.014 57.1)"
   border: "oklch(37.53% 0.014 57.1)"
-  ink: "oklch(90.44% 0.007 65.9)"
+  white: "oklch(100% 0 0)"
+  black: "oklch(0% 0 0)"
+  ink: "oklch(90.38% 0.007 65.9)"
   muted-text: "oklch(61.58% 0.014 61.1)"
   felt-green: "#1b2a22"
   felt-green-raised: "#274035"
@@ -96,7 +98,7 @@ components:
     rounded: "{rounded.pill}"
     padding: "2px 8px"
   lobby-tray:
-    backgroundColor: "{colors.warm-neutral-raised}"
+    backgroundColor: "{colors.warm-neutral-page}"
     rounded: "{rounded.2x-large}"
     padding: "16px 20px"
   game-bar:
@@ -171,8 +173,8 @@ into it, has broken the world.
 **Key Characteristics:**
 
 - Dark-only: there is no light mode; `color-scheme: dark` is set app-wide
-- Warm linen-gray chrome (a generated neutral ramp, hue ~67.5° in OKLCH) that reads as
-  room, not as UI
+- Warm linen-gray chrome (a generated neutral ramp, hue ~54.7° in OKLCH at the room,
+  drifting to ~67.5° at white) that reads as room, not as UI
 - One permanent coral accent (hue 16°), site-wide, reserved for action, turn, and identity
 - Page accents: a major page may claim one color of its own, and it never leaves that page
 - Literal, stacked depth: recessed trays, raised bars, drop-shadowed cards
@@ -200,11 +202,38 @@ chosen, and fixing them meant fighting a vendor's scale rather than editing our 
 what we own makes the boundary checkable instead of a matter of memory: a `--gp-` prefix means
 we decided it, an `--op-` prefix means we inherited it, and a color on `--op-` is a bug.
 
-*The plus/minus structure is kept deliberately.* Optics' ramp shape is genuinely good and
-survives the move: `plus-*` steps are **surfaces**, climbing from `plus-max` (the page floor)
-toward the viewer; `minus-*` steps are **ink** on those surfaces; `base` sits between them;
-and `on-*` pairs name the ink that belongs on a given surface. We adopted the shape and
-replaced the values. A new surface picks a `plus-*` step, not a new one-off color.
+*The plus/minus direction is kept; the anchoring is not.* Optics' convention that `plus-*`
+is darker and `minus-*` lighter survives, and so does `on-*` naming the ink that belongs on
+a given surface. What did not survive is Optics' idea of where `base` sits. Optics anchors
+its ramp on a neutral midpoint and runs eight steps either way; this app is dark-only, and
+under that arrangement the page tone landed on `plus-8` — the scale's *last* step — while
+`base` landed on a mid-gray whose only consumer was caption text. Two costs followed: the
+room could not be deepened without moving every step with it, and any surface meant to sit
+*below* the page had to be built by going lighter, inverting the elevation model.
+
+So `base` is now **the room's own tone**, and the scale runs both ways from it — but it stops
+short of both extremes, because **white and black are not on the ramp.**
+
+*Why they aren't.* A ramp holds one color and its lighter and darker shades. White and black
+hold no color at all; they are where hue and chroma stop existing. When they were ramp steps
+the file had to admit it twice over: both had to special-case their chroma to `0`, and the
+step size stopped being a knob — it was pinned to exactly `(100% − base) / 16`, whatever it
+took for sixteen steps to land on white. Changing the step either dimmed every heading or
+forced a renumber. A scale whose two extremes must opt out of the scale's defining property
+is telling you they were never members.
+
+*The three families.* `--gp-white` and `--gp-black` are named absolutes. The **warmed whites**
+(`--gp-w-1..3`) are white pulled back toward the room, and they are what all ink is made of —
+which is how they were already authored, as the ramp's top four steps with chroma scaled
+`0 / 0.25 / 0.50 / 0.75`. The **ramp** (`--gp-n-*`) is then only the room: `plus-2` … `minus-10`,
+thirteen steps, flat chroma throughout except the two cellar steps that run near black. The
+page floor is `plus-1`, one step sunk into the room.
+
+*What that bought.* The ramp's step is now a free knob — nothing downstream depends on where
+the ramp ends. Its chroma went flat, which is what OKLCH promised before the endpoints forced
+a correction. And "how warm is our ink" became one legible question with its own two knobs
+(`--gp-w-l-step`, `--gp-w-hue`) instead of an emergent property of ramp arithmetic. A new
+surface still picks a step rather than a one-off color; ink picks a warmed white.
 
 *How Optics still gets painted.* Optics' own components — buttons, sidebar, inputs,
 dropdowns, dialogs — read `--op-color-*` internally, and we cannot rewrite their stylesheets.
@@ -280,32 +309,72 @@ the deployment that fits it.
 ### Neutral
 
 All chrome comes from one warm hue, generated rather than hand-typed: five knobs in
-`core/theme.css` (hue, a per-step hue drift toward red at the floor, a flat chroma, a
-lightness floor, and a step size) produce all 17 ramp steps as OKLCH `calc()` expressions.
-Change a knob and every step moves together. The hue sits at 67.5° at the top of the ramp,
-drifting down to ~54.7° (redder) at the floor — OKLCH's hue numbers don't correspond to
+`core/theme.css` (hue, a per-step hue drift, a flat chroma, the room's lightness, and a step
+size) produce all 13 ramp steps as OKLCH `calc()` expressions, and two more (`--gp-w-l-step`,
+`--gp-w-hue`) produce the three warmed whites. Change a knob and every step derived from it
+moves together. `--gp-n-l-base` is the one that says how dark this app is — every ramp step is
+measured from it. The two families share a chroma and a hue drift, because both describe the
+same warmth, but **not** a lightness step: the ink's distance from white and the room's
+contrast per step of elevation are unrelated questions, and coupling them was the bug. The hue sits at 54.7° (red-orange) at the room and drifts 0.8° toward
+amber per step lighter, reaching 67.5° at white — OKLCH's hue numbers don't correspond to
 HSL's, so this is a different-looking number for the same amber-tinged gray the app has
 always had.
 
-**Chroma is flat, not tapered.** OKLCH chroma is perceptually uniform, so one value
-(`0.014`) reads equally warm at the near-black floor and the near-white top — unlike HSL
-saturation, which needed a hand-tuned taper to avoid going olive at one end or khaki at the
-other. See The Tapered Chroma Rule below for why that taper is gone.
+**Chroma is flat across the ramp, and the cellar is the one exception.** OKLCH chroma is
+perceptually uniform, so one value (`0.014`) reads equally warm across the whole ramp —
+unlike HSL saturation, which needed a hand-tuned taper to avoid going olive at one end or
+khaki at the other. See The Tapered Chroma Rule below for why *that* taper is gone.
+
+Chroma is *absolute colorfulness*, not saturation, so as lightness runs out toward an endpoint
+a flat chroma becomes a larger and larger **proportion** of the tone. The two cellar steps
+(`plus-1`, `plus-2`) run close enough to black to need correcting, and scale chroma by
+0.75 / 0.50. Without it the page read 30.5% HSL-saturated against the sidebar's 20.1% one step
+above it — same hue, same red-over-blue spread, visibly redder.
+
+The white end used to need the mirror of that. It no longer does, because the ramp no longer
+reaches white: the fade from white became the warmed-white family's whole definition rather
+than a correction bolted onto a scale's last four steps. That is the practical payoff of
+taking the endpoints off the ramp — a patch turned into a structure.
 
 Every step below is a single, dark-only value — there is no light arm.
 
-- **Warm Neutral Page** (`oklch(23.1% 0.014 54.7)`): the page and the game shell, and the
-  floor of the ramp.
-- **Warm Neutral Raised** (`oklch(32.72% 0.014 56.3)`): panel headers, the lobby tray, the
-  sidebar, the Rummy hand dock, opponent cards. The "chrome surface" tone.
-- **Warm Neutral Recessed** (`oklch(27.91% 0.014 55.5)`): stats grid, modal dialogs, the
-  request form, the winner row — surfaces set slightly *into* the page. One step darker
-  than Raised, matching dark-mode elevation convention (nearer the viewer is lighter).
+- **Warm Neutral Page** (`oklch(18.29% 0.0105 53.9)`, `plus-1`): the page, the lobby tray, and
+  the game shell — the floor you stand on, one step sunk into the room.
+- **Warm Neutral Recessed** (`oklch(23.1% 0.014 54.7)`, `base`): the sidebar, the Rummy hand
+  dock, stats grid, modal dialogs, the request form, the winner row. The room's own tone, and
+  the first surface above the floor. "Recessed" names the intent, not the direction — it is a
+  step *lighter* than the page, which is what makes the sidebar read as a lit panel. The dock
+  shares it deliberately, so the sidebar and the hand read as one continuous band of chrome.
+
+*A note on the cellar.* `plus-2` (`oklch(13.48% 0.007 53.1)`) is currently unused. The game
+page briefly took it as a deeper floor, to open a tone between the floor and the sidebar for
+the hand dock — but at 13.48% that shell read too stark against the felt and the cards, and
+the dock came back up to the sidebar's tone. The step remains in the ramp because a page that
+wants to sink below the house floor is a reasonable future want; nothing has earned it yet.
+- **Warm Neutral Raised** (`oklch(27.91% 0.014 55.5)`, `minus-1`): panel headers, opponent
+  cards. The "chrome surface" tone; one step above the room, directly adjacent to Recessed —
+  so the sidebar/dock band and the panel headers sitting on it are a single step apart.
 - **Warm Neutral Card Face** (`oklch(37.53% 0.014 57.1)`): the playing-card face and meld
   chip stock; doubles as the default border tone.
-- **Ink** (`oklch(90.44% 0.007 65.9)`): headings and primary text.
-- **Muted Text** (`oklch(61.58% 0.014 61.1)`): counts, captions, section labels, metadata,
-  the empty-state line.
+- **Muted Text** (`oklch(61.58% 0.014 61.1)`, `minus-8`): counts, captions, section labels,
+  metadata, the empty-state line. The one ink still taken from the ramp — at 61.58% it really
+  is a mid-tone of the room rather than a warmed white, and filing it with the others would be
+  a tidy-looking lie.
+
+**The ink comes from white, not from the ramp.** Every other ink tone is white pulled a step
+or two back toward the room, so it lives in its own family with its own knobs:
+
+- **White** (`oklch(100% 0 0)`, `--gp-white`): headings on the floor. A named absolute.
+- **Ink One Off White** (`oklch(95.19% 0.0035 66.7)`, `--gp-w-1`): the dimmest ink — muted
+  captions on a card face.
+- **Ink Two Off White** (`oklch(90.38% 0.007 65.9)`, `--gp-w-2`): ink on a raised surface, and
+  body text on the page.
+- **Ink Three Off White** (`oklch(85.57% 0.0105 65.1)`, `--gp-w-3`): ink on a recessed surface
+  or a card face. The warmest of them, closest to the room.
+- **Black** (`oklch(0% 0 0)`, `--gp-black`): not a surface. It is the overlay scrim and every
+  drop shadow, which were already literal `rgb(0 0 0 / …)` and now spend it by name. There is
+  deliberately **no** warmed-black family — the surfaces that are genuinely near-black are the
+  room in low light, not black seen warm. Add one when something actually wants it.
 
 ### Named Rules
 
@@ -341,8 +410,18 @@ values used to be the opposite — read from `--op-*` — but that's now also be
 the floor to ~7% at the top, because HSL saturation isn't perceptually uniform: a flat value
 read olive at the dark end or khaki at the light end. Converting to OKLCH removed the need
 entirely — chroma is a single flat knob (`--gp-n-chroma`) that reads evenly warm across the
-whole ramp. If this ever needs to vary by step again, that's a sign OKLCH chroma isn't as
-uniform as assumed here and worth re-measuring, not a reason to bring the old taper back.
+ramp's working middle.
+
+*The rule asked to be told if chroma ever needed to vary by step again, and it now does — in
+the two cellar steps only, and for a different reason than the HSL taper had.* HSL's taper
+corrected the **middle**, because HSL saturation isn't perceptually uniform and a flat value
+drifted olive-to-khaki along the ramp. The endpoint taper corrects the **ends**, because
+chroma is absolute colorfulness and near black there is no lightness left to dilute it — a
+flat 0.014 reads as rising saturation, which is what made the page look redder than the
+sidebar. Everything above the cellar is still flat, and OKLCH is still uniform there. (The
+white end needed the same correction until white came off the ramp entirely; now that fade is
+the warmed-white family's definition, not a taper.) If a *middle* step ever needs its own
+chroma, that would be the signal the original rule was watching for.
 
 **The Lamp Rule.** The room has exactly one light source: a single warm pool, high and left,
 declared on the page shell (`components/layout/room.css`) and echoed on the lobby tray so the

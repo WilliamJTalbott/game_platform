@@ -103,7 +103,7 @@ Tokens are CSS custom properties. There are three tiers:
 | Prefix     | Meaning                          | Defined where                     | Example |
 |------------|----------------------------------|-----------------------------------|---------|
 | `--op-*`   | Optics' own internal tokens, read only by Optics' not-yet-replaced components | the vendored bundle | `--op-border-all` (used correctly in `button.css`) |
-| `--gp-*`   | Project tokens — **all color, and non-color primitives too** | `core/theme.css` (color, the ramp) and `core/tokens/scale.css` (space/font/radius/border-width/shadow) | `--gp-n-plus-6`, `--gp-color-accent`, `--gp-space-medium`, `--gp-radius-2x-large` |
+| `--gp-*`   | Project tokens — **all color, and non-color primitives too** | `core/theme.css` (color, the ramp) and `core/tokens/scale.css` (space/font/radius/border-width/shadow) | `--gp-n-minus-2`, `--gp-white`, `--gp-w-2`, `--gp-color-accent`, `--gp-space-medium` |
 | `--_gp-*`  | Component-**private** tokens      | inside the block that uses them   | `--_gp-playing-card-shadow` |
 
 **Color is always `--gp-*`; never `--op-*`.** All color belongs to the project (see DESIGN.md's
@@ -159,17 +159,38 @@ Optics token affects every Optics component that reads it — prefer a new `--gp
 unless the global change is the point.
 
 **The ramp is generated, not typed.** Five knobs (hue, a per-step hue drift, a flat chroma,
-a lightness floor, and a step size) produce all 17 OKLCH steps as `calc()` expressions —
-change a knob and every step moves together. This replaced Optics' `light-dark()` `hsl()`
-pairs entirely; `color-scheme: dark` is set once and there is no light arm left to fall back
-to.
+the room's lightness, and a step size) produce all 13 OKLCH ramp steps as `calc()` expressions;
+two more (`--gp-w-l-step`, `--gp-w-hue`) produce the three warmed whites. Change a knob and
+every step derived from it moves together. This replaced Optics' `light-dark()` `hsl()` pairs
+entirely; `color-scheme: dark` is set once and there is no light arm left to fall back to.
+
+- **There are THREE neutral families, not one.** `--gp-n-*` is the ramp (the room and its
+  shades, `plus-2`..`minus-10`). `--gp-white` / `--gp-black` are named absolutes. `--gp-w-1..3`
+  are white pulled back toward the room, and **all ink except `--gp-ink-muted` comes from
+  them.** Read `w-2` as "two steps off white," never as a ramp index — the two scales are
+  independent and only meet at the roles layer.
+- **The ramp is anchored on `base`, and `base` is the room.** `--gp-n-l-base` is the tone the
+  whole app is measured from; steps run *both* ways from it (`plus-1`, `plus-2` darker,
+  `minus-1`..`minus-10` lighter). Note the page floor is `plus-1`, **not** `base`:
+  `--gp-surface-floor` sits one step sunk into the room, and `plus-2` below it is unused
+  headroom. Reading `base` as "the page color" is close but off by a step; read the roles in
+  `core/tokens/roles.css` instead, which is what components should spend anyway.
+- **`--gp-n-l-step` is a free knob — deliberately.** It used to be pinned to
+  `(100% - base) / 16`, because white was the ramp's last step and sixteen steps had to land on
+  it; changing the step dimmed every heading or forced a renumber. Taking white off the ramp
+  removed that coupling. Nothing downstream depends on where the ramp *ends*, so you can retune
+  elevation contrast without touching ink.
 
 - **`--op-color-neutral-l` is inert.** Optics defines it but its own steps never read it —
   they hardcode their lightness internally. Setting it does nothing.
-- **Chroma is flat across the whole ramp** (a single knob, `--gp-n-chroma`), not tapered by
-  step — OKLCH chroma is perceptually uniform, unlike the HSL saturation it replaced. See
-  DESIGN.md's (retired) Tapered Chroma Rule for why the old taper existed and why OKLCH no
-  longer needs it.
+- **Chroma is flat across the ramp** (a single knob, `--gp-n-chroma`) except the two cellar
+  steps, scaled 0.75 / 0.50. OKLCH chroma is perceptually uniform, unlike the HSL saturation it
+  replaced, so the ramp needs no taper — but chroma is absolute colorfulness, so near black a
+  flat value reads as rising saturation. The white end needed the same correction until white
+  came off the ramp; the warmed whites now scale chroma *up* from 0 as they leave white, which
+  is the family's definition rather than a patch. `--gp-n-chroma` is the reference for both
+  families, so it alone sets how warm the whole app reads. See DESIGN.md's (retired) Tapered
+  Chroma Rule for how this differs from the old taper.
 
 **What each token *means* visually — which color carries actions, which surface tone goes
 where, which radius belongs to which surface size — is DESIGN.md's job, not this file's.**

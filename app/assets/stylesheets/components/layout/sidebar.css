@@ -7,8 +7,12 @@
 }
 
 /* Optics' own default sidebar background reads --op-color-neutral-plus-eight,
-   which theme.css's bridge points at --gp-n-plus-6 (the raised surface), so
-   the sidebar is painted from our ramp without an override here.
+   which theme.css's bridge points at --gp-n-minus-2 (two steps above the room —
+   lighter than our own --gp-surface-raised, which is minus-1).
+   Dropped to --gp-surface-recessed — now the room's own base tone, one step
+   above the page floor — so the sidebar reads as sunk into the page rather
+   than level with panel headers. See hand_dock.css for the matching drop on
+   the hand dock, which shares this tone.
 
    The border and the internal .divider still need overriding: Optics' defaults
    (neutral-plus-four and neutral-plus-five/--op-color-border) are tuned for a
@@ -17,10 +21,11 @@
 
    This used to be a hand-written hsl() a few points above the background. It
    is now simply ONE STEP LIGHTER than the surface it sits on — the surface is
-   plus-6, the line is plus-5. That is the whole point of an even ramp: a line
+   base, the line is minus-1. That is the whole point of an even ramp: a line
    on a surface is the next step up, not a separate colour someone picked. */
 .sidebar {
-  --_gp-sidebar-line: var(--gp-n-plus-5);
+  --op-color-neutral-plus-eight: var(--gp-surface-recessed);
+  --_gp-sidebar-line: var(--gp-n-minus-1);
   --_op-sidebar-border-color: var(--_gp-sidebar-line);
 
   .divider {

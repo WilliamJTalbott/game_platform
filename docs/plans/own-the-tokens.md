@@ -127,6 +127,16 @@ Straight rename of what exists. No new thinking, no value changes:
 
 ### Tier 1b — the neutral ramp, generated
 
+> **⚠️ SUPERSEDED — this section records the original design, not the current one.**
+> The ramp shipped as planned and was then restructured twice. It is now anchored on
+> `--gp-n-l-base` (the room) rather than a floor, runs `plus-2`…`minus-10` (13 steps, not 17),
+> and **white and black are no longer ramp steps** — they are named absolutes (`--gp-white`,
+> `--gp-black`) alongside a three-step warmed-white family (`--gp-w-1..3`) that all ink comes
+> from. `--gp-n-l-floor` no longer exists, and `--gp-n-l-step` is now a free knob because
+> nothing depends on where the ramp ends. Chroma is flat except a two-step cellar taper.
+> **The authority is `core/theme.css` + DESIGN.md's Neutral section; read those, not this.**
+> Kept for the reasoning behind OKLCH, the knob-driven approach, and the retired HSL taper.
+
 Five knobs replace twenty hand-typed colors. `plus` is darker, always:
 
 ```css
@@ -346,7 +356,7 @@ Each phase ends green (`bundle exec rspec`, `bin/rubocop`, `bin/ci`) and is one 
 (verified). `bundle exec rspec` shows the same 23 pre-existing failures as before this
 session's changes (login-redirect/leaderboard issues unrelated to CSS) — no new ones.*
 
-### Phase 1b — Generate the ramp 🟢
+### Phase 1b — Generate the ramp ✅ *(shipped, then restructured — see the note in §3)*
 1. Write `core/tokens/palette.css`: the 5 knobs + 17 derived steps + the accents.
    Accents (coral, felt, lobby slate, card ink) stay **hand-picked** — the No-Ramp Rule
    still holds; only the *neutral* ramp is generated.
@@ -533,12 +543,14 @@ Fix in Phase 5 (or now — all are independent of the migration):
    `border-bottom` shorthand. **The rule is silently dropped; leaderboard rows have no
    separator today.** `--op-border-all` is a box-shadow value (`button.css` uses it
    correctly, as `box-shadow: inset var(--op-border-all) …`).
-2. **`components/game/hand_card.css:66`** — `font-size: var(--op-font-size-x-large)`. That
-   token does not exist; the correct name is `--op-font-x-large`. Declaration is invalid,
-   font-size silently inherits.
-3. **`core/theme.css:~150`** — `--gp-color-accent-secondary` is a `color-mix()`, which
-   AGENTS.md and DESIGN.md both explicitly forbid. It's the *only* one left. Resolve it to
-   a literal hand-picked value while you're in the file.
+2. **`components/game/hand_card.css:68`** — `font-size: var(--gp-font-size-x-large)`. That
+   token does not exist; the correct name is `--gp-font-x-large`. Declaration is invalid,
+   font-size silently inherits. **Still open** — the typo survived the `--op-*` → `--gp-*`
+   rename intact.
+3. ~~**`core/theme.css:~150`** — `--gp-color-accent-secondary` is a `color-mix()`~~ ✅ done;
+   resolved to the literal `#4b2e22` it produced. **But it was not the only one:**
+   `components/lobby/game_card.css:45` still mixes coral into `--gp-surface-floor` for its
+   live-row tint. That one is still open.
 4. **`app/icon_builders/icon_builder.rb:52`** — emits `var(--op-color-#{color}-base)`
    inline, violating the bridge rule. Currently unreachable (helper never called), and
    Phase 5 deletes the file — but if you keep the builders, fix it.

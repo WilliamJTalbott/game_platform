@@ -1,3 +1,9 @@
+/* The game page takes the house floor like every other page. It briefly sank a
+   step deeper (plus-2) to open a tone between the floor and the sidebar for the
+   Rummy hand dock; at 13.48% that shell read too stark against the felt and the
+   cards, so both went back — the dock now simply shares the sidebar's tone and
+   the page keeps the same one-step floor-to-chrome relationship as the lobby.
+   The cellar step is still there in the ramp if a future page wants it. */
 .game {
   height: 100dvh;
   background-color: var(--gp-surface-floor);

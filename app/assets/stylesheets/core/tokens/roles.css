@@ -14,13 +14,32 @@
 
 :root {
   /* ---- Surfaces — climbing away from the floor --------------------------
-     Named for what sits on them, not for their ramp position. */
-  --gp-surface-floor: var(--gp-n-plus-8); /* the page itself */
-  --gp-surface-recessed: var(--gp-n-plus-7); /* trays sunk into the page: modals, stats grid, menu, disabled cards */
-  --gp-surface-raised: var(--gp-n-plus-6); /* panel headers, sidebar-toned surfaces, opponent cards */
-  --gp-surface-card: var(--gp-n-plus-5); /* card faces, meld chips, message bubbles */
-  --gp-surface-outline: var(--gp-n-plus-4); /* the ring/outline tone one step up from a card face */
-  --gp-surface-dim: var(--gp-n-plus-3); /* a subtler background than recessed — the rules banner, a disabled card's border */
+     Named for what sits on them, not for their ramp position.
+
+     The floor is the one surface BELOW the room's base tone (plus-1). Everything
+     else climbs from base toward the viewer.
+
+     "Recessed" is still a slight lie — it sits one step ABOVE the floor, not
+     below it, so the sidebar and hand dock read as lit panels rather than sunk
+     ones. That relationship is deliberate and unchanged; what changed is that
+     it is now a *choice* rather than a constraint. Under the old floor-anchored
+     ramp the page was the darkest step in existence, so nothing could sit below
+     it even if a design wanted it to. The cellar (plus-2, below the floor) is
+     where a genuinely sunk surface would go if one is ever designed. */
+  --gp-surface-floor: var(--gp-n-plus-1); /* the page itself */
+  --gp-surface-recessed: var(--gp-n-base); /* trays sunk into the page: the sidebar, hand dock, modals, stats grid, menu, disabled cards */
+  --gp-surface-raised: var(--gp-n-minus-1); /* panel headers, opponent cards */
+  --gp-surface-card: var(--gp-n-minus-3); /* card faces, meld chips, message bubbles */
+  --gp-surface-outline: var(--gp-n-minus-4); /* the ring/outline tone one step up from a card face */
+  --gp-surface-dim: var(--gp-n-minus-5); /* a subtler background than recessed — the rules banner, a disabled card's border */
+
+  /* There is no role between --gp-surface-floor and --gp-surface-recessed, and
+     there cannot be one without re-leveling a page: they are ADJACENT ramp steps.
+     A --gp-surface-dock briefly existed here, made possible by the game page
+     sinking its own floor to plus-2 — but that shell read too stark, both went
+     back, and the token lost its only consumer. If a surface ever needs to sit
+     between the floor and the sidebar again, sinking that page's floor is the
+     move; the cellar (plus-2) is still there for it. */
 
   /* The lamp wash (see The Lamp Rule, DESIGN.md) is deliberately off the surface
      scale — a gradient stop, not a surface something sits on. Roled here only so
@@ -30,9 +49,15 @@
   /* ---- Ink — the ink that belongs on a given surface ---------------------
      Five positions are in active use, not three: a surface-coupled ink
      vocabulary doesn't compress as tightly as the surfaces themselves do. */
-  --gp-ink: var(--gp-n-minus-8); /* strongest ink — headings on the floor */
-  --gp-ink-on-raised: var(--gp-n-minus-6); /* ink on a raised surface */
-  --gp-ink-muted: var(--gp-n-base); /* the muted companion on a raised surface */
-  --gp-ink-on-card: var(--gp-n-minus-5); /* ink on a recessed surface or a card face */
-  --gp-ink-dim: var(--gp-n-minus-7); /* the dimmest ink — muted captions on a card face */
+  /* Four of the five come from the WARMED WHITE family (--gp-w-*, theme.css §3),
+     not from the ramp: ink in this app is white pulled a step or two back toward
+     the room, which is what those tokens say. Read w-1 as "one step off white."
+     --gp-ink-muted is the exception and stays on the ramp — at 61.58% it really
+     is a mid-tone of the room, not a warmed white, and calling it one would be
+     the kind of tidy-looking lie this split exists to remove. */
+  --gp-ink: var(--gp-white); /* strongest ink — headings on the floor */
+  --gp-ink-dim: var(--gp-w-1); /* the dimmest ink — muted captions on a card face */
+  --gp-ink-on-raised: var(--gp-w-2); /* ink on a raised surface */
+  --gp-ink-on-card: var(--gp-w-3); /* ink on a recessed surface or a card face */
+  --gp-ink-muted: var(--gp-n-minus-8); /* the muted companion on a raised surface */
 }

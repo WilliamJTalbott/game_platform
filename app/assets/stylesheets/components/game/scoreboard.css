@@ -1,5 +1,5 @@
 .scoreboard {
-  --_gp-scoreboard-ink: var(--gp-n-plus-2);
+  --_gp-scoreboard-ink: var(--gp-n-minus-6);
 
   width: 100%;
   border-collapse: collapse;

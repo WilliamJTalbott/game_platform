@@ -1,5 +1,5 @@
 .banner {
-    --_gp-banner-label-background: var(--gp-n-minus-2);
+    --_gp-banner-label-background: var(--gp-n-minus-10);
 
     position: relative;
     background-color: var(--gp-surface-dim);

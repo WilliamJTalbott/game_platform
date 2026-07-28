@@ -10,9 +10,9 @@
    text does. Coral here is turn state, not decoration (the One Signal Rule). */
 .game-card {
   /* The bar is the app's one cool surface, so the warm muted step that clears contrast on
-     the page (--gp-color-muted) lands at 4.4:1 on slate. One step lighter on the same
-     ramp — the hue stays the project's single neutral. */
-  --_gp-card-muted: var(--gp-n-minus-2);
+     the page (--gp-color-muted, minus-8) lands at 4.4:1 on slate. Two steps lighter on
+     the same ramp — the hue stays the project's single neutral. */
+  --_gp-card-muted: var(--gp-n-minus-10);
 
   display: flex;
   align-items: center;

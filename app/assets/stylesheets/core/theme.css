@@ -11,13 +11,15 @@
    ships, will be a separate hand-picked set — never an inversion of this one.
 
    Read this file in five parts:
-     1. The knobs           — five values that generate the whole neutral ramp.
-     2. The ramp            — 17 derived steps. plus is DARKER, minus LIGHTER.
-     3. Legacy aliases      — temporary; the old token names pointed at the new
-                              ramp so components keep working. Deleted in Phase 2.
-     4. Accents             — hand-picked, never derived from the ramp.
-     5. The Optics bridge   — points Optics' internal --op-color-* at our values.
-     6. Non-color overrides — the handful of --op-* measurements we change.
+     1. The knobs           — the values that generate the neutrals.
+     2. The ramp            — the ROOM and its shades. 13 steps, no endpoints.
+                              plus is DARKER, minus LIGHTER.
+     3. The absolutes       — white, black, and the warmed whites the ink is
+                              made of. Deliberately NOT part of the ramp.
+     4. Roles               — the semantic neutrals; the rest live in roles.css.
+     5. Accents             — hand-picked, never derived from the ramp.
+     6. The Optics bridge   — points Optics' internal --op-color-* at our values.
+     7. Non-color overrides — the handful of --op-* measurements we change.
    ========================================================================== */
 
 :root {
@@ -26,72 +28,193 @@
   /* ========================================================================
      1. THE KNOBS
 
-     Change these, and all seventeen steps move together. This is the whole
-     point of the ramp being generated rather than typed.
+     Change one of these and every step derived from it moves together. This is
+     the whole point of the neutrals being generated rather than typed.
+
+     There are TWO independent families here, each with its own knobs, and that
+     independence is deliberate — see section 3. The ramp (`--gp-n-*`) is the
+     room and its shades. The warmed whites (`--gp-w-*`) are the ink. They share
+     a chroma and a hue drift, because both describe the same warmth; they do
+     NOT share a lightness step, because the ink's distance from white and the
+     room's contrast per step of elevation are unrelated questions.
 
      Values are OKLCH, not HSL, and that choice is load-bearing: OKLCH chroma
-     is perceptually uniform, so one flat value reads equally warm at the floor
-     and at the top. The old hand-tuned HSL saturation taper (18%→23%→10%→…→5%)
-     existed only to compensate for HSL's non-uniformity — converted to OKLCH
-     it was already flat at ~0.010 outside one deliberate bump. See
+     is perceptually uniform, so one flat value reads equally warm across the
+     ramp. The old hand-tuned HSL saturation taper (18%→23%→10%→…→5%) existed
+     only to compensate for HSL's non-uniformity — converted to OKLCH it was
+     already flat at ~0.010 outside one deliberate bump. See
      docs/plans/own-the-tokens.md §3.
+
+     What OKLCH does NOT give you for free is an endpoint. Chroma is absolute
+     colorfulness, so as lightness approaches black or white there is less of it
+     left to carry the tint, and a flat chroma reads as rising *saturation*. That
+     used to require a correction at both ends of the ramp. Now the ramp only
+     touches one endpoint's neighbourhood — the cellar — so only the cellar
+     tapers; the white end's fade became the warmed-white family's definition
+     instead of a patch. Neither is the old HSL taper returning: these correct
+     the ends, the old one corrected the middle.
      ======================================================================== */
 
-  --gp-n-hue: 67.5;        /* the room's hue. ONE edit re-hues every neutral.
-                              (67.5 OKLCH ≈ the old hsl(30) — the perceptual
-                              hue was never 30.) */
-  --gp-n-hue-drift: 0.8;   /* degrees redder per step toward the floor. At 0.8
-                              the floor sits at 54.7° (red-orange) and white at
+  --gp-n-hue: 54.7;        /* the room's hue, AT BASE. ONE edit re-hues every
+                              neutral. (54.7 OKLCH ≈ the old hsl(30) at this
+                              lightness — the perceptual hue was never 30.) */
+  --gp-n-hue-drift: 0.8;   /* degrees toward amber per step LIGHTER. At 0.8 the
+                              room sits at 54.7° (red-orange) and white lands at
                               67.5° (amber). Set to 0 for a hue-flat ramp. */
-  --gp-n-chroma: 0.014;    /* flat — no taper needed in OKLCH */
-  --gp-n-l-floor: 23.1%;   /* plus-8, the page floor */
+  --gp-n-chroma: 0.014;    /* the room's colorfulness. Flat across the whole ramp
+                              now — OKLCH needs no taper — except the two cellar
+                              steps, which run close enough to black that it does.
+                              Also the reference the warmed whites scale down
+                              from, so this one knob sets how warm both families
+                              read. */
+  --gp-n-l-base: 23.1%;    /* THE ROOM. The one value that says how dark this
+                              app is; every step is measured from it. */
   --gp-n-l-step: 4.81%;    /* one step. Sits between this app's two real
-                              border-to-surface deltas (4.1 and 6.9). */
+                              border-to-surface deltas (4.1 and 6.9).
+
+                              THIS IS A FREE KNOB. It used to be pinned: the ink
+                              lived at the top of this ramp, so the step had to
+                              be exactly (100% - base) / 16 to land on white, and
+                              changing it either dimmed every heading or forced a
+                              renumber. The ink now comes from the white family
+                              below, so the ramp ends wherever it ends and this
+                              value answers only to how much contrast one step of
+                              elevation should carry. */
+
+  --gp-w-l-step: 4.81%;    /* the WHITE family's own step, measured down from
+                              white. Independent of the ramp's step on purpose —
+                              decoupling these two is the whole point of the
+                              split. Same value today only because it preserves
+                              the ink tones the app already had. */
+  --gp-w-hue: 67.5;        /* the hue the warmed whites lean toward. Its own knob
+                              for the same reason. Sits warmer (amber) than the
+                              room's 54.7 because ink reads as lamplight on
+                              paper, not as a shadowed wall. */
 
   /* ========================================================================
-     2. THE RAMP — 17 steps, one direction
+     2. THE RAMP — 13 steps, anchored on the room
 
-     plus-8 is nearly black, minus-8 is white, base is the true midpoint.
-     "One step lighter" is always minus one step, in every context. Adjacent
-     steps are one border's worth of contrast apart, so an outline can be
-     derived from its fill by stepping rather than by picking a new color.
+     THE RAMP IS ONLY THE ROOM. It holds one color — the room's tone — and its
+     lighter and darker shades. It does NOT hold white or black; those are
+     absolutes and they live in section 3, along with the warmed whites the ink
+     is made of. That boundary is the whole design of this file, so it is worth
+     saying why it exists.
 
-     Chroma fades to zero over the top four steps — white cannot hold chroma,
-     and the old ramp already did this (minus-max was pure white).
+     `base` IS the room's own tone — not a midpoint between two extremes. It
+     used to be neither: the ramp was generated upward from `--gp-n-l-floor`,
+     the page tone was pinned to `plus-8` (the scale's last step), and `base`
+     landed on an arbitrary mid-gray whose only consumer was caption text. There
+     was no darker value than the page, so the room could never be deepened; and
+     every surface meant to sit *below* the page had to be built by going
+     LIGHTER, inverting the dark-mode elevation model.
+
+     Re-anchoring on the room fixed that but left a subtler version of it. The
+     ink still lived at the top of this ramp, which meant white was a ramp step —
+     so the step size had to be exactly (100% - base) / 16 to land on it. The
+     step was not a knob at all; it was a consequence. Worse, both endpoints had
+     to special-case chroma to 0, because white and black cannot carry a hue. A
+     scale whose two extremes must opt out of the scale's own defining property
+     is telling you they are not members.
+
+     So the ramp now stops short of both, and runs:
+
+       plus-*   DARKER than the room — surfaces sunk beneath it (2 steps).
+       minus-*  LIGHTER — surfaces climbing toward the viewer (minus-1..minus-5),
+                then mid-tones used as borders and muted ink (minus-6..minus-10).
+
+     Every step's absolute value is unchanged; only the ends were removed.
+     Adjacent steps are one border's worth of contrast apart, so an outline can
+     be derived from its fill by stepping rather than by picking a new color.
+
+     Chroma is FLAT across this whole ramp — the promise OKLCH actually makes —
+     except for the two cellar steps, which still run close enough to black to
+     need it. See the note there.
      ======================================================================== */
 
-  /* Surfaces — the room, climbing away from the floor */
-  --gp-n-plus-8:  oklch(calc(var(--gp-n-l-floor) +  0 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 16 * var(--gp-n-hue-drift)));
-  --gp-n-plus-7:  oklch(calc(var(--gp-n-l-floor) +  1 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 15 * var(--gp-n-hue-drift)));
-  --gp-n-plus-6:  oklch(calc(var(--gp-n-l-floor) +  2 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 14 * var(--gp-n-hue-drift)));
-  --gp-n-plus-5:  oklch(calc(var(--gp-n-l-floor) +  3 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 13 * var(--gp-n-hue-drift)));
-  --gp-n-plus-4:  oklch(calc(var(--gp-n-l-floor) +  4 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 12 * var(--gp-n-hue-drift)));
-  --gp-n-plus-3:  oklch(calc(var(--gp-n-l-floor) +  5 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 11 * var(--gp-n-hue-drift)));
-  --gp-n-plus-2:  oklch(calc(var(--gp-n-l-floor) +  6 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 10 * var(--gp-n-hue-drift)));
-  --gp-n-plus-1:  oklch(calc(var(--gp-n-l-floor) +  7 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  9 * var(--gp-n-hue-drift)));
+  /* The cellar — darker than the room, and the only place chroma still tapers.
+     BLACK CANNOT HOLD CHROMA. OKLCH chroma is absolute colorfulness, not
+     saturation, so a flat 0.014 is a steadily larger *proportion* of the tone as
+     lightness falls — the page at 18.29% rendered 30.5% HSL-saturated against
+     the sidebar's 20.1%, off the identical hue and the identical red-over-blue
+     spread. That reads as "the page is redder than the sidebar," and it is not a
+     hue problem: zeroing the hue drift leaves the page byte-identical. It is
+     flat chroma running out of lightness to dilute it.
 
-  --gp-n-base:    oklch(calc(var(--gp-n-l-floor) +  8 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  8 * var(--gp-n-hue-drift)));
+     The white end used to need the mirror of this. It no longer does, because it
+     no longer reaches white — that job moved to the warmed whites in section 3,
+     where the fade from white is the family's whole definition rather than a
+     correction bolted onto a scale's last few steps. */
+  --gp-n-plus-2:   oklch(calc(var(--gp-n-l-base) -  2 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.50) calc(var(--gp-n-hue) -  2 * var(--gp-n-hue-drift)));
+  --gp-n-plus-1:   oklch(calc(var(--gp-n-l-base) -  1 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.75) calc(var(--gp-n-hue) -  1 * var(--gp-n-hue-drift)));
 
-  /* Ink — climbing toward white */
-  --gp-n-minus-1: oklch(calc(var(--gp-n-l-floor) +  9 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  7 * var(--gp-n-hue-drift)));
-  --gp-n-minus-2: oklch(calc(var(--gp-n-l-floor) + 10 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  6 * var(--gp-n-hue-drift)));
-  --gp-n-minus-3: oklch(calc(var(--gp-n-l-floor) + 11 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  5 * var(--gp-n-hue-drift)));
-  --gp-n-minus-4: oklch(calc(var(--gp-n-l-floor) + 12 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  4 * var(--gp-n-hue-drift)));
-  --gp-n-minus-5: oklch(calc(var(--gp-n-l-floor) + 13 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.75) calc(var(--gp-n-hue) - 3 * var(--gp-n-hue-drift)));
-  --gp-n-minus-6: oklch(calc(var(--gp-n-l-floor) + 14 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.50) calc(var(--gp-n-hue) - 2 * var(--gp-n-hue-drift)));
-  --gp-n-minus-7: oklch(calc(var(--gp-n-l-floor) + 15 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.25) calc(var(--gp-n-hue) - 1 * var(--gp-n-hue-drift)));
-  --gp-n-minus-8: oklch(calc(var(--gp-n-l-floor) + 16 * var(--gp-n-l-step)) 0 var(--gp-n-hue));
+  --gp-n-base:     oklch(var(--gp-n-l-base) var(--gp-n-chroma) var(--gp-n-hue));
 
-  /* The Lamp — a HALF step above the floor, deliberately off the surface scale.
-     DESIGN.md's Lamp Rule treats the room's light as light, not furniture: the
-     page gradient is a wash over the floor, not a surface something sits on.
-     Giving it a whole step put it level with plus-7 (recessed) and made every
-     recessed surface — the leaderboard's header band, the stats grid — vanish
-     into the page. Half a step keeps the wash and keeps the step free. */
-  --gp-n-lamp: oklch(calc(var(--gp-n-l-floor) + 0.5 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 15.5 * var(--gp-n-hue-drift)));
+  /* Surfaces — the furniture, climbing toward the viewer */
+  --gp-n-minus-1:  oklch(calc(var(--gp-n-l-base) +  1 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  1 * var(--gp-n-hue-drift)));
+  --gp-n-minus-2:  oklch(calc(var(--gp-n-l-base) +  2 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  2 * var(--gp-n-hue-drift)));
+  --gp-n-minus-3:  oklch(calc(var(--gp-n-l-base) +  3 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  3 * var(--gp-n-hue-drift)));
+  --gp-n-minus-4:  oklch(calc(var(--gp-n-l-base) +  4 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  4 * var(--gp-n-hue-drift)));
+  --gp-n-minus-5:  oklch(calc(var(--gp-n-l-base) +  5 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  5 * var(--gp-n-hue-drift)));
+  --gp-n-minus-6:  oklch(calc(var(--gp-n-l-base) +  6 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  6 * var(--gp-n-hue-drift)));
+  --gp-n-minus-7:  oklch(calc(var(--gp-n-l-base) +  7 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  7 * var(--gp-n-hue-drift)));
+
+  /* Mid-tones — too light to be furniture, too dark to be ink. Borders, muted
+     captions, the banner's label band, the scoreboard's numbers. */
+  --gp-n-minus-8:  oklch(calc(var(--gp-n-l-base) +  8 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  8 * var(--gp-n-hue-drift)));
+  --gp-n-minus-9:  oklch(calc(var(--gp-n-l-base) +  9 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) +  9 * var(--gp-n-hue-drift)));
+  --gp-n-minus-10: oklch(calc(var(--gp-n-l-base) + 10 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) + 10 * var(--gp-n-hue-drift)));
+
+  /* The Lamp — a HALF step above THE PAGE FLOOR, deliberately off the surface
+     scale. DESIGN.md's Lamp Rule treats the room's light as light, not
+     furniture: the page gradient is a wash over the floor, not a surface
+     something sits on. Giving it a whole step put it level with the recessed
+     surface and made every recessed surface — the leaderboard's header band,
+     the stats grid — vanish into the page. Half a step keeps the wash and
+     keeps the step free.
+
+     The floor is plus-1, so the lamp is a half step above that: base - 0.5.
+     Its chroma takes the matching half-taper (0.875, midway between base's 1.0
+     and plus-1's 0.75) — otherwise the wash would read warmer than the floor
+     it lies on, which is the one direction a light source must not go. */
+  --gp-n-lamp: oklch(calc(var(--gp-n-l-base) - 0.5 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.875) calc(var(--gp-n-hue) - 0.5 * var(--gp-n-hue-drift)));
 
   /* ========================================================================
-     3. ROLES
+     3. THE ABSOLUTES, AND THE WARMED WHITES
+
+     White and black are not colors in this system's sense — they are the two
+     places where hue and chroma stop existing. They get their own names because
+     that is what they are, rather than being parked at the far indices of a warm
+     ramp that has to zero its own chroma to reach them.
+
+     Between white and the room sits the ink. Every ink tone in this app is
+     "white, pulled N steps back toward the room" — which is exactly how they
+     were already authored, as the ramp's last four steps with chroma scaled
+     0 / 0.25 / 0.50 / 0.75. Naming that family directly changes no rendered
+     value and buys three things: the ramp's step becomes a free knob, the ramp's
+     chroma goes flat, and "how warm is our ink" becomes one legible question
+     with its own two knobs instead of an emergent property of ramp arithmetic.
+
+     Chroma RISES as you leave white (0 at white → 0.75 of the room's at w-3),
+     because the further ink gets from white the more of the room it can hold.
+     Read w-N as "N steps off white," not as a position on the neutral ramp —
+     the two scales are independent and only meet at the roles layer.
+
+     There is deliberately NO warmed-black family. Nothing needs one: the two
+     ramp steps that used to sit down there were dead, and the surfaces that are
+     genuinely near-black (the page floor, the game shell) are the room seen in
+     low light, not black seen warm. Add one when something actually wants it.
+     ======================================================================== */
+
+  --gp-white: oklch(100% 0 0);
+  --gp-black: oklch(0% 0 0);
+
+  /* Warmed whites — the ink family. w-3 is the warmest, closest to the room. */
+  --gp-w-3: oklch(calc(100% - 3 * var(--gp-w-l-step)) calc(var(--gp-n-chroma) * 0.75) calc(var(--gp-w-hue) - 3 * var(--gp-n-hue-drift)));
+  --gp-w-2: oklch(calc(100% - 2 * var(--gp-w-l-step)) calc(var(--gp-n-chroma) * 0.50) calc(var(--gp-w-hue) - 2 * var(--gp-n-hue-drift)));
+  --gp-w-1: oklch(calc(100% - 1 * var(--gp-w-l-step)) calc(var(--gp-n-chroma) * 0.25) calc(var(--gp-w-hue) - 1 * var(--gp-n-hue-drift)));
+
+  /* ========================================================================
+     4. ROLES
 
      Components spend these, never a raw --gp-n-* step — see
      core/tokens/roles.css for the surface/ink roles themselves and why five
@@ -106,16 +229,22 @@
   --gp-color-neutral-s: 8%;
 
   /* ---- Semantic neutrals ---------------------------------------------- */
-  --gp-color-background: var(--gp-n-plus-8);
-  --gp-color-on-background: var(--gp-n-minus-6);
-  --gp-color-border: var(--gp-n-plus-5);
-  --gp-color-muted: var(--gp-n-base); /* counts, captions, metadata */
+  /* The page sits ONE STEP BELOW the room's base tone, which is the point of
+     the cellar existing: the room is the reference everything is measured
+     against, and the floor you actually stand on is sunk a step into it. */
+  --gp-color-background: var(--gp-n-plus-1);
+  --gp-color-on-background: var(--gp-w-2);
+  --gp-color-border: var(--gp-n-minus-1);
+  --gp-color-muted: var(--gp-n-minus-8); /* counts, captions, metadata */
 
-  --gp-color-overlay: rgb(0 0 0 / 0.5);
-  --gp-color-shadow: rgb(0 0 0 / 0.6);
+  /* Both were already literal `rgb(0 0 0 / …)`. Relative color syntax lets them
+     spend --gp-black by name while keeping their alpha — so the one place this
+     app uses true black is stated once, above, rather than open-coded here. */
+  --gp-color-overlay: rgb(from var(--gp-black) r g b / 0.5);
+  --gp-color-shadow: rgb(from var(--gp-black) r g b / 0.6);
 
   /* ========================================================================
-     4. ACCENTS  —  hand-picked, never derived
+     5. ACCENTS  —  hand-picked, never derived
 
      The No-Ramp Rule still holds, and now has a clearer target: never derive
      an accent from the neutral ramp. Only the neutrals are generated.
@@ -166,7 +295,7 @@
   --gp-color-warning-text: hsl(47 100% 60%);
 
   /* ========================================================================
-     5. THE OPTICS BRIDGE
+     6. THE OPTICS BRIDGE
 
      Optics' own components (buttons, sidebar, inputs, dropdowns, dialogs) read
      --op-color-* internally, and we cannot rewrite their stylesheets. Left
@@ -182,25 +311,28 @@
   --op-color-neutral-h: var(--gp-color-neutral-h);
   --op-color-neutral-s: var(--gp-color-neutral-s);
 
-  --op-color-neutral-plus-max:   var(--gp-n-plus-8);
-  --op-color-neutral-plus-eight: var(--gp-n-plus-6);
-  --op-color-neutral-plus-seven: var(--gp-n-plus-7);
-  --op-color-neutral-plus-six:   var(--gp-n-plus-6);
-  --op-color-neutral-plus-five:  var(--gp-n-plus-5);
-  --op-color-neutral-plus-four:  var(--gp-n-plus-4);
-  --op-color-neutral-plus-three: var(--gp-n-plus-4);
-  --op-color-neutral-plus-two:   var(--gp-n-plus-3);
-  --op-color-neutral-plus-one:   var(--gp-n-plus-2);
-  --op-color-neutral-base:       var(--gp-n-plus-4);
+  /* Optics' plus-* run dark-to-light the same way ours do, but its scale is its
+     own; these are hand-mapped, not index-matched. plus-max is Optics' page
+     floor, so it takes ours (plus-1, not base). */
+  --op-color-neutral-plus-max:   var(--gp-n-plus-1);
+  --op-color-neutral-plus-eight: var(--gp-n-minus-2);
+  --op-color-neutral-plus-seven: var(--gp-n-minus-1);
+  --op-color-neutral-plus-six:   var(--gp-n-minus-2);
+  --op-color-neutral-plus-five:  var(--gp-n-minus-3);
+  --op-color-neutral-plus-four:  var(--gp-n-minus-4);
+  --op-color-neutral-plus-three: var(--gp-n-minus-4);
+  --op-color-neutral-plus-two:   var(--gp-n-minus-5);
+  --op-color-neutral-plus-one:   var(--gp-n-minus-6);
+  --op-color-neutral-base:       var(--gp-n-minus-4);
 
   /* Contrast pairs. These were MISSING and it showed: Optics' sidebar reads
      --op-color-neutral-on-plus-eight for its text, so while the sidebar's
      *background* came from our ramp, its *text* was still Optics' own
      hsl(30 8% 88%) — our hue and saturation, but Optics' lightness, and an HSL
      value sitting off the OKLCH ramp entirely. Same for body text. */
-  --op-color-neutral-on-plus-max:   var(--gp-n-minus-8);
-  --op-color-neutral-on-plus-eight: var(--gp-n-minus-6);
-  --op-color-neutral-on-plus-seven: var(--gp-n-minus-5);
+  --op-color-neutral-on-plus-max:   var(--gp-white);
+  --op-color-neutral-on-plus-eight: var(--gp-w-2);
+  --op-color-neutral-on-plus-seven: var(--gp-w-3);
 
   --op-color-background: var(--gp-color-background);
   --op-color-on-background: var(--gp-color-on-background);
@@ -221,7 +353,7 @@
   --op-color-primary-l: 40%;   /* nearly inert — Optics hardcodes the base lightness */
 
   /* ========================================================================
-     6. NON-COLOR OVERRIDES
+     7. NON-COLOR OVERRIDES
 
      Optics owns spacing, type, radii, shadows and borders; these are the few
      measurements we deliberately change. Everything else comes from Optics
