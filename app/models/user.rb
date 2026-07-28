@@ -8,16 +8,10 @@ class User < ApplicationRecord
   has_many :participants, dependent: :destroy
   has_many :games, through: :participants
 
+  has_one :player_stat
+
   validates :email_address, presence: true, uniqueness: { case_insensitive: true }, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 8 }, on: :create
-
-  def games_played = self.games.where.not(finished_at: nil).size
-  def games_won = self.participants.where(winner: true).size
-  def win_percentage
-    return 0 if games_played.zero?
-
-    ((games_won.to_f / games_played) * 100).round(1)
-  end
 
   def create_name
     username = email_address.split("@").first

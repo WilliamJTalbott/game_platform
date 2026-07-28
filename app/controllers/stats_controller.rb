@@ -1,5 +1,5 @@
 class StatsController < ApplicationController
   def index
-    @user = Current.user
+    @presenter = StatsPresenter.new(user: current_user)
   end
 end

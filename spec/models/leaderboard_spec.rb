@@ -1,13 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Leaderboard, type: :model do
-  def finished_game_for(user, duration: 1.hour, won: false)
-    game = create(:finished_game, :go_fish, :many_participants, :has_participants, :with_duration,
-      users: [ user ], duration: duration)
-    game.participants.find_by!(user: user).update!(winner: true) if won
-    game
-  end
-
   def row_for(user, sort: Leaderboard::DEFAULT_SORT)
     Leaderboard.new(sort: sort).rows.find { |row| row.id == user.id }
   end

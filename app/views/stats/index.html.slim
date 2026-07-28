@@ -19,10 +19,10 @@
   .stats-page__body
     .stat-block
       .stat-block__header Number of Games Played
-      .stat-block__body = @user.games_played
+      .stat-block__body = @presenter.games_played
     .stat-block
       .stat-block__header Number of Games Won
-      p = @user.games_won
+      p = @presenter.games_won
     .stat-block
       .stat-block__header Win Percentage
-      p #{@user.win_percentage}%
+      p = @presenter.win_percentage

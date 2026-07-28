@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_27_131755) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_28_130117) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -160,4 +160,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_27_131755) do
   add_foreign_key "participants", "games"
   add_foreign_key "participants", "users"
   add_foreign_key "sessions", "users"
+
+  create_view "player_stats", sql_definition: <<-SQL
+      SELECT users.id AS user_id,
+      users.name,
+      count(games.id) AS games_played,
+      count(games.id) FILTER (WHERE participants.winner) AS games_won,
+      COALESCE(round((((count(games.id) FILTER (WHERE participants.winner))::numeric * 100.0) / (NULLIF(count(games.id), 0))::numeric), 1), 0.0) AS win_percentage,
+      (COALESCE(sum(EXTRACT(epoch FROM (games.finished_at - games.started_at))), (0)::numeric))::bigint AS play_seconds
+     FROM ((users
+       LEFT JOIN participants ON ((participants.user_id = users.id)))
+       LEFT JOIN games ON (((games.id = participants.game_id) AND (games.started_at IS NOT NULL) AND (games.finished_at IS NOT NULL))))
+    GROUP BY users.id, users.name;
+  SQL
 end

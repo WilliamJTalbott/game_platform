@@ -2,7 +2,7 @@ class LeaderboardPresenter
   SORT_BUTTONS = [
     { key: "wins", label: "Wins", icon: "trophy" },
     { key: "games", label: "Games Played", icon: "cards" },
-    { key: "win_percent", label: "Win %", icon: "percent" },
+    { key: "win_percent", label: "Win Percentage", icon: "percent" },
     { key: "time", label: "Time Played", icon: "timer" }
   ].freeze
 
@@ -37,6 +37,6 @@ class LeaderboardPresenter
   def build_entry(row, index)
     LeaderboardEntry.new(rank: index + 1, name: row.name, games_played: row.games_played,
       games_won: row.games_won, win_percentage: row.win_percentage, play_seconds: row.play_seconds,
-      you: row.id == @current_user.id)
+      you: row.user_id == @current_user.id)
   end
 end

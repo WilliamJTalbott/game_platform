@@ -90,3 +90,7 @@ gem "simple_form", "~> 5.4"
 gem "good_job"
 
 gem "data_for"
+
+gem 'bullet', group: %w[development test]
+
+gem "scenic"
