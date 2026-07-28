@@ -7,12 +7,14 @@
   .leaderboard__header {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: var(--gp-space-medium);
   }
 
   .leaderboard__sorts {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: var(--gp-space-medium);
   }
 
@@ -31,18 +33,23 @@
     border-radius: var(--gp-radius-2x-large);
     overflow: hidden;
 
+    table-layout: fixed;
+
     th,
     td {
       padding: var(--gp-space-small) var(--gp-space-medium);
-      text-align: left;
+      text-align: center;
     }
 
+    /* Same tint as .leaderboard__row--you by request. The two are deliberately the
+       same colour; the you-row is told apart by its coral left bar, not its fill. */
     thead {
+      background-color: var(--gp-color-accent-secondary);
       color: var(--gp-color-muted);
     }
 
     tbody tr:not(:last-child) {
-      border-bottom: var(--op-border-all) var(--gp-color-border);
+      border-bottom: var(--gp-border-width) solid var(--gp-color-border-on-raised);
     }
   }
 

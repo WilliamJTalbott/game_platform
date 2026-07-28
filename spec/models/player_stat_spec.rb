@@ -6,7 +6,7 @@ RSpec.describe PlayerStat, type: :model do
     subject(:stat) { PlayerStat.find_by(user_id: user.id) }
 
     context "given one won two-hour game" do
-      before { finished_game_for(user, duration: 2.hours, won: true) }
+      before { create(:finished_game, :go_fish, :user_won, :with_duration, user: user, duration: 2.hours) }
 
       it "counts the game, the win, the percentage and the duration" do
         expect(stat).to have_attributes(games_played: 1, games_won: 1,
@@ -33,7 +33,10 @@ RSpec.describe PlayerStat, type: :model do
     end
 
     context "given a finished game that has since been soft-deleted" do
-      before { finished_game_for(user).update!(deleted_at: Time.current) }
+      before do
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ user ])
+          .update!(deleted_at: Time.current)
+      end
 
       it "still counts it" do
         expect(stat.games_played).to eq 1
@@ -42,8 +45,9 @@ RSpec.describe PlayerStat, type: :model do
 
     context "given two finished games" do
       before do
-        finished_game_for(user, duration: 1.hour)
-        finished_game_for(user, duration: 30.minutes)
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ user ])
+        create(:finished_game, :go_fish, :has_participants, :with_duration,
+          users: [ user ], duration: 30.minutes)
       end
 
       it "sums their durations" do

@@ -7,6 +7,6 @@ class HistoryPresenter
   end
 
   def winner
-    game.participants.find_by(winner: true)&.user&.name
+    game.participants.find(&:winner?)&.user&.name
   end
 end

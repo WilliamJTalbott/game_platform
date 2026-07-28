@@ -1,22 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe LeaderboardPresenter, type: :presenter do
-  def finished_game_for(user, won: false)
-    game = create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ user ])
-    game.participants.find_by!(user: user).update!(winner: true) if won
-    game
-  end
-
   let(:viewer) { create(:user, name: "Viewer") }
   let(:other) { create(:user, name: "Other") }
 
-  subject(:presenter) { described_class.new(sort: sort, current_user: viewer) }
+  subject(:presenter) { described_class.new(sort: sort, page: page, current_user: viewer) }
+
+  let(:page) { nil }
 
   context "given two users with finished games" do
     let(:sort) { "wins" }
     before do
-      finished_game_for(viewer, won: true)
-      finished_game_for(other)
+      create(:finished_game, :go_fish, :user_won, :with_duration, user: viewer)
+      create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ other ])
     end
 
     it "assigns rank 1..n in the current sort order" do
@@ -29,6 +25,35 @@ RSpec.describe LeaderboardPresenter, type: :presenter do
 
     it "exposes the four sort buttons" do
       expect(presenter.sort_buttons.map { |button| button[:key] }).to contain_exactly("wins", "games", "win_percent", "time")
+    end
+  end
+
+  context "given the second page of a board that overflows one page" do
+    let(:sort) { "wins" }
+    let(:page) { 2 }
+    before do
+      create_list(:user, Leaderboard::PER_PAGE + 2).each do |player|
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ player ])
+      end
+    end
+
+    it "continues the ranks from the previous page rather than restarting at 1" do
+      expect(presenter.entries.first.rank).to eq Leaderboard::PER_PAGE + 1
+    end
+
+    it "is not empty" do
+      expect(presenter).to_not be_empty
+    end
+  end
+
+  context "given a page past the end of the board" do
+    let(:sort) { "wins" }
+    let(:page) { 99 }
+    before { create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ viewer ]) }
+
+    it "reports the board as non-empty even though the page has no rows" do
+      expect(presenter.entries).to be_empty
+      expect(presenter).to_not be_empty
     end
   end
 
@@ -51,7 +76,7 @@ RSpec.describe LeaderboardPresenter, type: :presenter do
 
   context "given the win-percent sort with nobody past the floor" do
     let(:sort) { "win_percent" }
-    before { finished_game_for(viewer) }
+    before { create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ viewer ]) }
 
     it "reports empty with the win-percent-specific message" do
       expect(presenter).to be_empty

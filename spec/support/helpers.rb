@@ -10,5 +10,4 @@ RSpec.configure do |c|
   c.include TestElementHelper, type: :system
   c.include LoginHelper, type: :system
   c.include GamesHelper, type: :system
-  c.include FinishedGamesHelper
 end

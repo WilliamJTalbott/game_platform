@@ -9,16 +9,18 @@ This app has **two distinct layers** that both contain a class called `Game`. Ke
 Standard Rails models backed by PostgreSQL.
 
 - **`Game`** (`app/models/game.rb`) — abstract STI base. The `type` column selects a subclass.
-  - **`GoFishGame`** / **`CrazyEightsGame`** (`app/models/games/`) — concrete subclasses.
+  - **`GoFishGame`** / **`CrazyEightsGame`** / **`RummyGame`** (`app/models/games/`) — concrete subclasses.
 - **`Participant`** (`app/models/participant.rb`) — join model between `User` and `Game`; also records `winner`.
-- **`User`** (`app/models/user.rb`) — `has_secure_password`; `has_many :participants` / `:games`. Stats (`games_played`, `games_won`, `win_percentage`) are derived from participants.
+- **`User`** (`app/models/user.rb`) — `has_secure_password`; `has_many :participants` / `:games`, `has_one :player_stat`.
+- **`PlayerStat`** (`app/models/player_stat.rb`) — **read-only, backed by a Scenic view** (`db/views/player_stats_v01.sql`), not a table. One row per user keyed on `user_id`, holding `games_played`, `games_won`, `win_percentage`, `play_seconds`. It is the single definition of those stats, shared by `/leaderboard` and `/stats`.
 - **`Session`** — one row per signed-in device; the auth cookie holds its id.
 
 Relationships:
 
 ```
-User ──< Participant >── Game (STI: GoFishGame | CrazyEightsGame)
+User ──< Participant >── Game (STI: GoFishGame | CrazyEightsGame | RummyGame)
 User ──< Session
+User ──  PlayerStat (view; one row per user, always present)
 ```
 
 ### 2. Game-logic layer (Plain Old Ruby Objects)

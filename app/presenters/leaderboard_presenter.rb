@@ -6,18 +6,19 @@ class LeaderboardPresenter
     { key: "time", label: "Time Played", icon: "timer" }
   ].freeze
 
-  def initialize(sort:, current_user:)
-    @leaderboard = Leaderboard.new(sort: sort)
+  def initialize(sort:, page:, current_user:)
+    @leaderboard = Leaderboard.new(sort: sort, page: page)
     @current_user = current_user
   end
 
   def sort = @leaderboard.sort
   def sorted_by?(key) = sort == key
   def sort_buttons = SORT_BUTTONS
-  def empty? = entries.empty?
+  def rows = @rows ||= @leaderboard.rows
+  def empty? = rows.total_count.zero?
 
   def entries
-    @entries ||= @leaderboard.rows.each_with_index.map { |row, index| build_entry(row, index) }
+    @entries ||= rows.each_with_index.map { |row, index| build_entry(row, rows.offset_value + index + 1) }
   end
 
   def win_percent_note
@@ -34,8 +35,8 @@ class LeaderboardPresenter
 
   private
 
-  def build_entry(row, index)
-    LeaderboardEntry.new(rank: index + 1, name: row.name, games_played: row.games_played,
+  def build_entry(row, rank)
+    LeaderboardEntry.new(rank: rank, name: row.name, games_played: row.games_played,
       games_won: row.games_won, win_percentage: row.win_percentage, play_seconds: row.play_seconds,
       you: row.user_id == @current_user.id)
   end

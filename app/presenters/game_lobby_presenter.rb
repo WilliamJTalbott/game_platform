@@ -26,7 +26,7 @@ class GameLobbyPresenter
   end
 
   def players
-    game.participants.map do |participant|
+    game.participants.includes(:user).map do |participant|
       LobbyPlayerRow.new(name: participant.user.name, host: participant.host?, you: participant.user_id == user.id)
     end
   end

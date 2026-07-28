@@ -23,7 +23,19 @@
    is now simply ONE STEP LIGHTER than the surface it sits on — the surface is
    base, the line is minus-1. That is the whole point of an even ramp: a line
    on a surface is the next step up, not a separate colour someone picked. */
+/* Pin the sidebar so only the page scrolls. `.op-page` is a grid with
+   `min-block-size: 100dvh`, and the sidebar is a grid item — by default it stretches to
+   the full ROW height, which on a long page is the whole document, so it scrolls away
+   with the content. `align-self: start` is the load-bearing half: without it the item
+   is still stretched full-height and `position: sticky` has no slack to move within.
+   Optics already sets `overflow-y: auto` on .sidebar, so a sidebar taller than the
+   viewport scrolls inside itself rather than clipping. */
 .sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  block-size: 100dvh;
+
   --op-color-neutral-plus-eight: var(--gp-surface-recessed);
   --_gp-sidebar-line: var(--gp-n-minus-1);
   --_op-sidebar-border-color: var(--_gp-sidebar-line);

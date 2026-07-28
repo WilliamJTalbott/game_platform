@@ -9,19 +9,23 @@ class Leaderboard
   }.freeze
 
   DEFAULT_SORT = "wins"
+  PER_PAGE = 25
 
-  attr_reader :sort
+  attr_reader :sort, :page
 
-  def initialize(sort: DEFAULT_SORT)
+  def initialize(sort: DEFAULT_SORT, page: nil)
     @sort = SORTS.key?(sort) ? sort : DEFAULT_SORT
+    @page = page
   end
 
-  def rows
+  def rows = qualifying.page(page).per(PER_PAGE)
+
+  private
+
+  def qualifying
     scope = PlayerStat.where(games_played: 1..).order(SORTS.fetch(sort))
     win_percent_sort? ? scope.where(games_played: MINIMUM_GAMES_FOR_WIN_PERCENTAGE..) : scope
   end
-
-  private
 
   def win_percent_sort? = sort == "win_percent"
 end

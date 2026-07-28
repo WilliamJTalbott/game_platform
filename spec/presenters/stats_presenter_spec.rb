@@ -7,8 +7,8 @@ RSpec.describe StatsPresenter do
 
   context "given a user who has won one of two finished games" do
     before do
-      finished_game_for(user, won: true)
-      finished_game_for(user)
+      create(:finished_game, :go_fish, :user_won, :with_duration, user: user)
+      create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ user ])
     end
 
     it "reports the counts and a formatted percentage" do

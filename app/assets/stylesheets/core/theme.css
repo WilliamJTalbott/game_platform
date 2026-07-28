@@ -235,6 +235,12 @@
   --gp-color-background: var(--gp-n-plus-1);
   --gp-color-on-background: var(--gp-w-2);
   --gp-color-border: var(--gp-n-minus-1);
+  /* --gp-color-border is the border for things sitting ON the floor or a recessed
+     surface. It cannot divide a RAISED surface, because raised IS minus-1 — the
+     border and its background are the same token, so the line is invisible. This is
+     the same tone two steps up, for rules drawn on a raised surface (leaderboard
+     rows). Named like --gp-ink-on-raised, and for the same reason. */
+  --gp-color-border-on-raised: var(--gp-n-minus-3);
   --gp-color-muted: var(--gp-n-minus-8); /* counts, captions, metadata */
 
   /* Both were already literal `rgb(0 0 0 / …)`. Relative color syntax lets them

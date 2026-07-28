@@ -94,3 +94,5 @@ gem "data_for"
 gem 'bullet', group: %w[development test]
 
 gem "scenic"
+
+gem 'kaminari'

@@ -8,7 +8,7 @@ RSpec.describe Leaderboard, type: :model do
   describe "#rows" do
     context "given a user with one won finished game" do
       let(:user) { create(:user) }
-      before { finished_game_for(user, duration: 2.hours, won: true) }
+      before { create(:finished_game, :go_fish, :user_won, :with_duration, user: user, duration: 2.hours) }
 
       it "reports games_played" do
         expect(row_for(user).games_played).to eq 1
@@ -46,7 +46,10 @@ RSpec.describe Leaderboard, type: :model do
 
     context "given a user whose only finished game has since been soft-deleted" do
       let(:user) { create(:user) }
-      before { finished_game_for(user).update!(deleted_at: Time.current) }
+      before do
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ user ])
+          .update!(deleted_at: Time.current)
+      end
 
       it "still counts them" do
         expect(row_for(user).games_played).to eq 1
@@ -56,8 +59,9 @@ RSpec.describe Leaderboard, type: :model do
     context "given a user with two finished games" do
       let(:user) { create(:user) }
       before do
-        finished_game_for(user, duration: 1.hour)
-        finished_game_for(user, duration: 30.minutes)
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ user ])
+        create(:finished_game, :go_fish, :has_participants, :with_duration,
+          users: [ user ], duration: 30.minutes)
       end
 
       it "sums their durations" do
@@ -70,8 +74,10 @@ RSpec.describe Leaderboard, type: :model do
       let(:big_loser) { create(:user, name: "Big Loser") }
 
       before do
-        5.times { finished_game_for(big_winner, duration: 10.minutes, won: true) }
-        5.times { finished_game_for(big_loser, duration: 1.hour) }
+        5.times do
+          create(:finished_game, :go_fish, :user_won, :with_duration, user: big_winner, duration: 10.minutes)
+          create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ big_loser ])
+        end
       end
 
       it "sort=wins orders by wins descending" do
@@ -105,13 +111,37 @@ RSpec.describe Leaderboard, type: :model do
       end
     end
 
+    context "given more qualifying players than fit on one page" do
+      before do
+        create_list(:user, Leaderboard::PER_PAGE + 2).each do |player|
+          create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ player ])
+        end
+      end
+
+      it "returns only a page's worth" do
+        expect(Leaderboard.new.rows.size).to eq Leaderboard::PER_PAGE
+      end
+
+      it "counts every qualifying player, not just the page" do
+        expect(Leaderboard.new.rows.total_count).to eq PlayerStat.where(games_played: 1..).count
+      end
+
+      it "returns a slice that does not overlap the first page" do
+        expect(Leaderboard.new(page: 2).rows.map(&:id) & Leaderboard.new.rows.map(&:id)).to be_empty
+      end
+
+      it "returns nothing past the last page" do
+        expect(Leaderboard.new(page: 99).rows).to be_empty
+      end
+    end
+
     context "the win percentage floor" do
       let(:seasoned) { create(:user, name: "Seasoned") }
       let(:rookie) { create(:user, name: "Rookie") }
 
       before do
-        5.times { finished_game_for(seasoned, won: true) }
-        4.times { finished_game_for(rookie, won: true) }
+        5.times { create(:finished_game, :go_fish, :user_won, :with_duration, user: seasoned) }
+        4.times { create(:finished_game, :go_fish, :user_won, :with_duration, user: rookie) }
       end
 
       it "includes a user with exactly 5 finished games under sort=win_percent" do
