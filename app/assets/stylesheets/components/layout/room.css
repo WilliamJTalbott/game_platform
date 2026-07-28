@@ -2,19 +2,19 @@
    and the lights are low" — but every surface in the app was a flat fill with no luminance
    gradient anywhere, which reads as lights *off* rather than lights *low*.
 
-   This is the one authored light in the app: a simple top-to-bottom fade from one shade below
-   the sidebar's brightest point (neutral-plus-nine, theme.css) down to the floor
-   (neutral-plus-max). It sits on the page shell (Optics' `.op-page`) rather than on any one
-   page, so every surface in the house is lit by the same lamp.
+   This is the one authored light in the app: a simple top-to-bottom fade from the lamp wash
+   (--gp-wash-lamp, theme.css) down to the floor (--gp-surface-floor). It sits on the page
+   shell (Optics' `.op-page`) rather than on any one page, so every surface in the house is
+   lit by the same lamp.
 
    `fixed` attachment keeps the gradient anchored to the room instead of scrolling with the
    content — light doesn't move when you scroll. Opaque surfaces laid on top (the sidebar,
    the lobby tray, panels, the felt) mask it, which is correct: furniture blocks light. The
-   sidebar instead takes neutral-plus-eight directly as its own flat background (its normal
-   role is already "the raised surface tone" — Optics' default sidebar color) — one shade
-   brighter than this gradient's own top, so it reads as the room's actual light source rather
-   than just another patch of the same fade (see sidebar.css). */
+   sidebar instead takes the raised surface tone directly as its own flat background (Optics'
+   default sidebar color, bridged to --gp-surface-raised) — one shade brighter than this
+   gradient's own top, so it reads as the room's actual light source rather than just another
+   patch of the same fade (see sidebar.css). */
 body.op-page {
-  background-image: linear-gradient(to bottom, var(--gp-color-neutral-plus-nine), var(--gp-color-neutral-plus-max));
+  background-image: linear-gradient(to bottom, var(--gp-wash-lamp), var(--gp-surface-floor));
   background-attachment: fixed;
 }

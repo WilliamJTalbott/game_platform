@@ -1,6 +1,6 @@
 .game {
   height: 100dvh;
-  background-color: var(--gp-color-neutral-plus-max);
+  background-color: var(--gp-surface-floor);
   --gp-side-size: calc(83 * var(--gp-size-unit));
   --gp-base-size: calc(65 * var(--gp-size-unit));
 

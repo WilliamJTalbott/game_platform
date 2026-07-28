@@ -11,8 +11,8 @@
 .game-card {
   /* The bar is the app's one cool surface, so the warm muted step that clears contrast on
      the page (--gp-color-muted) lands at 4.4:1 on slate. One step lighter on the same
-     Optics ramp — the hue stays the project's single neutral. */
-  --_gp-card-muted: var(--gp-color-neutral-minus-five);
+     ramp — the hue stays the project's single neutral. */
+  --_gp-card-muted: var(--gp-n-minus-2);
 
   display: flex;
   align-items: center;
@@ -42,7 +42,7 @@
      here rather than by editing the shared token, which also dresses the Join CTA and the
      turn badge and should not move with this row. */
   &.game-card--your-turn {
-    background-color: color-mix(in srgb, var(--gp-color-accent) 32%, var(--gp-color-neutral-plus-max));
+    background-color: color-mix(in srgb, var(--gp-color-accent) 32%, var(--gp-surface-floor));
     box-shadow: var(--gp-lobby-bar-shadow-live);
   }
 
@@ -66,7 +66,7 @@
        is 10px uppercase — the coral border and the row's own wash carry the accent, so the
        signal survives without asking 10px type to do it at 3.2:1. */
     background-color: var(--gp-color-accent-secondary);
-    color: var(--gp-color-neutral-minus-max);
+    color: var(--gp-ink);
     font-size: var(--gp-font-2x-small);
     font-weight: var(--gp-weight-bold);
     text-transform: uppercase;

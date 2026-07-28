@@ -4,10 +4,10 @@
   display: flex;
   flex-direction: column;
 
-  color: var(--gp-color-neutral-on-plus-eight-alt);
+  color: var(--gp-ink-muted);
 
   .panel__header {
-    background-color: var(--gp-color-neutral-plus-eight);
+    background-color: var(--gp-surface-raised);
     font-size: var(--gp-font-large);
     font-weight: var(--gp-weight-semi-bold);
     border-bottom: var(--gp-border-width) solid var(--gp-color-border);
@@ -21,7 +21,7 @@
     }
 
     h2 {
-      color: var(--gp-color-neutral-on-plus-max);
+      color: var(--gp-ink);
       font-size: var(--gp-font-large);
       font-weight: var(--gp-weight-semi-bold);
     }
@@ -65,19 +65,19 @@
 }
 
 .panel--feed {
-  --gp-feed-background: var(--gp-color-neutral-plus-max);
+  --gp-feed-background: var(--gp-surface-floor);
 
   grid-area: feed;
   background-color: var(--gp-feed-background);
 
   .panel__header {
     border-bottom: none;
-    background-color: var(--gp-color-neutral-plus-seven);
-    color: var(--gp-color-neutral-on-plus-eight-alt);
+    background-color: var(--gp-surface-recessed);
+    color: var(--gp-ink-muted);
     justify-content: space-between;
 
     .badge {
-      border: var(--gp-border-width-x-large) solid var(--gp-color-neutral-plus-max);
+      border: var(--gp-border-width-x-large) solid var(--gp-surface-floor);
       border-radius: var(--gp-radius-large);
     }
   }

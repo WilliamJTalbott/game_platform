@@ -8,13 +8,13 @@
     border: var(--gp-border-width) solid var(--gp-color-border);
     border-radius: var(--gp-radius-2x-large);
     color: var(--gp-color-muted);
-    background-color: var(--gp-color-neutral-plus-max);
+    background-color: var(--gp-surface-floor);
 
     &.phase-stepper__step--active {
       border-color: var(--gp-color-accent);
       color: var(--gp-color-accent-text);
       font-weight: var(--gp-weight-bold);
-      background-color: var(--gp-color-neutral-plus-eight);
+      background-color: var(--gp-surface-raised);
     }
   }
 }

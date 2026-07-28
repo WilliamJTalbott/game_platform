@@ -15,7 +15,7 @@
   }
 
   &:not(:disabled) .playing-card {
-    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-color-neutral-base);
+    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-surface-outline);
     outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
   }
 

@@ -27,7 +27,7 @@
   .leaderboard__table {
     width: 100%;
     border-collapse: collapse;
-    background-color: var(--gp-color-neutral-plus-seven);
+    background-color: var(--gp-surface-recessed);
     border-radius: var(--gp-radius-2x-large);
     overflow: hidden;
 

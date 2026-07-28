@@ -41,13 +41,12 @@
     border-radius: var(--gp-radius-2x-large);
     /* The tray is the largest surface in the app, so a flat fill here is most of what made
        the page read flat. It catches the same top-to-bottom fade as the room's lamp
-       (layout/room.css), starting one shade darker than the page's own top
-       (neutral-plus-ten, theme.css) since it's recessed a level further into the room — so
-       the light continues across the furniture, dimming further with each surface back,
-       instead of stopping at its edge. The background-color stays as the fallback and as
-       the gradient's base tone. */
-    background-color: var(--gp-color-neutral-plus-max);
-    background-image: linear-gradient(to bottom, var(--gp-color-neutral-plus-ten), var(--gp-color-neutral-plus-max));
+       (layout/room.css), reusing the same lamp wash (--gp-wash-lamp, theme.css) since it's
+       recessed a level further into the room — so the light continues across the furniture,
+       dimming further with each surface back, instead of stopping at its edge. The
+       background-color stays as the fallback and as the gradient's base tone. */
+    background-color: var(--gp-surface-floor);
+    background-image: linear-gradient(to bottom, var(--gp-wash-lamp), var(--gp-surface-floor));
     border: var(--gp-lobby-tray-border);
     box-shadow: var(--gp-lobby-tray-shadow);
   }

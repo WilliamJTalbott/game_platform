@@ -11,8 +11,8 @@
       padding: var(--gp-space-small);
       border-radius: var(--gp-radius-x-large);
       
-      color: var(--gp-color-neutral-on-plus-five-alt);
-      background-color: var(--gp-color-neutral-plus-five);
+      color: var(--gp-ink-dim);
+      background-color: var(--gp-surface-card);
   }
 
   &.message--action {
@@ -26,16 +26,16 @@
 
     p {
       flex: 1;
-      color: var(--gp-color-neutral-on-plus-max);
-      border: var(--gp-border-width) solid var(--gp-color-neutral-plus-five);
-      background-color: var(--gp-color-neutral-plus-eight);
+      color: var(--gp-ink);
+      border: var(--gp-border-width) solid var(--gp-surface-card);
+      background-color: var(--gp-surface-raised);
 
       font-size: var(--gp-font-x-small);
       font-weight: var(--gp-weight-semi-bold);
     }
 
     .response__icon {
-      color: var(--gp-color-neutral-on-plus-eight-alt);
+      color: var(--gp-ink-muted);
       font-weight: bolder;
     }
 

@@ -30,7 +30,7 @@
 
   /* A simplified placeholder for each melded card — just its rank + suit glyph, far
      more legible at this size than the full card art. It reuses the real card's face
-     tokens (--gp-color-neutral-plus-five / -base, see playing_card.css) and its
+     tokens (--gp-surface-card / --gp-surface-outline, see playing_card.css) and its
      portrait aspect ratio, so it reads as the same stock — just text instead of art. */
   .meld__card {
     display: inline-flex;
@@ -41,9 +41,9 @@
     font-size: var(--gp-font-x-small);
     font-weight: var(--gp-weight-semi-bold);
     line-height: 1;
-    color: var(--gp-color-neutral-on-plus-five);
-    background-color: var(--gp-color-neutral-plus-five);
-    border: var(--gp-border-width) solid var(--gp-color-neutral-base);
+    color: var(--gp-ink-on-card);
+    background-color: var(--gp-surface-card);
+    border: var(--gp-border-width) solid var(--gp-surface-outline);
     border-radius: var(--gp-radius-medium);
 
     &.meld__card--red {

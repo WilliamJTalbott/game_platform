@@ -11,7 +11,7 @@
   border: var(--gp-border-width) solid var(--gp-color-border);
   border-radius: var(--gp-radius-medium);
   padding: var(--gp-space-x-small) var(--gp-space-small);
-  background-color: var(--gp-color-neutral-plus-eight);
+  background-color: var(--gp-surface-raised);
   text-align: center;
 
   .opponent-card__name {
@@ -41,14 +41,14 @@
     aspect-ratio: var(--gp-card-aspect-ratio);
     border: var(--gp-border-width) solid var(--gp-color-border);
     border-radius: var(--gp-radius-small);
-    background-color: var(--gp-color-neutral-plus-five);
+    background-color: var(--gp-surface-card);
   }
 
   &.opponent-card--turn {
     border-color: var(--gp-color-accent);
     background-color: var(--gp-color-accent-secondary);
 
-    /* The default mini-card fill (--gp-color-neutral-plus-five) is close enough in
+    /* The default mini-card fill (--gp-surface-card) is close enough in
        lightness to the accent-secondary tint that it nearly vanishes — currentColor
        picks up the same ink color as the name text, which reliably contrasts against
        the tint in both themes (rather than fighting the tint with more coral). */

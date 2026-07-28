@@ -2,7 +2,7 @@
 
 .player-dropdown__summary {
 
-    background-color: var(--gp-color-neutral-plus-max);
+    background-color: var(--gp-surface-floor);
 
     height: var(--gp-input-height-large);
 
@@ -44,7 +44,7 @@
 }
 
 .player-dropdown__summary:hover {
-    outline: var(--gp-border-width) solid var(--gp-color-neutral-plus-six);
+    outline: var(--gp-border-width) solid var(--gp-surface-raised);
     outline-offset: calc(var(--gp-border-width) * -1);
 }
 
@@ -56,7 +56,7 @@
     border-top: 0;
     border-inline: var(--gp-border-width) solid var(--gp-color-border);
     border-bottom: var(--gp-border-width) solid var(--gp-color-border);
-    background-color: var(--gp-color-neutral-plus-eight);
+    background-color: var(--gp-surface-raised);
 
     border-bottom-left-radius: var(--gp-radius-medium);
     border-bottom-right-radius: var(--gp-radius-medium);
@@ -74,14 +74,14 @@
 
 .player-dropdown[open] {
 
-color: var(--gp-color-neutral-on-plus-eight);
+color: var(--gp-ink-on-raised);
 
 .player-dropdown__summary {
 
     border-bottom: 0;
-    border-top: var(--gp-border-width) solid var(--gp-color-neutral-plus-four);
-    border-inline: var(--gp-border-width) solid var(--gp-color-neutral-plus-four);
-    background-color: var(--gp-color-neutral-plus-eight);
+    border-top: var(--gp-border-width) solid var(--gp-surface-outline);
+    border-inline: var(--gp-border-width) solid var(--gp-surface-outline);
+    background-color: var(--gp-surface-raised);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 
@@ -92,12 +92,12 @@ color: var(--gp-color-neutral-on-plus-eight);
     border-radius: var(--gp-radius-medium);
     padding: var(--gp-space-x-small);
     
-    background-color: var(--gp-color-neutral-plus-five);
-    border: var(--gp-border-width) solid var(--gp-color-neutral-plus-three);
+    background-color: var(--gp-surface-card);
+    border: var(--gp-border-width) solid var(--gp-surface-outline);
     }
 }
 .player-dropdown__expanded {
-    border-color: var(--gp-color-neutral-plus-four);
+    border-color: var(--gp-surface-outline);
 }
 }
 

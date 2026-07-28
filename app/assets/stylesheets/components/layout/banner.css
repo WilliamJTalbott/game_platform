@@ -1,6 +1,8 @@
 .banner {
+    --_gp-banner-label-background: var(--gp-n-minus-2);
+
     position: relative;
-    background-color: var(--gp-color-neutral-plus-two);
+    background-color: var(--gp-surface-dim);
     height: 150px;
 
     img {
@@ -21,7 +23,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: var(--gp-color-neutral-minus-five);
+        background-color: var(--_gp-banner-label-background);
         border-radius: var(--gp-radius-x-large);
         padding-block: var(--gp-space-x-small);
         padding-inline: var(--gp-space-small);

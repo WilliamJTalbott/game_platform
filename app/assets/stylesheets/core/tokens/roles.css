@@ -1,0 +1,38 @@
+/* ==========================================================================
+   Color roles — Tier 2
+
+   Components spend roles, never a raw ramp index (--gp-n-*) or a step-math
+   name (the old --gp-color-neutral-plus-N/-minus-N/-on-*). If a component
+   needs a step with no role yet, add one here rather than reaching past it —
+   a role with a single consumer today is still a name, and it's where the
+   next consumer will look. See docs/plans/own-the-tokens.md §3.
+
+   Two roles that aren't ramp positions live in theme.css instead, because
+   they're already named for their job: --gp-color-border and
+   --gp-color-muted. Nothing here duplicates them.
+   ========================================================================== */
+
+:root {
+  /* ---- Surfaces — climbing away from the floor --------------------------
+     Named for what sits on them, not for their ramp position. */
+  --gp-surface-floor: var(--gp-n-plus-8); /* the page itself */
+  --gp-surface-recessed: var(--gp-n-plus-7); /* trays sunk into the page: modals, stats grid, menu, disabled cards */
+  --gp-surface-raised: var(--gp-n-plus-6); /* panel headers, sidebar-toned surfaces, opponent cards */
+  --gp-surface-card: var(--gp-n-plus-5); /* card faces, meld chips, message bubbles */
+  --gp-surface-outline: var(--gp-n-plus-4); /* the ring/outline tone one step up from a card face */
+  --gp-surface-dim: var(--gp-n-plus-3); /* a subtler background than recessed — the rules banner, a disabled card's border */
+
+  /* The lamp wash (see The Lamp Rule, DESIGN.md) is deliberately off the surface
+     scale — a gradient stop, not a surface something sits on. Roled here only so
+     components still read a role rather than a raw ramp token. */
+  --gp-wash-lamp: var(--gp-n-lamp);
+
+  /* ---- Ink — the ink that belongs on a given surface ---------------------
+     Five positions are in active use, not three: a surface-coupled ink
+     vocabulary doesn't compress as tightly as the surfaces themselves do. */
+  --gp-ink: var(--gp-n-minus-8); /* strongest ink — headings on the floor */
+  --gp-ink-on-raised: var(--gp-n-minus-6); /* ink on a raised surface */
+  --gp-ink-muted: var(--gp-n-base); /* the muted companion on a raised surface */
+  --gp-ink-on-card: var(--gp-n-minus-5); /* ink on a recessed surface or a card face */
+  --gp-ink-dim: var(--gp-n-minus-7); /* the dimmest ink — muted captions on a card face */
+}

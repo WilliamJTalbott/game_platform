@@ -8,8 +8,8 @@
     padding: var(--gp-space-small);
     gap: var(--gp-space-small);
 
-    background-color: var(--gp-color-neutral-plus-seven);
-    border: var(--gp-border-width) solid var(--gp-color-neutral-plus-six);
+    background-color: var(--gp-surface-recessed);
+    border: var(--gp-border-width) solid var(--gp-surface-raised);
 
     .request-form__details{
       display: flex;

@@ -1,5 +1,5 @@
 .stat-block {
-  background-color: var(--gp-color-neutral-base);
+  background-color: var(--gp-surface-outline);
   grid-area: span 1;
   border-radius: var(--gp-radius-2x-large);
 
@@ -7,7 +7,7 @@
     text-align: center;
     font-size: var(--gp-font-4x-large);
     font-weight: var(--gp-weight-semi-bold);
-    color: var(--gp-color-neutral-on-base);
+    color: var(--gp-ink);
   }
 
   .stat-block__body {

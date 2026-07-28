@@ -27,7 +27,7 @@
 
   .end-of-game-modal__dialog {
     position: relative;
-    background-color: var(--gp-color-neutral-plus-seven);
+    background-color: var(--gp-surface-recessed);
     border-radius: var(--gp-radius-2x-large);
     padding: var(--gp-space-3x-large);
     width: var(--_gp-end-of-game-modal-width);

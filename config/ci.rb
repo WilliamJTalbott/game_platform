@@ -5,6 +5,17 @@ CI.run do
 
   step "Style: Ruby", "bin/rubocop"
 
+  # Warn-only for now (docs/plans/own-the-tokens.md Phase 2) — becomes a `step` (and
+  # therefore fails CI) once Phase 3 replaces the last vendored Optics components.
+  # Components should spend --gp-* roles, not a raw ramp step or an --op-* token. A
+  # component-private `--_gp-*` token is allowed to read the ramp directly (that's the
+  # documented escape hatch), so those declarations don't count as violations.
+  tier_violations = `grep -rn -- '--gp-n-\\|--op-color-' app/assets/stylesheets/components/ app/views/`
+    .each_line.reject { |line| line.match?(/--_gp-[\w-]+:\s*var\(--gp-n-/) }.join
+  unless tier_violations.strip.empty?
+    puts "\nWARN: raw ramp/Optics-color tokens outside the roles layer:\n#{tier_violations}"
+  end
+
   step "Security: Gem audit", "bin/bundler-audit"
   step "Security: Importmap vulnerability audit", "bin/importmap audit"
   step "Security: Brakeman code analysis", "bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error"

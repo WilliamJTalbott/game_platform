@@ -358,12 +358,25 @@ session's changes (login-redirect/leaderboard issues unrelated to CSS) — no ne
 
 *Ends: one knob re-hues the room. ~half a day, mostly verification.*
 
-### Phase 2 — Introduce roles 🟡
-1. Write `core/tokens/roles.css` per §3 — surfaces, ink, lines, elevation, rhythm, type.
-2. Migrate all 39 component files to spend roles. The `on-*` retirement is mechanical
-   (7 tokens → 3); the judgment calls are the ~14 raw ramp-step references.
-3. Turn the guard on, warn-only.
-4. Re-screenshot. **Diff must be empty** — this phase changes names, not values.
+### Phase 2 — Introduce roles ✅
+1. Wrote `core/tokens/roles.css`: **6 surface roles** (`floor`/`recessed`/`raised`/`card`/
+   `outline`/`dim`, plus a `--gp-wash-lamp` for the page gradient, which is deliberately off
+   the surface scale) and **5 ink roles**, not 3 — measuring actual usage found 5 distinct
+   contrast-pair values in play (`--gp-ink`, `--gp-ink-on-raised`, `--gp-ink-muted`,
+   `--gp-ink-on-card`, `--gp-ink-dim`), not the 3 originally guessed in §3. Lines and muted
+   text keep their existing names (`--gp-color-border`, `--gp-color-muted`) — already
+   role-shaped, no rename needed.
+2. Migrated all 23 component files that referenced a raw ramp step (not 39 — the other 16
+   never did). Values one-off enough to not warrant a shared role (a banner label
+   background, a hand-card focus outline, a scoreboard-only ink, game-card's already-private
+   muted variable) became `--_gp-*` component-private tokens instead of roles, per the
+   plan's own escape-hatch guidance.
+3. Turned the guard on, warn-only, in `bin/ci` (`config/ci.rb`) — no such guard existed to
+   "mirror" as the plan assumed; this is the first one. It greps for raw `--gp-n-*` or
+   `--op-color-*` outside a `--_gp-*` private-token declaration.
+4. Deleted the "Legacy aliases" block from `theme.css` now that nothing references it.
+5. Re-screenshot: **empty diff**, confirmed via `spec/system/ramp_preview_spec.rb` and a
+   full `rspec` run (same pre-existing, unrelated failures as before this phase).
 
 *Ends: the actual goal. Everything after this is deletion. ~1 day, the most careful one.*
 

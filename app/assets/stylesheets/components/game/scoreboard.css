@@ -1,9 +1,11 @@
 .scoreboard {
+  --_gp-scoreboard-ink: var(--gp-n-plus-2);
+
   width: 100%;
   border-collapse: collapse;
 
   thead {
-    color: var(--gp-color-neutral-minus-two);
+    color: var(--_gp-scoreboard-ink);
     font-size: var(--gp-font-small);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -16,8 +18,8 @@
   }
 
   .scoreboard__row--winner {
-    background-color: var(--gp-color-neutral-plus-seven);
-    color: var(--gp-color-neutral-on-plus-seven);
+    background-color: var(--gp-surface-recessed);
+    color: var(--gp-ink-on-card);
   }
 
   .scoreboard__crown {
@@ -26,7 +28,7 @@
 
   .scoreboard__you {
     margin-left: var(--gp-space-small);
-    color: var(--gp-color-neutral-minus-two);
+    color: var(--_gp-scoreboard-ink);
     font-weight: var(--gp-weight-medium);
   }
 }

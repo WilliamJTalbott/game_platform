@@ -91,61 +91,14 @@
   --gp-n-lamp: oklch(calc(var(--gp-n-l-floor) + 0.5 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 15.5 * var(--gp-n-hue-drift)));
 
   /* ========================================================================
-     3. LEGACY ALIASES  —  TEMPORARY
+     3. ROLES
 
-     The old token names, re-pointed at the new ramp so the 39 component files
-     keep working untouched while the ramp is evaluated. Phase 2 migrates
-     components to role names (--gp-surface-raised, --gp-ink-muted, …) and this
-     whole block is deleted. Do not add to it.
-
-     Three mappings are deliberate rather than nearest-value:
-
-       plus-eight → plus-6   RAISED, and plus-seven → plus-7 RECESSED. These two
-         swap. They were 1.0 OKLCH point apart — the same lightness — and read
-         as different surfaces only because plus-eight carried 2x the chroma.
-         Under a flat-chroma ramp they must separate, so they were put in
-         dark-mode elevation order: nearer the viewer is lighter.
-
-       base → plus-4, NOT the midpoint. Despite the name, 4 of its 5 uses are
-         the border/outline on a plus-five card face, 4.9 points lighter — one
-         step. It was never a midpoint; it was the "one step up" tone.
-
-       plus-ten/plus-nine → --gp-n-lamp, a HALF step above the floor and
-         deliberately off the surface scale. Both are page-gradient stops. They
-         were first rounded up to plus-7, which put the page wash level with
-         recessed and made every recessed surface vanish into the page — the
-         leaderboard's header band disappeared outright. A wash is not a
-         surface and must not occupy a surface step. See the Lamp token above.
+     Components spend these, never a raw --gp-n-* step — see
+     core/tokens/roles.css for the surface/ink roles themselves and why five
+     ink positions survive rather than three. Two roles are named here instead
+     because they're already the semantic name a component wants, not a ramp
+     position: --gp-color-border and --gp-color-muted.
      ======================================================================== */
-
-  --gp-color-neutral-plus-max:   var(--gp-n-plus-8);
-  --gp-color-neutral-plus-ten:   var(--gp-n-lamp);   /* gradient stop, not a surface */
-  --gp-color-neutral-plus-nine:  var(--gp-n-lamp);   /* gradient stop, not a surface */
-  --gp-color-neutral-plus-eight: var(--gp-n-plus-6);   /* RAISED  — swapped */
-  --gp-color-neutral-plus-seven: var(--gp-n-plus-7);   /* RECESSED — swapped */
-  --gp-color-neutral-plus-six:   var(--gp-n-plus-6);
-  --gp-color-neutral-plus-five:  var(--gp-n-plus-5);
-  --gp-color-neutral-plus-four:  var(--gp-n-plus-4);
-  --gp-color-neutral-plus-three: var(--gp-n-plus-4);
-  --gp-color-neutral-plus-two:   var(--gp-n-plus-3);
-  --gp-color-neutral-plus-one:   var(--gp-n-plus-2);
-  --gp-color-neutral-base:       var(--gp-n-plus-4);   /* an outline tone, not a midpoint */
-
-  --gp-color-neutral-minus-two:   var(--gp-n-plus-2);
-  --gp-color-neutral-minus-three: var(--gp-n-plus-1);
-  --gp-color-neutral-minus-four:  var(--gp-n-base);
-  --gp-color-neutral-minus-five:  var(--gp-n-minus-2);
-  --gp-color-neutral-minus-max:   var(--gp-n-minus-8);
-
-  /* Contrast pairs. All seven collapse onto five ramp positions — Phase 2
-     replaces them with three ink roles. */
-  --gp-color-neutral-on-base:            var(--gp-n-minus-8);
-  --gp-color-neutral-on-plus-max:        var(--gp-n-minus-8);
-  --gp-color-neutral-on-plus-eight:      var(--gp-n-minus-6);
-  --gp-color-neutral-on-plus-eight-alt:  var(--gp-n-base);
-  --gp-color-neutral-on-plus-seven:      var(--gp-n-minus-5);
-  --gp-color-neutral-on-plus-five:       var(--gp-n-minus-5);
-  --gp-color-neutral-on-plus-five-alt:   var(--gp-n-minus-7);
 
   /* The bridge still feeds Optics an HSL hue/saturation for any step we don't
      override. Legacy scalars; they go with the bridge in Phase 3. */

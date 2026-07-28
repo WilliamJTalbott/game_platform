@@ -15,7 +15,7 @@
   display: grid;
   place-items: center;
   padding: var(--gp-space-x-large);
-  background-color: var(--gp-color-neutral-plus-max);
+  background-color: var(--gp-surface-floor);
 
   .waiting-room__stage {
     width: min(var(--_gp-waiting-room-width), 100%);

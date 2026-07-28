@@ -5,6 +5,8 @@
    hands (Go Fish, Crazy Eights) omit it and so match none of the affordance rules
    below — they render as plain, static cards. */
 .hand-card {
+  --_gp-hand-card-focus-outline: var(--gp-n-plus-1);
+
   position: relative;
   display: block;
   flex: 0 0 auto;
@@ -26,18 +28,18 @@
      A *locked* card is NOT disabled — it's still selectable for melding, so it
      keeps the normal card look and only gains the lock badge below. */
   &:has(.hand-card__input:disabled) .playing-card {
-    background-color: var(--gp-color-neutral-plus-seven);
-    border-color: var(--gp-color-neutral-plus-two);
+    background-color: var(--gp-surface-recessed);
+    border-color: var(--gp-surface-dim);
   }
 
   &:has(.hand-card__input:enabled) .playing-card {
-    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-color-neutral-base);
+    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-surface-outline);
     outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
   }
 
   &:has(.hand-card__input:focus-visible) .playing-card {
-    outline-color: var(--gp-color-neutral-minus-three);
-    background-color: var(--gp-color-neutral-plus-three);
+    outline-color: var(--_gp-hand-card-focus-outline);
+    background-color: var(--gp-surface-outline);
   }
 }
 

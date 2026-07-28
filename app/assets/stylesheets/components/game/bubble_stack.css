@@ -17,7 +17,7 @@
   border-radius: var(--gp-radius-x-large) var(--gp-radius-x-large) var(--gp-radius-medium) var(--gp-radius-x-large);
   padding: var(--gp-space-small) var(--gp-space-medium);
   font-size: var(--gp-font-small);
-  background-color: var(--gp-color-neutral-plus-max);
+  background-color: var(--gp-surface-floor);
   border: var(--gp-border-width) solid var(--gp-color-border);
   box-shadow: var(--gp-shadow-small);
 
