@@ -22,12 +22,14 @@ The layout links every local stylesheet with one helper call, in
 `app/views/application/_head.html.slim`:
 
 ```slim
-= stylesheet_link_tag "https://cdn.jsdelivr.net/npm/@rolemodel/optics@2.4.0/dist/css/optics+phosphor_icons.min.css"
+= stylesheet_link_tag "optics-phosphor-icons.min.css"
 = stylesheet_link_tag :app, "data-turbo-track": "reload"
 ```
 
-- **Line 1** loads **Optics** (and Phosphor icons) from a CDN — this is where all the
-  `--op-*` tokens and `.op-*` component classes come from.
+- **Line 1** loads **Optics** (and Phosphor icons) — vendored locally at
+  `vendor/optics/optics-phosphor-icons.min.css`, not from a CDN. This is where the
+  `--op-*` tokens and `.op-*` component classes Optics still supplies come from; see
+  "Optics" below for what that's shrunk to.
 - **Line 2** uses a Propshaft feature: `:app` is a **bulk-include symbol**, not a
   filename. It emits a separate `<link>` for **every** stylesheet under `app/assets`
   — it globs `app/assets/**/*.css` **recursively**, so `core/*.css` and every file in
@@ -41,7 +43,7 @@ manifest to update, no `@import` to add, and no build step to run.** (A common s
 of confusion: an empty `application.css` and a stale webpack build look broken but are
 irrelevant — the styles you see come from Propshaft serving the files directly.)
 
-Load order matters in exactly one way: our files are linked *after* the Optics CDN link,
+Load order matters in exactly one way: our files are linked *after* the Optics link,
 so a selector of equal specificity to an Optics one wins. That's how
 `components/ui/button.css` overrides `.btn.btn--primary` without `!important`.
 
@@ -52,7 +54,9 @@ app/assets/stylesheets/
   application.css          # empty; the webpack CSS entry, unused for styling
   core/
     base.css               # element resets / global defaults
-    theme.css              # ALL design tokens live here
+    theme.css              # ALL color tokens + the neutral ramp live here
+    tokens/
+      scale.css            # non-color primitives (space, font, radius, shadow, …) as --gp-*
   components/              # one BEM block per file, grouped by domain
     layout/                # app structure & chrome: page, panel, sidebar, menu, banner, body, overlay
     game/                  # in-game screens: game, felt, cards, hand, pile, meld, feed, opponents, …
@@ -66,24 +70,31 @@ link tag or manifest. Pick the folder by the block's domain; when in doubt, `gam
 
 ## Optics
 
-`@rolemodel/optics` (v2.4.0) is the RoleModel design system. It provides:
+**Optics is being phased out.** `@rolemodel/optics` (v2.4.0) used to supply every non-color
+token and every component class; it's being replaced piece by piece with our own —
+see `docs/plans/own-the-tokens.md` for the full migration and its current phase. What's
+still true today:
 
-- **Component classes** used directly in markup — e.g. `.op-page`, `.op-page__main`
-  in the layouts. Reach for an Optics class before writing a new component.
-- **The `--op-*` token system** — spacing, typography, radii, borders, and shadows. Build
-  with these tokens rather than hard-coded values wherever one exists.
+- **Component classes** used directly in markup — e.g. `.op-page`, `.op-page__main` in the
+  layouts, and the not-yet-replaced components (`button`, `sidebar`, `form`, `dialog`, …).
+  Reach for one of these before writing a new component, but expect them to keep shrinking.
+- **Optics' own internal `--op-*` tokens** — its bundled components still read their own
+  copies of spacing/type/radii/shadows internally, which is why `theme.css`'s bridge feeds
+  them our *color* values but our non-color primitives live independently in
+  `core/tokens/scale.css` as `--gp-*` (see Design tokens below).
 
-**We use Optics for the measurements, not the color.** Every color is a `--gp-color-*` token
-we define; Optics contributes none of it. See DESIGN.md's Color Ownership section for the
-decision and its reasoning. Mechanically: take Optics' non-color tokens freely, and never
-read any `--op-color-*` token outside `theme.css`'s bridge block.
-
-Because Optics is loaded from a CDN, its version is pinned in **two** places that must
-stay in sync: the CDN URL in `_head.html.slim` and the `@rolemodel/optics` entry in
-`package.json`.
+**We vendor Optics locally, not from a CDN.** `vendor/optics/optics-phosphor-icons.min.css`
+is a copy of `node_modules/@rolemodel/optics/dist/css/optics+phosphor_icons.min.css`,
+registered on `config.assets.paths` (`config/initializers/assets.rb`) so Propshaft serves it.
+**The file is renamed** (`+` → `-`) because Rack/Propshaft decodes a literal `+` in a request
+path as a space, 404ing on a filename a CDN would serve without issue — re-vendoring a new
+Optics version needs the same rename. Bump the version in `package.json`, copy the new
+bundle over, and re-apply the rename.
 
 Optics sets `html { font-size: 62.5% }`, so **1rem = 10px** — every `--op-font-*` and
-`--op-space-*` value reads as tenths of its pixel size (`--op-font-medium: 1.6rem` = 16px).
+`--op-space-*` value (and their `--gp-*` equivalents) reads as tenths of its pixel size
+(`--gp-font-medium: 16px` is declared directly; Optics' own `--op-font-medium: 1.6rem`
+computes to the same 16px).
 
 ## Design tokens
 
@@ -91,8 +102,8 @@ Tokens are CSS custom properties. There are three tiers:
 
 | Prefix     | Meaning                          | Defined where                     | Example |
 |------------|----------------------------------|-----------------------------------|---------|
-| `--op-*`   | Optics tokens — **non-color only**| Optics CDN (a few overridden below)| `--op-space-large`, `--op-font-small`, `--op-radius-2x-large` |
-| `--gp-*`   | Project tokens, shared/reusable  | `core/theme.css` (or a block)     | `--gp-color-neutral-plus-seven`, `--gp-color-accent`, `--gp-card-aspect-ratio` |
+| `--op-*`   | Optics' own internal tokens, read only by Optics' not-yet-replaced components | the vendored bundle | `--op-border-all` (used correctly in `button.css`) |
+| `--gp-*`   | Project tokens — **all color, and non-color primitives too** | `core/theme.css` (color, the ramp) and `core/tokens/scale.css` (space/font/radius/border-width/shadow) | `--gp-n-plus-6`, `--gp-color-accent`, `--gp-space-medium`, `--gp-radius-2x-large` |
 | `--_gp-*`  | Component-**private** tokens      | inside the block that uses them   | `--_gp-playing-card-shadow` |
 
 **Color is always `--gp-*`; never `--op-*`.** All color belongs to the project (see DESIGN.md's
@@ -102,11 +113,16 @@ our values so its own components are painted from our palette. A color on `--op-
 else is a bug; `grep -rn -- '--op-color-' app/assets/stylesheets/ | grep -v core/theme.css`
 should return nothing.
 
-**Non-color is the reverse: prefer `--op-*`.** Optics owns spacing, type, radii, shadows and
-border widths, and those are used directly rather than restated under `--gp-*`. Define a
-`--gp-*` measurement only when Optics has no equivalent and the value is reused. The leading
-underscore (`--_gp-…`) marks a token as **local to one component** — do not reference it from
-another file.
+**Non-color is also `--gp-*` now.** `core/tokens/scale.css` declares the 38 space/font/
+weight/radius/border-width/shadow primitives our own components use, transcribed from
+Optics' values. This is additive, not a replacement of Optics' internal tokens: Optics'
+*own* bundled components (button, sidebar, form, dialog) still read their own `--op-*`
+copies, and `theme.css`'s non-color overrides (`--op-border-width`, `--op-border-width-large`,
+`--op-radius-2x-large`) still feed *those* so Optics-rendered chrome keeps matching. A new
+component reaches for `--gp-*` first; only `--op-border-all` (a genuinely Optics-internal
+composite, see DESIGN.md/§8 of the plan) and a couple of not-yet-migrated one-offs still
+read `--op-*` directly. The leading underscore (`--_gp-…`) marks a token as **local to one
+component** — do not reference it from another file.
 
 Note `--gp-*` replaced an earlier `--gf-*` prefix (a leftover from when this app was only Go
 Fish); if you find `--gf-` anywhere, it is stale.
@@ -124,28 +140,36 @@ can't edit. Left alone they would paint themselves from Optics' defaults while o
 components used our palette: one screen in two color systems.
 
 The flow is one-directional and lives in exactly one place — our palette feeds Optics, never
-the reverse. The bridge covers the nine `plus-*` surface steps, `base`, the nine `minus-*` ink
-steps, `background`, `border`, and `neutral-h/s`. It also sets `--op-color-primary-h/s/l` at
-coral's hue, purely so Optics' internal chrome (focus rings, focused Simple Form inputs) reads
-coral instead of a stray default — never color a component from that ramp.
+the reverse. The bridge covers the `plus-*` surface steps, `base`, `background`,
+`on-background`, `border`, `neutral-h/s`, and — since these were found missing and caused a
+real bug (an un-bridged sidebar link and body text reading Optics' own colors instead of
+ours) — the surface **contrast pairs** (`on-plus-max`, `on-plus-eight`, `on-plus-seven`) and
+`--op-color-primary-original` (every un-overridden `<a>`). A bridge that covers a surface but
+not its contrast pair looks correct in a screenshot and is wrong in the DOM; when replacing
+another Optics component, diff the tokens it reads against what the bridge covers. It also
+sets `--op-color-primary-h/s/l` at coral's hue, purely so Optics' internal chrome (focus
+rings, focused Simple Form inputs) reads coral instead of a stray default — never color a
+component from that ramp.
 
 Non-color overrides are separate and few: `--op-border-width` (1.8px),
 `--op-border-width-large` (3px), and `--op-radius-2x-large` (20px, up from Optics' 16px).
-Overriding an Optics token affects every Optics component that reads it — prefer a new `--gp-*`
-token unless the global change is the point.
+These exist only to keep Optics' *own* rendered components matching our values — our own
+components read the `--gp-*` equivalents in `core/tokens/scale.css` instead. Overriding an
+Optics token affects every Optics component that reads it — prefer a new `--gp-*` token
+unless the global change is the point.
 
-**Why the ramp is re-declared wholesale rather than nudged.** Optics builds each step as a
-`light-dark()` pair of `hsl()` literals, so every surface in the app is pinned to an absolute
-step. Re-pointing the steps in `theme.css` therefore re-levels the whole app from one place;
-the alternative was editing ~20 component files to shift each surface. Two consequences worth
-knowing:
+**The ramp is generated, not typed.** Five knobs (hue, a per-step hue drift, a flat chroma,
+a lightness floor, and a step size) produce all 17 OKLCH steps as `calc()` expressions —
+change a knob and every step moves together. This replaced Optics' `light-dark()` `hsl()`
+pairs entirely; `color-scheme: dark` is set once and there is no light arm left to fall back
+to.
 
-- **`--op-color-neutral-l` is inert.** Optics defines it but the steps never read it — they
-  hardcode their lightness. Setting it does nothing; measured output is identical at 20% and
-  30%. Change a step's literal instead.
-- **Each step carries its own saturation**, tapering down as lightness rises. That pairing is
-  a design rule with a measured reason, not a style preference — see DESIGN.md's Tapered
-  Chroma Rule before touching it.
+- **`--op-color-neutral-l` is inert.** Optics defines it but its own steps never read it —
+  they hardcode their lightness internally. Setting it does nothing.
+- **Chroma is flat across the whole ramp** (a single knob, `--gp-n-chroma`), not tapered by
+  step — OKLCH chroma is perceptually uniform, unlike the HSL saturation it replaced. See
+  DESIGN.md's (retired) Tapered Chroma Rule for why the old taper existed and why OKLCH no
+  longer needs it.
 
 **What each token *means* visually — which color carries actions, which surface tone goes
 where, which radius belongs to which surface size — is DESIGN.md's job, not this file's.**
@@ -188,32 +212,35 @@ as one component:
 2. Name the root class after the block; add elements/modifiers with `__`/`--`, nested
    under the block with `&`.
 3. Color and shape it per **[DESIGN.md](../DESIGN.md)** — its Colors, Shapes, and
-   Elevation sections decide which token to reach for. Mechanically: `--op-*` first, a new
-   `--gp-*` in `core/theme.css` (always, for color; for non-color only if Optics has no
-   equivalent and the value is reused), and `--_gp-*` for one-off private values inside the block.
+   Elevation sections decide which token to reach for. Mechanically: `--gp-*` first — color
+   from `core/theme.css`, non-color primitives from `core/tokens/scale.css` — and `--_gp-*`
+   for one-off private values inside the block. Reach for `--op-*` only when styling an
+   Optics component class directly (its internal tokens, not ours).
 4. That's it — Propshaft serves the file automatically via `:app`. No registration.
 
 ## Gotchas
 
 - **Don't try to "fix" the empty `application.css` or the webpack CSS build.** CSS is not
   bundled here; those artifacts are unused. Styles load through Propshaft's `:app`.
-- **Bump Optics in both places** (CDN URL and `package.json`) or they drift.
+- **Bump Optics in both places** (`vendor/optics/` and `package.json`) or they drift. Copy
+  the new `dist/css` bundle over the vendored one and re-apply the `+` → `-` filename
+  rename below.
+- **A literal `+` in a vendored asset filename 404s.** Rack/Propshaft decodes it as a space
+  in the request path. Optics' own bundle names (`optics+phosphor_icons.min.css`) have to be
+  renamed (`optics-phosphor-icons.min.css`) once vendored locally — a CDN serves the
+  original name fine, which is why this only surfaced when the CDN was dropped.
 - **Keep one block per file.** Splitting a block across files or mixing blocks in one
   file defeats the file-per-component convention.
 - Optics token names use scales like `--op-space-small … 3x-large` and
-  `--op-font-small … 4x-large`; check Optics for the exact token before hard-coding.
-- **Optics color scale tokens (`--op-color-*-plus-N`/`-minus-N`) are `light-dark()` pairs,
-  not fixed colors.** `plus-N` = surface/background tokens (light in light mode, dark in
-  dark mode); `minus-N` = text/foreground tokens (the opposite). Moving to a lower `plus-N`
-  number is darker in light mode but *lighter* in dark mode (Material-style elevation: more
-  "elevated" surfaces get lighter in dark mode) — the two modes trade off in opposite
-  directions along the same scale, so "one token darker" doesn't mean darker in both
-  schemes simultaneously. **Pick the step that's right in dark mode** — dark is the designed
-  scheme (see DESIGN.md's Dark-First Rule) — and screenshot it with
+  `--op-font-small … 4x-large`; the `--gp-*` equivalents in `core/tokens/scale.css` use the
+  same scale names.
+- **The app is dark-only; there is no light mode to design against.** `color-scheme: dark`
+  is set on `:root` and the neutral ramp has no `light-dark()` left in it — every value is
+  a single OKLCH literal. This applies to *our* tokens; Optics' own not-yet-replaced
+  components may still carry `light-dark()` internally for whatever they haven't been
+  overridden for (e.g. the alert colors), so a screenshot should still be taken with
   `page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }` in a
-  system spec. Never substitute a raw hex/rgb for one of these tokens: hard-coding a fixed
-  color breaks light mode outright *and* removes the seam the planned hand-picked light
-  palette will be written into. Keep the pair, even though only one half is designed today.
+  system spec to be certain.
 - **Card face SVGs (`app/assets/images/dark_cards/*.svg`) carry their own theme-aware ink.**
   They're loaded via `<img>`, so page CSS (and `--op-*` tokens) can't reach inside them.
   The card *face* is a real CSS element (`.playing-card` / `.meld__card` background), but the
@@ -225,16 +252,18 @@ as one component:
   (`[data-theme-mode]`), these `<img>` SVGs won't follow it and would need inlining +
   `currentColor`. The two card-back SVGs are decorative and left untouched.
 - **`light-dark()` only accepts two `<color>` arguments — never a full shadow/border
-  shorthand.** `light-dark(inset 0 2px 5px rgb(...), inset 0 2px 7px rgb(...))` or
+  shorthand**, if one is ever reintroduced (our own tokens no longer use it at all — see
+  the dark-only gotcha above — but Optics' own not-yet-replaced components might still).
+  `light-dark(inset 0 2px 5px rgb(...), inset 0 2px 7px rgb(...))` or
   `light-dark(1px solid rgb(...), 1px solid rgb(...))` are invalid values: the whole
   `box-shadow`/`border` declaration silently drops to its initial value (`none`), with
   no console warning — it just looks like the style was never applied. Wrap `light-dark()`
   around only the color portion of each layer instead (e.g.
   `inset 0 2px 5px light-dark(rgb(...), rgb(...))`), or wrap the entire value if every
   argument truly is a plain color. Check `getComputedStyle(el).boxShadow`/`.border` when a
-  shadow/border token seems to have no effect — this bug shipped invisibly in
-  `--gp-lobby-tray-shadow`/`--gp-lobby-bar-shadow`/`--gp-lobby-tray-border` for a full
-  session before being caught.
+  shadow/border token seems to have no effect. This is how `--gp-lobby-tray-shadow`/
+  `--gp-lobby-bar-shadow`/`--gp-lobby-tray-border` shipped invisibly broken for a full
+  session before being caught — they're flat dark-only values now, not `light-dark()`.
 - **CSS custom properties can't be read inside `@media` conditions.** Breakpoint values
   (e.g. `--gp-breakpoint-tablet` in `core/theme.css`) are documentation only — every
   `@media (max-width: …)` query using that breakpoint must repeat the literal pixel value
