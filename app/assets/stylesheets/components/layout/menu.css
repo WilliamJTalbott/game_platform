@@ -4,6 +4,6 @@
     justify-content: space-between;
     align-items: end;
     background-color: var(--gp-color-neutral-plus-seven);
-    padding: var(--op-space-small);
-    border-radius: var(--op-radius-large);
+    padding: var(--gp-space-small);
+    border-radius: var(--gp-radius-large);
 }

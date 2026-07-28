@@ -1,135 +1,197 @@
 /* ==========================================================================
    Game Platform — design tokens
 
-   COLOR IS OURS. Every color in this app is defined here as a --gp-* token and
-   never taken from Optics. Optics still owns every *non-color* measurement
-   (spacing, type, radii, shadows, borders), which stay on --op-*. See
-   DESIGN.md, "Color Ownership", for the decision and its reasoning, and
-   docs/frontend.md for the token tiers.
+   COLOR IS OURS. Every color in this app is defined here and never taken from
+   Optics. Optics still owns every *non-color* measurement (spacing, type,
+   radii, shadows, borders), which stay on --op-*. See DESIGN.md, "Color
+   Ownership", and docs/frontend.md for the token tiers.
 
-   Read this file in three parts:
-     1. The color system    — the --gp-color-* ramp and the accents. Ours.
-     2. The Optics bridge   — points Optics' internal --op-color-* tokens at
-                              our values, so its own components are painted by
-                              this palette instead of its defaults.
-     3. Non-color overrides — the handful of --op-* measurements we change.
+   DARK ONLY. `color-scheme: dark` is declared below and there are no
+   light-dark() pairs left in the neutral ramp. A light palette, if it ever
+   ships, will be a separate hand-picked set — never an inversion of this one.
+
+   Read this file in five parts:
+     1. The knobs           — five values that generate the whole neutral ramp.
+     2. The ramp            — 17 derived steps. plus is DARKER, minus LIGHTER.
+     3. Legacy aliases      — temporary; the old token names pointed at the new
+                              ramp so components keep working. Deleted in Phase 2.
+     4. Accents             — hand-picked, never derived from the ramp.
+     5. The Optics bridge   — points Optics' internal --op-color-* at our values.
+     6. Non-color overrides — the handful of --op-* measurements we change.
    ========================================================================== */
 
 :root {
+  color-scheme: dark;
 
   /* ========================================================================
-     1. THE COLOR SYSTEM  (ours)
+     1. THE KNOBS
+
+     Change these, and all seventeen steps move together. This is the whole
+     point of the ramp being generated rather than typed.
+
+     Values are OKLCH, not HSL, and that choice is load-bearing: OKLCH chroma
+     is perceptually uniform, so one flat value reads equally warm at the floor
+     and at the top. The old hand-tuned HSL saturation taper (18%→23%→10%→…→5%)
+     existed only to compensate for HSL's non-uniformity — converted to OKLCH
+     it was already flat at ~0.010 outside one deliberate bump. See
+     docs/plans/own-the-tokens.md §3.
      ======================================================================== */
 
-  /* ---- Neutral: the room ------------------------------------------------
-     One warm hue at 30° — a soft, warm gray leaning toward the coral accent
-     rather than yellow. Pulled down from an earlier 41°/14% (and 49° before
-     that), both of which read too yellow-olive at these saturations instead
-     of like lamplight.
+  --gp-n-hue: 67.5;        /* the room's hue. ONE edit re-hues every neutral.
+                              (67.5 OKLCH ≈ the old hsl(30) — the perceptual
+                              hue was never 30.) */
+  --gp-n-hue-drift: 0.8;   /* degrees redder per step toward the floor. At 0.8
+                              the floor sits at 54.7° (red-orange) and white at
+                              67.5° (amber). Set to 0 for a hue-flat ramp. */
+  --gp-n-chroma: 0.014;    /* flat — no taper needed in OKLCH */
+  --gp-n-l-floor: 23.1%;   /* plus-8, the page floor */
+  --gp-n-l-step: 4.81%;    /* one step. Sits between this app's two real
+                              border-to-surface deltas (4.1 and 6.9). */
 
-     The ramp keeps Optics' plus/minus structure, which is a genuinely good
-     shape: plus-* steps are *surfaces* (plus-max is the page floor, climbing
-     toward the viewer), minus-* steps are *ink* on those surfaces, and base
-     sits between them. Only the values are ours.
+  /* ========================================================================
+     2. THE RAMP — 17 steps, one direction
 
-     Saturation and lightness move in OPPOSITE directions across the dark
-     surface steps, and that pairing is load-bearing rather than decorative.
-     Chroma is nearly imperceptible at 13% lightness and very visible at 40%,
-     so one saturation cannot serve both ends: a flat 24% made the page
-     properly warm but turned the lighter surfaces (stat blocks, card faces)
-     into khaki cardboard, and a flat 14% made the page a 5-level channel
-     spread — a warm room that was true on paper and neutral black on screen.
-     High chroma where it is barely perceptible, low where it would shout.
-     See DESIGN.md's Tapered Chroma Rule before changing any pair.
+     plus-8 is nearly black, minus-8 is white, base is the true midpoint.
+     "One step lighter" is always minus one step, in every context. Adjacent
+     steps are one border's worth of contrast apart, so an outline can be
+     derived from its fill by stepping rather than by picking a new color.
 
-     The dark lightness values are also re-spaced relative to Optics' own
-     (which compress all chrome into 8–14%): the floor sits ~5 points higher
-     and adjacent steps are pushed apart, so stacked surfaces separate on tone
-     instead of relying entirely on shadow.
+     Chroma fades to zero over the top four steps — white cannot hold chroma,
+     and the old ramp already did this (minus-max was pure white).
+     ======================================================================== */
 
-     Light values are Optics' original lightness at a flat 14% saturation —
-     incidental output, not a designed palette, per the Dark-First Rule. */
+  /* Surfaces — the room, climbing away from the floor */
+  --gp-n-plus-8:  oklch(calc(var(--gp-n-l-floor) +  0 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 16 * var(--gp-n-hue-drift)));
+  --gp-n-plus-7:  oklch(calc(var(--gp-n-l-floor) +  1 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 15 * var(--gp-n-hue-drift)));
+  --gp-n-plus-6:  oklch(calc(var(--gp-n-l-floor) +  2 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 14 * var(--gp-n-hue-drift)));
+  --gp-n-plus-5:  oklch(calc(var(--gp-n-l-floor) +  3 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 13 * var(--gp-n-hue-drift)));
+  --gp-n-plus-4:  oklch(calc(var(--gp-n-l-floor) +  4 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 12 * var(--gp-n-hue-drift)));
+  --gp-n-plus-3:  oklch(calc(var(--gp-n-l-floor) +  5 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 11 * var(--gp-n-hue-drift)));
+  --gp-n-plus-2:  oklch(calc(var(--gp-n-l-floor) +  6 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 10 * var(--gp-n-hue-drift)));
+  --gp-n-plus-1:  oklch(calc(var(--gp-n-l-floor) +  7 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  9 * var(--gp-n-hue-drift)));
+
+  --gp-n-base:    oklch(calc(var(--gp-n-l-floor) +  8 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  8 * var(--gp-n-hue-drift)));
+
+  /* Ink — climbing toward white */
+  --gp-n-minus-1: oklch(calc(var(--gp-n-l-floor) +  9 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  7 * var(--gp-n-hue-drift)));
+  --gp-n-minus-2: oklch(calc(var(--gp-n-l-floor) + 10 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  6 * var(--gp-n-hue-drift)));
+  --gp-n-minus-3: oklch(calc(var(--gp-n-l-floor) + 11 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  5 * var(--gp-n-hue-drift)));
+  --gp-n-minus-4: oklch(calc(var(--gp-n-l-floor) + 12 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) -  4 * var(--gp-n-hue-drift)));
+  --gp-n-minus-5: oklch(calc(var(--gp-n-l-floor) + 13 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.75) calc(var(--gp-n-hue) - 3 * var(--gp-n-hue-drift)));
+  --gp-n-minus-6: oklch(calc(var(--gp-n-l-floor) + 14 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.50) calc(var(--gp-n-hue) - 2 * var(--gp-n-hue-drift)));
+  --gp-n-minus-7: oklch(calc(var(--gp-n-l-floor) + 15 * var(--gp-n-l-step)) calc(var(--gp-n-chroma) * 0.25) calc(var(--gp-n-hue) - 1 * var(--gp-n-hue-drift)));
+  --gp-n-minus-8: oklch(calc(var(--gp-n-l-floor) + 16 * var(--gp-n-l-step)) 0 var(--gp-n-hue));
+
+  /* The Lamp — a HALF step above the floor, deliberately off the surface scale.
+     DESIGN.md's Lamp Rule treats the room's light as light, not furniture: the
+     page gradient is a wash over the floor, not a surface something sits on.
+     Giving it a whole step put it level with plus-7 (recessed) and made every
+     recessed surface — the leaderboard's header band, the stats grid — vanish
+     into the page. Half a step keeps the wash and keeps the step free. */
+  --gp-n-lamp: oklch(calc(var(--gp-n-l-floor) + 0.5 * var(--gp-n-l-step)) var(--gp-n-chroma) calc(var(--gp-n-hue) - 15.5 * var(--gp-n-hue-drift)));
+
+  /* ========================================================================
+     3. LEGACY ALIASES  —  TEMPORARY
+
+     The old token names, re-pointed at the new ramp so the 39 component files
+     keep working untouched while the ramp is evaluated. Phase 2 migrates
+     components to role names (--gp-surface-raised, --gp-ink-muted, …) and this
+     whole block is deleted. Do not add to it.
+
+     Three mappings are deliberate rather than nearest-value:
+
+       plus-eight → plus-6   RAISED, and plus-seven → plus-7 RECESSED. These two
+         swap. They were 1.0 OKLCH point apart — the same lightness — and read
+         as different surfaces only because plus-eight carried 2x the chroma.
+         Under a flat-chroma ramp they must separate, so they were put in
+         dark-mode elevation order: nearer the viewer is lighter.
+
+       base → plus-4, NOT the midpoint. Despite the name, 4 of its 5 uses are
+         the border/outline on a plus-five card face, 4.9 points lighter — one
+         step. It was never a midpoint; it was the "one step up" tone.
+
+       plus-ten/plus-nine → --gp-n-lamp, a HALF step above the floor and
+         deliberately off the surface scale. Both are page-gradient stops. They
+         were first rounded up to plus-7, which put the page wash level with
+         recessed and made every recessed surface vanish into the page — the
+         leaderboard's header band disappeared outright. A wash is not a
+         surface and must not occupy a surface step. See the Lamp token above.
+     ======================================================================== */
+
+  --gp-color-neutral-plus-max:   var(--gp-n-plus-8);
+  --gp-color-neutral-plus-ten:   var(--gp-n-lamp);   /* gradient stop, not a surface */
+  --gp-color-neutral-plus-nine:  var(--gp-n-lamp);   /* gradient stop, not a surface */
+  --gp-color-neutral-plus-eight: var(--gp-n-plus-6);   /* RAISED  — swapped */
+  --gp-color-neutral-plus-seven: var(--gp-n-plus-7);   /* RECESSED — swapped */
+  --gp-color-neutral-plus-six:   var(--gp-n-plus-6);
+  --gp-color-neutral-plus-five:  var(--gp-n-plus-5);
+  --gp-color-neutral-plus-four:  var(--gp-n-plus-4);
+  --gp-color-neutral-plus-three: var(--gp-n-plus-4);
+  --gp-color-neutral-plus-two:   var(--gp-n-plus-3);
+  --gp-color-neutral-plus-one:   var(--gp-n-plus-2);
+  --gp-color-neutral-base:       var(--gp-n-plus-4);   /* an outline tone, not a midpoint */
+
+  --gp-color-neutral-minus-two:   var(--gp-n-plus-2);
+  --gp-color-neutral-minus-three: var(--gp-n-plus-1);
+  --gp-color-neutral-minus-four:  var(--gp-n-base);
+  --gp-color-neutral-minus-five:  var(--gp-n-minus-2);
+  --gp-color-neutral-minus-max:   var(--gp-n-minus-8);
+
+  /* Contrast pairs. All seven collapse onto five ramp positions — Phase 2
+     replaces them with three ink roles. */
+  --gp-color-neutral-on-base:            var(--gp-n-minus-8);
+  --gp-color-neutral-on-plus-max:        var(--gp-n-minus-8);
+  --gp-color-neutral-on-plus-eight:      var(--gp-n-minus-6);
+  --gp-color-neutral-on-plus-eight-alt:  var(--gp-n-base);
+  --gp-color-neutral-on-plus-seven:      var(--gp-n-minus-5);
+  --gp-color-neutral-on-plus-five:       var(--gp-n-minus-5);
+  --gp-color-neutral-on-plus-five-alt:   var(--gp-n-minus-7);
+
+  /* The bridge still feeds Optics an HSL hue/saturation for any step we don't
+     override. Legacy scalars; they go with the bridge in Phase 3. */
   --gp-color-neutral-h: 30;
-  --gp-color-neutral-s: 8%;    /* ink + anything without its own saturation */
-
-  /* Surfaces: page floor → nearest the viewer.        light  |  dark (designed) */
-  --gp-color-neutral-plus-max:   light-dark(hsl(var(--gp-color-neutral-h) 14% 100%), hsl(var(--gp-color-neutral-h) 18% 11%));
-  --gp-color-neutral-plus-eight: light-dark(hsl(var(--gp-color-neutral-h) 14%  98%), hsl(var(--gp-color-neutral-h) 15% 15%));
-  --gp-color-neutral-plus-seven: light-dark(hsl(var(--gp-color-neutral-h) 14%  96%), hsl(var(--gp-color-neutral-h) 10% 19%));
-  --gp-color-neutral-plus-six:   light-dark(hsl(var(--gp-color-neutral-h) 14%  94%), hsl(var(--gp-color-neutral-h)  9% 22%));
-  --gp-color-neutral-plus-five:  light-dark(hsl(var(--gp-color-neutral-h) 14%  90%), hsl(var(--gp-color-neutral-h)  7% 25%));
-  --gp-color-neutral-plus-four:  light-dark(hsl(var(--gp-color-neutral-h) 14%  84%), hsl(var(--gp-color-neutral-h)  6% 28%));
-  --gp-color-neutral-plus-three: light-dark(hsl(var(--gp-color-neutral-h) 14%  70%), hsl(var(--gp-color-neutral-h)  6% 32%));
-  --gp-color-neutral-plus-two:   light-dark(hsl(var(--gp-color-neutral-h) 14%  64%), hsl(var(--gp-color-neutral-h)  5% 35%));
-  --gp-color-neutral-plus-one:   light-dark(hsl(var(--gp-color-neutral-h) 14%  44%), hsl(var(--gp-color-neutral-h)  5% 39%));
-
-  --gp-color-neutral-base:       light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 40%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 30%));
-
-  /* Ink: minus-max is the strongest, stepping down toward the surface tone. */
-  --gp-color-neutral-minus-one:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 36%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 36%));
-  --gp-color-neutral-minus-two:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 32%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 40%));
-  --gp-color-neutral-minus-three: light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 28%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 44%));
-  --gp-color-neutral-minus-four:  light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 24%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 52%));
-  --gp-color-neutral-minus-five:  light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 20%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 64%));
-  --gp-color-neutral-minus-six:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 16%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 72%));
-  --gp-color-neutral-minus-seven: light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  8%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 80%));
-  --gp-color-neutral-minus-eight: light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  4%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 88%));
-  --gp-color-neutral-minus-max:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  0%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%));
-
-  /* Contrast pairs: the ink to use *on* a given surface step. `-alt` is the
-     muted companion. Only the pairs in use are defined; add a step's pair
-     when a component needs it rather than defining all nineteen up front. */
-  --gp-color-neutral-on-base:            light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%));
-  --gp-color-neutral-on-plus-max:        light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)   0%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s) 100%));
-  --gp-color-neutral-on-plus-eight:      light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)   4%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  88%));
-  --gp-color-neutral-on-plus-eight-alt:  light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  34%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  54%));
-  --gp-color-neutral-on-plus-seven:      light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)   8%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  80%));
-  --gp-color-neutral-on-plus-five:       light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  20%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  80%));
-  --gp-color-neutral-on-plus-five-alt:   light-dark(hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  40%), hsl(var(--gp-color-neutral-h) var(--gp-color-neutral-s)  94%));
+  --gp-color-neutral-s: 8%;
 
   /* ---- Semantic neutrals ---------------------------------------------- */
-  --gp-color-background: var(--gp-color-neutral-plus-max);
-  --gp-color-on-background: var(--gp-color-neutral-on-plus-eight);
-  --gp-color-border: var(--gp-color-neutral-plus-five);
-  --gp-color-muted: var(--gp-color-neutral-minus-four); /* counts, captions, metadata */
+  --gp-color-background: var(--gp-n-plus-8);
+  --gp-color-on-background: var(--gp-n-minus-6);
+  --gp-color-border: var(--gp-n-plus-5);
+  --gp-color-muted: var(--gp-n-base); /* counts, captions, metadata */
 
   --gp-color-overlay: rgb(0 0 0 / 0.5);
   --gp-color-shadow: rgb(0 0 0 / 0.6);
+
+  /* ========================================================================
+     4. ACCENTS  —  hand-picked, never derived
+
+     The No-Ramp Rule still holds, and now has a clearer target: never derive
+     an accent from the neutral ramp. Only the neutrals are generated.
+     ======================================================================== */
 
   /* ---- Coral: the one brand accent ------------------------------------
      One hue (16°), a few hand-picked shades, never a derived ramp — a
      ramp-darkened coral reads as muddy copper. */
   --gp-color-accent: hsl(16 85% 62%);
   --gp-color-on-accent: #fff;
-  --gp-color-accent-text: light-dark(hsl(16 90% 42%), var(--gp-color-accent)); /* coral as ink, legible on either page */
-  --gp-color-accent-secondary: color-mix(in srgb, var(--gp-color-accent) 20%, var(--gp-color-neutral-plus-max));
-
-  /* ---- The lamp -------------------------------------------------------
-     The room's single light source: one warm pool, high and left, falling off
-     into the corners (components/layout/room.css). Alpha stays low; it is
-     meant to be felt rather than seen as a shape. See DESIGN.md's Lamp Rule. */
-  --gp-lamp-warm: rgb(255 190 120 / 0.10);
-  --gp-lamp-mid: rgb(255 175 105 / 0.045);
+  --gp-color-accent-text: hsl(16 85% 62%);  /* coral as ink */
+  /* Was color-mix(coral 20%, plus-max), which DESIGN.md forbids and which hid
+     the resulting color behind a formula. Resolved to the literal it produced. */
+  --gp-color-accent-secondary: #4b2e22;
 
   /* ---- Page accents ---------------------------------------------------
      One color per major page, never appearing on another (DESIGN.md's One
      Page, One Color Rule). */
 
   /* Felt — the game page. Green lives only here, never on chrome. */
-  --gp-felt: light-dark(#bfd2c6, #1b2a22);
-  --gp-felt-bright: light-dark(#e6f5ea, #274035);
-  --gp-felt-brighter: light-dark(rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.05)); /* translucent white over felt */
+  --gp-felt: #1b2a22;
+  --gp-felt-bright: #274035;
+  --gp-felt-brighter: rgb(255 255 255 / 0.05); /* translucent white over felt */
 
   /* Lobby slate — the games index. Only the raised game bars carry it; the
-     tray beneath them stays neutral chrome.
-
-     Slate keeps the hue and saturation it always had (#262b32 is
-     hsl(215 14% 17%)) — it is the same cool blue-gray. Only its *lightness*
-     rises, to 26%, because the room rose underneath it: against the lifted
-     tray (17%) the original slate would sit lower than the surface it is
-     meant to rest on, inverting the raised-bar reading and breaking the
-     Matched-Pair Rule. Re-leveling, not recoloring. */
-  --gp-lobby-bar: light-dark(#eef1f5, hsl(215 14% 26%));
+     tray beneath them stays neutral chrome. Same hue and saturation it always
+     had (#262b32 is hsl(215 14% 17%)); only its lightness rises, to 26%,
+     because the room rose underneath it. Re-leveling, not recoloring. */
+  --gp-lobby-bar: hsl(215 14% 26%);
 
   /* ---- Cards ----------------------------------------------------------- */
   --gp-card-face-selected: hsl(16 45% 20%); /* dark/muted coral so the card's own ink still reads over it */
@@ -139,60 +201,74 @@
   --gp-card-ink-red: #dc4d38;
 
   /* ---- Warning --------------------------------------------------------
-     THE ONE UNDESIGNED CORNER OF THE PALETTE. These values are Optics' alert
-     hue (47° at full saturation) transcribed so that no color resolves through
-     an Optics token, but they were never chosen for this room — they are a
-     hot yellow in a warm amber house. Used by the copy-link popup and the
-     "not your turn" message. Pick real values when a warning state next gets
-     design attention. */
-  --gp-color-warning-base: light-dark(hsl(47 100% 40%), hsl(47 100% 32%));
-  --gp-color-warning-on-base: light-dark(hsl(47 100% 12%), hsl(47 100% 2%));
-  --gp-color-warning-surface: light-dark(hsl(47 100% 96%), hsl(47 100% 8%));
-  --gp-color-warning-border: light-dark(hsl(47 100% 90%), hsl(47 100% 14%));
-  --gp-color-warning-text: light-dark(hsl(47 100% 28%), hsl(47 100% 60%));
+     THE ONE UNDESIGNED CORNER OF THE PALETTE. Optics' alert hue (47° at full
+     saturation), transcribed so no color resolves through an Optics token, but
+     never chosen for this room — a hot yellow in a warm amber house. Used by
+     the copy-link popup and the "not your turn" message. Pick real values when
+     a warning state next gets design attention. */
+  --gp-color-warning-base: hsl(47 100% 32%);
+  --gp-color-warning-on-base: hsl(47 100% 2%);
+  --gp-color-warning-surface: hsl(47 100% 8%);
+  --gp-color-warning-border: hsl(47 100% 14%);
+  --gp-color-warning-text: hsl(47 100% 60%);
 
   /* ========================================================================
-     2. THE OPTICS BRIDGE
+     5. THE OPTICS BRIDGE
 
      Optics' own components (buttons, sidebar, inputs, dropdowns, dialogs) read
      --op-color-* internally, and we cannot rewrite their stylesheets. Left
      alone they would paint themselves from Optics' default palette while our
-     hand-written components used the palette above — the same screen in two
-     color systems.
+     hand-written components used the ramp above — the same screen in two color
+     systems.
 
-     So the flow is one-directional and this is the only place it happens: our
+     The flow is one-directional and this is the only place it happens: our
      tokens feed Optics, never the reverse. Nothing outside this block should
-     reference --op-color-*; use the --gp-color-* token instead.
+     reference --op-color-*; use a --gp-* token instead.
      ======================================================================== */
 
   --op-color-neutral-h: var(--gp-color-neutral-h);
   --op-color-neutral-s: var(--gp-color-neutral-s);
 
-  --op-color-neutral-plus-max:   var(--gp-color-neutral-plus-max);
-  --op-color-neutral-plus-eight: var(--gp-color-neutral-plus-eight);
-  --op-color-neutral-plus-seven: var(--gp-color-neutral-plus-seven);
-  --op-color-neutral-plus-six:   var(--gp-color-neutral-plus-six);
-  --op-color-neutral-plus-five:  var(--gp-color-neutral-plus-five);
-  --op-color-neutral-plus-four:  var(--gp-color-neutral-plus-four);
-  --op-color-neutral-plus-three: var(--gp-color-neutral-plus-three);
-  --op-color-neutral-plus-two:   var(--gp-color-neutral-plus-two);
-  --op-color-neutral-plus-one:   var(--gp-color-neutral-plus-one);
-  --op-color-neutral-base:       var(--gp-color-neutral-base);
+  --op-color-neutral-plus-max:   var(--gp-n-plus-8);
+  --op-color-neutral-plus-eight: var(--gp-n-plus-6);
+  --op-color-neutral-plus-seven: var(--gp-n-plus-7);
+  --op-color-neutral-plus-six:   var(--gp-n-plus-6);
+  --op-color-neutral-plus-five:  var(--gp-n-plus-5);
+  --op-color-neutral-plus-four:  var(--gp-n-plus-4);
+  --op-color-neutral-plus-three: var(--gp-n-plus-4);
+  --op-color-neutral-plus-two:   var(--gp-n-plus-3);
+  --op-color-neutral-plus-one:   var(--gp-n-plus-2);
+  --op-color-neutral-base:       var(--gp-n-plus-4);
+
+  /* Contrast pairs. These were MISSING and it showed: Optics' sidebar reads
+     --op-color-neutral-on-plus-eight for its text, so while the sidebar's
+     *background* came from our ramp, its *text* was still Optics' own
+     hsl(30 8% 88%) — our hue and saturation, but Optics' lightness, and an HSL
+     value sitting off the OKLCH ramp entirely. Same for body text. */
+  --op-color-neutral-on-plus-max:   var(--gp-n-minus-8);
+  --op-color-neutral-on-plus-eight: var(--gp-n-minus-6);
+  --op-color-neutral-on-plus-seven: var(--gp-n-minus-5);
 
   --op-color-background: var(--gp-color-background);
+  --op-color-on-background: var(--gp-color-on-background);
   --op-color-border: var(--gp-color-border);
+
+  /* Optics' base.css paints every un-overridden <a> with this. Left alone it
+     resolves through the primary ramp to hsl(16 70% 40%) — a dark, muddy
+     coral, not ours. Point it at the real accent. */
+  --op-color-primary-original: var(--gp-color-accent);
 
   /* Optics' primary ramp is pointed at coral's hue for one reason only: so its
      *internal* chrome (focus rings, focused Simple Form inputs) reads coral
      rather than a stray default. Never color a component from this ramp — its
-     lightness knob is inert and its base is locked mid-dark in both schemes,
-     so it cannot reach our coral. See DESIGN.md's No-Ramp Rule. */
+     lightness knob is inert and its base is locked mid-dark, so it cannot
+     reach our coral. See DESIGN.md's No-Ramp Rule. */
   --op-color-primary-h: 16;    /* coral, matches --gp-color-accent */
   --op-color-primary-s: 70%;
   --op-color-primary-l: 40%;   /* nearly inert — Optics hardcodes the base lightness */
 
   /* ========================================================================
-     3. NON-COLOR OVERRIDES
+     6. NON-COLOR OVERRIDES
 
      Optics owns spacing, type, radii, shadows and borders; these are the few
      measurements we deliberately change. Everything else comes from Optics
@@ -211,25 +287,21 @@
   --gp-card-aspect-ratio: 5 / 7;
 
   /* The Matched-Pair Rule (DESIGN.md): the tray's inset and the bar's lift are
-     one effect and are tuned together. The dark values are deliberately
-     stronger than the light ones — on a near-black tray a black drop shadow
-     has almost no tone left to darken, so depth in dark comes from the *lit*
-     inner edges plus a wider, heavier blur. Judged in dark.
-
-     light-dark() must wrap only the <color>, never the whole shorthand — a
-     shorthand silently invalidates the declaration to `none` with no warning.
-     See docs/frontend.md. */
-  --gp-lobby-tray-border: 1px solid light-dark(rgb(90 80 55 / 0.14), rgb(200 185 140 / 0.09));
+     one effect and are tuned together. On a near-black tray a black drop
+     shadow has almost no tone left to darken, so depth comes from the *lit*
+     inner edges plus a wider, heavier blur. Dark-only now — the light arms
+     these carried were never designed. */
+  --gp-lobby-tray-border: 1px solid rgb(200 185 140 / 0.09);
   --gp-lobby-tray-shadow:
-    inset 0 3px 9px light-dark(rgb(70 62 40 / 0.12), rgb(0 0 0 / 0.6)),
-    inset 0 -1px 0 light-dark(rgb(255 255 255 / 0.4), rgb(255 255 255 / 0.07));
+    inset 0 3px 9px rgb(0 0 0 / 0.6),
+    inset 0 -1px 0 rgb(255 255 255 / 0.07);
   --gp-lobby-bar-shadow:
-    inset 0 1px 0 light-dark(rgb(255 255 255 / 0.7), rgb(255 255 255 / 0.11)),
-    0 3px 10px light-dark(rgb(70 62 40 / 0.13), rgb(0 0 0 / 0.55));
+    inset 0 1px 0 rgb(255 255 255 / 0.11),
+    0 3px 10px rgb(0 0 0 / 0.55);
   /* The one row waiting on you sits highest on the tray — same pair, one step further. */
   --gp-lobby-bar-shadow-live:
-    inset 0 1px 0 light-dark(rgb(255 255 255 / 0.8), rgb(255 255 255 / 0.14)),
-    0 5px 16px light-dark(rgb(70 62 40 / 0.18), rgb(0 0 0 / 0.62));
+    inset 0 1px 0 rgb(255 255 255 / 0.14),
+    0 5px 16px rgb(0 0 0 / 0.62);
 
   /* CSS custom properties can't be read inside @media conditions — this is
      documentation only; keep any matching @media (max-width: …) in sync by hand. */

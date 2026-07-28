@@ -1,46 +1,46 @@
 .opponent-strip {
   display: flex;
   justify-content: center;
-  gap: var(--op-space-medium);
-  padding-bottom: var(--op-space-medium);
-  border-bottom: var(--op-border-width) solid var(--gp-color-border);
+  gap: var(--gp-space-medium);
+  padding-bottom: var(--gp-space-medium);
+  border-bottom: var(--gp-border-width) solid var(--gp-color-border);
 }
 
 .opponent-card {
-  min-width: calc(11 * var(--op-space-scale-unit));
-  border: var(--op-border-width) solid var(--gp-color-border);
-  border-radius: var(--op-radius-medium);
-  padding: var(--op-space-x-small) var(--op-space-small);
+  min-width: calc(11 * var(--gp-space-scale-unit));
+  border: var(--gp-border-width) solid var(--gp-color-border);
+  border-radius: var(--gp-radius-medium);
+  padding: var(--gp-space-x-small) var(--gp-space-small);
   background-color: var(--gp-color-neutral-plus-eight);
   text-align: center;
 
   .opponent-card__name {
-    font-size: var(--op-font-small);
-    font-weight: var(--op-font-weight-semi-bold);
+    font-size: var(--gp-font-small);
+    font-weight: var(--gp-weight-semi-bold);
   }
 
   .opponent-card__turn-icon {
-    margin-right: var(--op-space-3x-small);
+    margin-right: var(--gp-space-3x-small);
     color: var(--gp-color-accent-text);
-    font-size: var(--op-font-small);
+    font-size: var(--gp-font-small);
   }
 
   .opponent-card__divider {
-    border-top: var(--op-border-width) solid var(--gp-color-border);
-    margin-block: var(--op-space-2x-small);
+    border-top: var(--gp-border-width) solid var(--gp-color-border);
+    margin-block: var(--gp-space-2x-small);
   }
 
   .opponent-card__hand {
     display: flex;
     justify-content: center;
-    gap: var(--op-space-3x-small);
+    gap: var(--gp-space-3x-small);
   }
 
   .opponent-card__mini-card {
-    width: var(--op-space-medium);
+    width: var(--gp-space-medium);
     aspect-ratio: var(--gp-card-aspect-ratio);
-    border: var(--op-border-width) solid var(--gp-color-border);
-    border-radius: var(--op-radius-small);
+    border: var(--gp-border-width) solid var(--gp-color-border);
+    border-radius: var(--gp-radius-small);
     background-color: var(--gp-color-neutral-plus-five);
   }
 

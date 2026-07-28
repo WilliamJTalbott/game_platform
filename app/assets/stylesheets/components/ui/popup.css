@@ -8,10 +8,10 @@
 
   color: var(--gp-color-warning-on-base);
   background-color: var(--gp-color-warning-base);
-  padding: var(--op-space-medium);
-  border-radius: var(--op-radius-large);
-  font-weight: var(--op-font-weight-semi-bold);
-  box-shadow: var(--op-shadow-medium);
+  padding: var(--gp-space-medium);
+  border-radius: var(--gp-radius-large);
+  font-weight: var(--gp-weight-semi-bold);
+  box-shadow: var(--gp-shadow-medium);
 
 
   transition: all 0.4s ease-in-out;

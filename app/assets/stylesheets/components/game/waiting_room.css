@@ -14,53 +14,53 @@
   min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: var(--op-space-x-large);
+  padding: var(--gp-space-x-large);
   background-color: var(--gp-color-neutral-plus-max);
 
   .waiting-room__stage {
     width: min(var(--_gp-waiting-room-width), 100%);
-    padding: var(--op-space-medium);
-    border-radius: var(--op-radius-2x-large);
+    padding: var(--gp-space-medium);
+    border-radius: var(--gp-radius-2x-large);
     background-color: var(--gp-felt);
   }
 
   .waiting-room__panel {
     display: flex;
     flex-direction: column;
-    gap: var(--op-space-large);
-    padding: var(--op-space-large);
-    border-radius: var(--op-radius-x-large);
+    gap: var(--gp-space-large);
+    padding: var(--gp-space-large);
+    border-radius: var(--gp-radius-x-large);
     background-color: var(--gp-felt-bright);
-    box-shadow: var(--op-shadow-small);
+    box-shadow: var(--gp-shadow-small);
   }
 
   .waiting-room__title {
     margin: 0;
-    font-size: var(--op-font-2x-large);
-    font-weight: var(--op-font-weight-bold);
+    font-size: var(--gp-font-2x-large);
+    font-weight: var(--gp-weight-bold);
     text-wrap: balance;
   }
 
   .waiting-room__meta {
-    margin: var(--op-space-3x-small) 0 0;
+    margin: var(--gp-space-3x-small) 0 0;
     color: var(--gp-color-muted);
-    font-size: var(--op-font-small);
+    font-size: var(--gp-font-small);
     font-variant-numeric: tabular-nums;
   }
 
   .waiting-room__seating {
     display: flex;
     flex-direction: column;
-    gap: var(--op-space-x-small);
+    gap: var(--gp-space-x-small);
   }
 
   .waiting-room__seating-label {
     margin: 0;
     color: var(--gp-color-muted);
-    font-size: var(--op-font-x-small);
-    font-weight: var(--op-font-weight-bold);
+    font-size: var(--gp-font-x-small);
+    font-weight: var(--gp-weight-bold);
     text-transform: uppercase;
-    letter-spacing: var(--op-letter-spacing-label);
+    letter-spacing: var(--gp-letter-spacing-label);
   }
 
   .waiting-room__seats {
@@ -69,18 +69,18 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: var(--op-space-x-small);
+    gap: var(--gp-space-x-small);
   }
 
   .waiting-room__seat {
     display: flex;
     align-items: center;
-    gap: var(--op-space-x-small);
-    padding: var(--op-space-x-small) var(--op-space-small);
+    gap: var(--gp-space-x-small);
+    padding: var(--gp-space-x-small) var(--gp-space-small);
     /* Transparent here so a taken seat and an open one — which carries a real dashed
        border below — stay exactly the same height. */
-    border: var(--op-border-width) solid transparent;
-    border-radius: var(--op-radius-large);
+    border: var(--gp-border-width) solid transparent;
+    border-radius: var(--gp-radius-large);
     background-color: var(--gp-felt-brighter);
     box-shadow: var(--gp-lobby-bar-shadow);
 
@@ -92,7 +92,7 @@
 
       .waiting-room__seat-name {
         color: var(--gp-color-muted);
-        font-weight: var(--op-font-weight-normal);
+        font-weight: var(--gp-weight-normal);
       }
     }
   }
@@ -100,8 +100,8 @@
   .waiting-room__seat-name {
     flex: 1;
     min-width: 0;
-    font-size: var(--op-font-medium);
-    font-weight: var(--op-font-weight-semi-bold);
+    font-size: var(--gp-font-medium);
+    font-weight: var(--gp-weight-semi-bold);
     /* break-word, not anywhere: a long name may only split when it genuinely cannot
        fit, never mid-word while there's still room. */
     overflow-wrap: break-word;
@@ -112,23 +112,23 @@
   .waiting-room__role {
     flex: none;
     color: var(--gp-color-muted);
-    font-size: var(--op-font-2x-small);
-    font-weight: var(--op-font-weight-bold);
+    font-size: var(--gp-font-2x-small);
+    font-weight: var(--gp-weight-bold);
     text-transform: uppercase;
-    letter-spacing: var(--op-letter-spacing-label);
+    letter-spacing: var(--gp-letter-spacing-label);
   }
 
   .waiting-room__you {
     flex: none;
-    padding: var(--op-space-3x-small) var(--op-space-x-small);
-    border: var(--op-border-width) solid var(--gp-color-accent);
-    border-radius: var(--op-radius-pill);
+    padding: var(--gp-space-3x-small) var(--gp-space-x-small);
+    border: var(--gp-border-width) solid var(--gp-color-accent);
+    border-radius: var(--gp-radius-pill);
     background-color: var(--gp-color-accent-secondary);
     color: var(--gp-color-accent-text);
-    font-size: var(--op-font-2x-small);
-    font-weight: var(--op-font-weight-bold);
+    font-size: var(--gp-font-2x-small);
+    font-weight: var(--gp-weight-bold);
     text-transform: uppercase;
-    letter-spacing: var(--op-letter-spacing-label);
+    letter-spacing: var(--gp-letter-spacing-label);
   }
 
   /* There is no status line — the Start button's own label reports what the lobby is
@@ -136,7 +136,7 @@
      gates are one object rather than two. */
   .waiting-room__actions {
     display: flex;
-    gap: var(--op-space-x-small);
+    gap: var(--gp-space-x-small);
   }
 
   /* button_to wraps its <button> in a form; keep the form out of the flex row so the
@@ -158,10 +158,10 @@
      pair past the panel's edge. Give the width back, and stack the actions.
      NB: --gp-breakpoint-tablet can't be read inside @media — keep 768px in sync by hand. */
   @media (max-width: 768px) {
-    padding: var(--op-space-small);
+    padding: var(--gp-space-small);
 
     .waiting-room__panel {
-      padding: var(--op-space-medium);
+      padding: var(--gp-space-medium);
     }
 
     .waiting-room__actions {

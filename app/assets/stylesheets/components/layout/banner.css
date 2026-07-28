@@ -22,9 +22,9 @@
         left: 50%;
         transform: translate(-50%, -50%);
         background-color: var(--gp-color-neutral-minus-five);
-        border-radius: var(--op-radius-x-large);
-        padding-block: var(--op-space-x-small);
-        padding-inline: var(--op-space-small);
-        font-weight: var(--op-font-weight-semi-bold);
+        border-radius: var(--gp-radius-x-large);
+        padding-block: var(--gp-space-x-small);
+        padding-inline: var(--gp-space-small);
+        font-weight: var(--gp-weight-semi-bold);
     }
 }

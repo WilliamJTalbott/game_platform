@@ -1,16 +1,16 @@
 .profile {
-  padding: var(--op-space-2x-large);
+  padding: var(--gp-space-2x-large);
   display: flex;
   flex-direction: column;
   width: fit-content;
-  gap: var(--op-space-large);
+  gap: var(--gp-space-large);
 
   h1 {
     color: var(--gp-color-accent-text);
   }
 
   btn {
-    margin-top: var(--op-space-2x-large);
+    margin-top: var(--gp-space-2x-large);
     flex-shrink: 1;
   }
 

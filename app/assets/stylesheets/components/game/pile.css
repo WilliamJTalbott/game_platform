@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--op-space-2x-small);
-  padding: var(--op-space-2x-small);
-  border-radius: var(--op-radius-large);
+  gap: var(--gp-space-2x-small);
+  padding: var(--gp-space-2x-small);
+  border-radius: var(--gp-radius-large);
   background: none;
   border: 0;
 
@@ -15,8 +15,8 @@
   }
 
   &:not(:disabled) .playing-card {
-    outline: calc(var(--op-border-width-large) - 1px) solid var(--gp-color-neutral-base);
-    outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
+    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-color-neutral-base);
+    outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
   }
 
   &:not(:disabled):focus-visible .playing-card {
@@ -24,7 +24,7 @@
   }
 
   .pile__caption {
-    font-size: var(--op-font-x-small);
+    font-size: var(--gp-font-x-small);
     color: var(--gp-color-muted);
     text-align: center;
   }

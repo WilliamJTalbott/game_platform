@@ -17,9 +17,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--op-space-medium);
-  padding: var(--op-space-small) var(--op-space-medium);
-  border-radius: var(--op-radius-x-large);
+  gap: var(--gp-space-medium);
+  padding: var(--gp-space-small) var(--gp-space-medium);
+  border-radius: var(--gp-radius-x-large);
   background-color: var(--gp-lobby-bar);
   box-shadow: var(--gp-lobby-bar-shadow);
 
@@ -27,9 +27,9 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--op-space-x-small);
-    font-size: var(--op-font-medium);
-    font-weight: var(--op-font-weight-semi-bold);
+    gap: var(--gp-space-x-small);
+    font-size: var(--gp-font-medium);
+    font-weight: var(--gp-weight-semi-bold);
   }
 
   /* The live row swaps slate for a coral tint rather than mixing coral *into* slate — coral
@@ -47,18 +47,18 @@
   }
 
   .game-card__type {
-    margin-top: var(--op-space-3x-small);
+    margin-top: var(--gp-space-3x-small);
     color: var(--_gp-card-muted);
-    font-size: var(--op-font-small);
+    font-size: var(--gp-font-small);
   }
 
   .game-card__turn-badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--op-space-3x-small);
-    padding: var(--op-space-3x-small) var(--op-space-x-small);
-    border: var(--op-border-width) solid var(--gp-color-accent);
-    border-radius: var(--op-radius-pill);
+    gap: var(--gp-space-3x-small);
+    padding: var(--gp-space-3x-small) var(--gp-space-x-small);
+    border: var(--gp-border-width) solid var(--gp-color-accent);
+    border-radius: var(--gp-radius-pill);
     /* This badge only ever renders on a --your-turn row (the view gates both on the same
        condition), so it is styled for that surface. Its fill is the shared tint, one step
        deeper than the row, so it reads as a chip resting on it. The label takes room ink
@@ -67,15 +67,15 @@
        signal survives without asking 10px type to do it at 3.2:1. */
     background-color: var(--gp-color-accent-secondary);
     color: var(--gp-color-neutral-minus-max);
-    font-size: var(--op-font-2x-small);
-    font-weight: var(--op-font-weight-bold);
+    font-size: var(--gp-font-2x-small);
+    font-weight: var(--gp-weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.03em;
 
     .game-card__turn-dot {
       width: 0.45em;
       height: 0.45em;
-      border-radius: var(--op-radius-pill);
+      border-radius: var(--gp-radius-pill);
       background-color: currentColor;
     }
   }
@@ -83,13 +83,13 @@
   .game-card__meta {
     display: flex;
     align-items: center;
-    gap: var(--op-space-medium);
+    gap: var(--gp-space-medium);
     white-space: nowrap;
   }
 
   .game-card__count {
     color: var(--_gp-card-muted);
-    font-size: var(--op-font-small);
+    font-size: var(--gp-font-small);
     font-variant-numeric: tabular-nums;
   }
 
@@ -104,11 +104,11 @@
     align-items: center;
     justify-content: center;
     min-width: 4.5rem;
-    padding: var(--op-space-x-small) var(--op-space-small);
-    border: var(--op-border-width) solid transparent;
-    border-radius: var(--op-radius-large);
-    font-size: var(--op-font-small);
-    font-weight: var(--op-font-weight-semi-bold);
+    padding: var(--gp-space-x-small) var(--gp-space-small);
+    border: var(--gp-border-width) solid transparent;
+    border-radius: var(--gp-radius-large);
+    font-size: var(--gp-font-small);
+    font-weight: var(--gp-weight-semi-bold);
     text-decoration: none;
     cursor: pointer;
 
@@ -130,7 +130,7 @@
       background-color: var(--gp-color-accent);
       border-color: var(--gp-color-accent);
       color: var(--gp-color-on-accent);
-      font-weight: var(--op-font-weight-bold);
+      font-weight: var(--gp-weight-bold);
     }
 
     &.game-card__cta--join {

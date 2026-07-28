@@ -5,7 +5,7 @@
 .game--rummy .panel--board .panel__body {
   display: flex;
   flex-direction: column;
-  padding: var(--op-space-medium);
+  padding: var(--gp-space-medium);
 }
 
 /* The felt is the muted board surface; each felt-zone is a raised, brighter panel on
@@ -17,10 +17,10 @@
   flex: 1;
   min-height: 0;
   display: flex;
-  gap: var(--op-space-medium);
-  margin-top: var(--op-space-medium);
-  padding: var(--op-space-medium);
-  border-radius: var(--op-radius-2x-large);
+  gap: var(--gp-space-medium);
+  margin-top: var(--gp-space-medium);
+  padding: var(--gp-space-medium);
+  border-radius: var(--gp-radius-2x-large);
   background-color: var(--gp-felt);
   overflow: hidden;
 }
@@ -28,24 +28,24 @@
 .felt-zone {
   display: flex;
   flex-direction: column;
-  gap: var(--op-space-small);
-  padding: var(--op-space-small) var(--op-space-medium);
-  border-radius: var(--op-radius-x-large);
+  gap: var(--gp-space-small);
+  padding: var(--gp-space-small) var(--gp-space-medium);
+  border-radius: var(--gp-radius-x-large);
   background-color: var(--gp-felt-bright);
-  box-shadow: var(--op-shadow-small);
+  box-shadow: var(--gp-shadow-small);
 
   .felt-zone__label {
-    font-size: var(--op-font-x-small);
-    font-weight: var(--op-font-weight-bold);
+    font-size: var(--gp-font-x-small);
+    font-weight: var(--gp-weight-bold);
     text-transform: uppercase;
-    letter-spacing: var(--op-letter-spacing-label);
+    letter-spacing: var(--gp-letter-spacing-label);
     color: var(--gp-color-muted);
   }
 
   .felt-zone__body {
     display: flex;
     align-items: center;
-    gap: var(--op-space-medium);
+    gap: var(--gp-space-medium);
   }
 
   &.felt-zone--piles {

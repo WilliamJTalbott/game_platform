@@ -4,14 +4,14 @@
 
   thead {
     color: var(--gp-color-neutral-minus-two);
-    font-size: var(--op-font-small);
+    font-size: var(--gp-font-small);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    font-weight: var(--op-font-weight-medium);
+    font-weight: var(--gp-weight-medium);
   }
 
   th, td {
-    padding: var(--op-space-small) var(--op-space-medium);
+    padding: var(--gp-space-small) var(--gp-space-medium);
     text-align: left;
   }
 
@@ -21,12 +21,12 @@
   }
 
   .scoreboard__crown {
-    margin-left: var(--op-space-small);
+    margin-left: var(--gp-space-small);
   }
 
   .scoreboard__you {
-    margin-left: var(--op-space-small);
+    margin-left: var(--gp-space-small);
     color: var(--gp-color-neutral-minus-two);
-    font-weight: var(--op-font-weight-medium);
+    font-weight: var(--gp-weight-medium);
   }
 }

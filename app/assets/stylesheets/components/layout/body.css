@@ -9,7 +9,7 @@
 
     h2 {
        color: var(--gp-color-accent-text);
-       font-weight: var(--op-font-weight-medium);
+       font-weight: var(--gp-weight-medium);
     }
 
     p {
@@ -23,7 +23,7 @@
 
     .body__main {
         grid-area: main;
-        padding-block: var(--op-space-medium);
+        padding-block: var(--gp-space-medium);
     }
 
     .body__left {
@@ -32,8 +32,8 @@
         display: flex;
         justify-content: end;
         align-items: start;
-        padding-block: var(--op-space-medium);
-        padding-inline: var(--op-space-2x-large);
+        padding-block: var(--gp-space-medium);
+        padding-inline: var(--gp-space-2x-large);
     }
 
     .body__right {
@@ -47,5 +47,5 @@
     align-items: stretch;
     width: fit-content;
 
-    gap: var(--op-space-small);
+    gap: var(--gp-space-small);
 }

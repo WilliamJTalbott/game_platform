@@ -1,8 +1,8 @@
 .game {
   height: 100dvh;
   background-color: var(--gp-color-neutral-plus-max);
-  --gp-side-size: calc(83 * var(--op-size-unit));
-  --gp-base-size: calc(65 * var(--op-size-unit));
+  --gp-side-size: calc(83 * var(--gp-size-unit));
+  --gp-base-size: calc(65 * var(--gp-size-unit));
 
   display: grid;
   grid-template-columns: 1fr var(--gp-side-size);

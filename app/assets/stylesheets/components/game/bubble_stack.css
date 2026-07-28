@@ -2,24 +2,24 @@
    reads as a live message trail rather than a side panel. Older entries fade/ghost. */
 .bubble-stack {
   position: absolute;
-  top: var(--op-space-x-large);
-  right: var(--op-space-medium);
-  width: calc(26 * var(--op-space-scale-unit));
+  top: var(--gp-space-x-large);
+  right: var(--gp-space-medium);
+  width: calc(26 * var(--gp-space-scale-unit));
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: var(--op-space-2x-small);
+  gap: var(--gp-space-2x-small);
   z-index: 1;
 }
 
 .feed-bubble {
   max-width: 100%;
-  border-radius: var(--op-radius-x-large) var(--op-radius-x-large) var(--op-radius-medium) var(--op-radius-x-large);
-  padding: var(--op-space-small) var(--op-space-medium);
-  font-size: var(--op-font-small);
+  border-radius: var(--gp-radius-x-large) var(--gp-radius-x-large) var(--gp-radius-medium) var(--gp-radius-x-large);
+  padding: var(--gp-space-small) var(--gp-space-medium);
+  font-size: var(--gp-font-small);
   background-color: var(--gp-color-neutral-plus-max);
-  border: var(--op-border-width) solid var(--gp-color-border);
-  box-shadow: var(--op-shadow-small);
+  border: var(--gp-border-width) solid var(--gp-color-border);
+  box-shadow: var(--gp-shadow-small);
 
   &.feed-bubble--ghost {
     opacity: 0.3;
@@ -33,11 +33,11 @@
     background-color: var(--gp-color-accent);
     border-color: var(--gp-color-accent);
     color: var(--gp-color-on-accent);
-    font-weight: var(--op-font-weight-bold);
+    font-weight: var(--gp-weight-bold);
 
     &::before {
       content: "➜";
-      margin-right: var(--op-space-3x-small);
+      margin-right: var(--gp-space-3x-small);
     }
   }
 }

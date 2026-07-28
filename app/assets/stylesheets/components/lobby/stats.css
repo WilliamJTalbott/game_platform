@@ -1,14 +1,14 @@
 .stats-page {
 
-    padding: var(--op-space-2x-large);
-    gap: var(--op-space-large);
+    padding: var(--gp-space-2x-large);
+    gap: var(--gp-space-large);
 
     display: flex;
     flex-direction: column;
     justify-content: stretch;
 
     .stats-page__header {
-        gap: var(--op-space-medium);
+        gap: var(--gp-space-medium);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -17,14 +17,14 @@
     .stats-page__body {
         flex: 1;
 
-        border-radius: var(--op-radius-2x-large);
+        border-radius: var(--gp-radius-2x-large);
         background-color: var(--gp-color-neutral-plus-seven);
 
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         
-        gap: var(--op-space-small);
-        padding: var(--op-space-medium);    
+        gap: var(--gp-space-small);
+        padding: var(--gp-space-medium);    
     }
 
 }

@@ -1,0 +1,74 @@
+/* ==========================================================================
+   Non-color primitives — Tier 1a
+
+   Every non-color value this app renders, transcribed from Optics' own
+   base_tokens.css so it is declared here instead of read from the vendored
+   bundle. Optics' own components (sidebar, button, form, dialog, …) still
+   read their own --op-* copies internally — that stays true until Phase 3
+   replaces them. This file is what OUR component stylesheets read instead of
+   reaching into --op-* directly. See docs/plans/own-the-tokens.md §6.
+
+   Three values (marked below) are not Optics' defaults — they are values we
+   already override in theme.css's old "non-color overrides" section, carried
+   forward here unchanged.
+   ========================================================================== */
+
+:root {
+  /* ---- Spacing ---------------------------------------------------------- */
+  --gp-space-scale-unit: 1rem;
+  --gp-space-3x-small: 2px;
+  --gp-space-2x-small: 4px;
+  --gp-space-x-small: 8px;
+  --gp-space-small: 12px;
+  --gp-space-medium: 16px;
+  --gp-space-large: 20px;
+  --gp-space-x-large: 24px;
+  --gp-space-2x-large: 28px;
+  --gp-space-3x-large: 40px;
+  --gp-size-unit: 0.4rem;
+
+  /* ---- Type --------------------------------------------------------------
+     font-x-large is 20px here, not 20px derived from a scale-unit calc — see
+     the bug note on --op-font-size-x-large (docs/plans/own-the-tokens.md §8)
+     for the invalid token name it's transcribed from. */
+  --gp-font-2x-small: 10px;
+  --gp-font-x-small: 12px;
+  --gp-font-small: 14px;
+  --gp-font-medium: 16px;
+  --gp-font-large: 18px;
+  --gp-font-x-large: 20px;
+  --gp-font-2x-large: 24px;
+  --gp-font-4x-large: 32px;
+  --gp-weight-normal: 400;
+  --gp-weight-medium: 500;
+  --gp-weight-semi-bold: 600;
+  --gp-weight-bold: 700;
+  --gp-letter-spacing-label: 0.04rem;
+  --gp-line-height-densest: 1;
+
+  /* ---- Radius ------------------------------------------------------------
+     2x-large is ours, not Optics' (16px) — the mockups' big surfaces (felt,
+     lobby tray, modals) want 20px. Every other step matches Optics' scale. */
+  --gp-radius-small: 2px;
+  --gp-radius-medium: 4px;
+  --gp-radius-large: 8px;
+  --gp-radius-x-large: 12px;
+  --gp-radius-2x-large: 20px; /* ours */
+  --gp-radius-pill: 9999px;
+
+  /* ---- Border width — both non-default steps are ours -------------------- */
+  --gp-border-width: 1.8px; /* ours */
+  --gp-border-width-large: 3px; /* ours */
+  --gp-border-width-x-large: 4px;
+
+  /* ---- Shadow -------------------------------------------------------------
+     Optics' own shadow scale, unchanged. */
+  --gp-shadow-small: 0 1px 2px hsl(0deg 0% 0% / 3%), 0 2px 6px hsl(0deg 0% 0% / 15%);
+  --gp-shadow-medium: 0 4px 8px hsl(0deg 0% 0% / 15%), 0 1px 3px hsl(0deg 0% 0% / 3%);
+  --gp-shadow-x-large: 0 8px 12px hsl(0deg 0% 0% / 15%), 0 4px 4px hsl(0deg 0% 0% / 3%);
+
+  /* ---- Misc ---------------------------------------------------------------
+     input-height-large is the only dynamic-form dimension we spend directly
+     (player_dropdown.css). */
+  --gp-input-height-large: 4rem;
+}

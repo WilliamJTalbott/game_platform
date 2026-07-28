@@ -28,8 +28,8 @@
   .end-of-game-modal__dialog {
     position: relative;
     background-color: var(--gp-color-neutral-plus-seven);
-    border-radius: var(--op-radius-2x-large);
-    padding: var(--op-space-3x-large);
+    border-radius: var(--gp-radius-2x-large);
+    padding: var(--gp-space-3x-large);
     width: var(--_gp-end-of-game-modal-width);
     max-width: 90vw;
     opacity: 0;
@@ -40,11 +40,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: var(--op-space-large);
+    margin-bottom: var(--gp-space-large);
   }
 
   .end-of-game-modal__body {
-    margin-bottom: var(--op-space-large);
+    margin-bottom: var(--gp-space-large);
   }
 
   .end-of-game-modal__footer {

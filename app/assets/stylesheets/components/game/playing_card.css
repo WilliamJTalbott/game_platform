@@ -35,8 +35,8 @@
      baked into the SVG) is what lets --selected below just swap a background
      color instead of swapping images. */
   background-color: var(--gp-color-neutral-plus-five);
-  border: var(--op-border-width) solid var(--gp-color-neutral-base);
-  border-radius: var(--op-radius-medium);
+  border: var(--gp-border-width) solid var(--gp-color-neutral-base);
+  border-radius: var(--gp-radius-medium);
 
   filter: var(--_gp-playing-card-shadow);
   transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out, background-color 0.2s ease-in-out;

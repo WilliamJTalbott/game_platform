@@ -31,8 +31,8 @@
   }
 
   &:has(.hand-card__input:enabled) .playing-card {
-    outline: calc(var(--op-border-width-large) - 1px) solid var(--gp-color-neutral-base);
-    outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
+    outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-color-neutral-base);
+    outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
   }
 
   &:has(.hand-card__input:focus-visible) .playing-card {
@@ -59,11 +59,11 @@
    selectable for melding). */
 .hand-card__lock {
   position: absolute;
-  top: var(--op-space-x-small);
-  right: var(--op-space-x-small);
+  top: var(--gp-space-x-small);
+  right: var(--gp-space-x-small);
   z-index: 1;
   color: var(--gp-color-accent);
-  font-size: var(--op-font-size-x-large);
+  font-size: var(--gp-font-size-x-large);
   pointer-events: none;
   transition: transform 0.2s ease-in-out;
 }
@@ -71,16 +71,16 @@
 /* Keep the lock pinned to the card as it lifts on select — same offset and
    easing as the .playing-card transform below. */
 .hand-card__input:checked ~ .hand-card__lock {
-  transform: translateY(calc(-1 * var(--op-space-large)));
+  transform: translateY(calc(-1 * var(--gp-space-large)));
 }
 
 /* :checked is a stable pseudo-class on a stable node (the input never remounts),
    so the `transition` on .playing-card in playing_card.css animates both select
    and deselect here — no keyframe or remount workaround needed. */
 .hand-card__input:checked ~ .card-container .playing-card {
-  transform: translateY(calc(-1 * var(--op-space-large)));
+  transform: translateY(calc(-1 * var(--gp-space-large)));
   filter: var(--_gp-playing-card-shadow);
   background-color: var(--gp-card-face-selected);
-  outline: calc(var(--op-border-width-large) - 1px) solid var(--gp-color-accent);
-  outline-offset: calc(-1 * (var(--op-border-width-large) - 1px));
+  outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-color-accent);
+  outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
 }

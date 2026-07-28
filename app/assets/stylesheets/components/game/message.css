@@ -5,33 +5,33 @@
   justify-content: start;
   align-items: center;
 
-  font-size: var(--op-font-medium);
+  font-size: var(--gp-font-medium);
 
   p {
-      padding: var(--op-space-small);
-      border-radius: var(--op-radius-x-large);
+      padding: var(--gp-space-small);
+      border-radius: var(--gp-radius-x-large);
       
       color: var(--gp-color-neutral-on-plus-five-alt);
       background-color: var(--gp-color-neutral-plus-five);
   }
 
   &.message--action {
-    margin-top: var(--op-space-small);
+    margin-top: var(--gp-space-small);
   }
 
   &.message--response {
 
-    gap: var(--op-space-x-small);
-    padding-inline: var(--op-space-small);
+    gap: var(--gp-space-x-small);
+    padding-inline: var(--gp-space-small);
 
     p {
       flex: 1;
       color: var(--gp-color-neutral-on-plus-max);
-      border: var(--op-border-width) solid var(--gp-color-neutral-plus-five);
+      border: var(--gp-border-width) solid var(--gp-color-neutral-plus-five);
       background-color: var(--gp-color-neutral-plus-eight);
 
-      font-size: var(--op-font-x-small);
-      font-weight: var(--op-font-weight-semi-bold);
+      font-size: var(--gp-font-x-small);
+      font-weight: var(--gp-weight-semi-bold);
     }
 
     .response__icon {
@@ -42,7 +42,7 @@
     &.response--alert {
       p {
         color: var(--gp-color-warning-text);
-        border: var(--op-border-width) solid var(--gp-color-warning-border);
+        border: var(--gp-border-width) solid var(--gp-color-warning-border);
         background-color: var(--gp-color-warning-surface);
       }
     }

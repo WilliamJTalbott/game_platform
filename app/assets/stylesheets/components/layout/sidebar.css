@@ -6,6 +6,28 @@
   }
 }
 
+/* Optics' own default sidebar background reads --op-color-neutral-plus-eight,
+   which theme.css's bridge points at --gp-n-plus-6 (the raised surface), so
+   the sidebar is painted from our ramp without an override here.
+
+   The border and the internal .divider still need overriding: Optics' defaults
+   (neutral-plus-four and neutral-plus-five/--op-color-border) are tuned for a
+   lower-saturation ramp and read as pale, washed-out lines against the
+   sidebar's warmer tone.
+
+   This used to be a hand-written hsl() a few points above the background. It
+   is now simply ONE STEP LIGHTER than the surface it sits on — the surface is
+   plus-6, the line is plus-5. That is the whole point of an even ramp: a line
+   on a surface is the next step up, not a separate colour someone picked. */
+.sidebar {
+  --_gp-sidebar-line: var(--gp-n-plus-5);
+  --_op-sidebar-border-color: var(--_gp-sidebar-line);
+
+  .divider {
+    background-color: var(--_gp-sidebar-line);
+  }
+}
+
 @media (max-width: 768px) {
   .sidebar {
     --__op-sidebar-width: var(--_op-sidebar-rail-width);

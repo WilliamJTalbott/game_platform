@@ -2,23 +2,19 @@
    and the lights are low" — but every surface in the app was a flat fill with no luminance
    gradient anywhere, which reads as lights *off* rather than lights *low*.
 
-   This is the one authored light in the app: a single warm pool high and to the left of the
-   main column, falling off into the corners. It sits on the page shell (Optics' `.op-page`)
-   rather than on any one page, so every surface in the house is lit by the same lamp.
+   This is the one authored light in the app: a simple top-to-bottom fade from one shade below
+   the sidebar's brightest point (neutral-plus-nine, theme.css) down to the floor
+   (neutral-plus-max). It sits on the page shell (Optics' `.op-page`) rather than on any one
+   page, so every surface in the house is lit by the same lamp.
 
-   `fixed` attachment keeps the lamp anchored to the room instead of scrolling with the
-   content — light doesn't move when you scroll. Opaque surfaces laid on top (the lobby
-   tray, panels, the felt) mask it, which is correct: furniture blocks light. The tray adds
-   its own matching falloff so the biggest surface in the app catches the same light rather
-   than sitting flat under it (see lobby.css). */
+   `fixed` attachment keeps the gradient anchored to the room instead of scrolling with the
+   content — light doesn't move when you scroll. Opaque surfaces laid on top (the sidebar,
+   the lobby tray, panels, the felt) mask it, which is correct: furniture blocks light. The
+   sidebar instead takes neutral-plus-eight directly as its own flat background (its normal
+   role is already "the raised surface tone" — Optics' default sidebar color) — one shade
+   brighter than this gradient's own top, so it reads as the room's actual light source rather
+   than just another patch of the same fade (see sidebar.css). */
 body.op-page {
-  background-image:
-    radial-gradient(
-      120ch 90ch at 30% -10%,
-      var(--gp-lamp-warm) 0%,
-      var(--gp-lamp-mid) 45%,
-      transparent 78%
-    );
-  background-repeat: no-repeat;
+  background-image: linear-gradient(to bottom, var(--gp-color-neutral-plus-nine), var(--gp-color-neutral-plus-max));
   background-attachment: fixed;
 }
