@@ -131,7 +131,7 @@ jobs:
 
       - name: Keep screenshots from failed system specs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rspec-screenshots
           path: tmp/screenshots
