@@ -7,5 +7,7 @@
   .opponent-card__divider
 
   .opponent-card__hand
-    - 3.times do
+    - (opponent.card_count - 1).times do
       span.opponent-card__mini-card
+    - if opponent.card_count.positive?
+      span.opponent-card__mini-card.opponent-card__mini-card--count = opponent.card_count

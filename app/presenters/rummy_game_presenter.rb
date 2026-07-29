@@ -1,5 +1,5 @@
 class RummyGamePresenter < GamePresenter
-  OpponentView = Struct.new(:name, :turn, :you, keyword_init: true)
+  OpponentView = Struct.new(:name, :turn, :you, :card_count, keyword_init: true)
   HandCardView = Struct.new(:card, :locked, :rank_value, :rank_index, :suit_index, keyword_init: true)
   MeldView = Struct.new(:label, :owner, :cards, keyword_init: true)
   MeldCardView = Struct.new(:card, :rank_value, :suit_index, keyword_init: true)
@@ -58,7 +58,8 @@ class RummyGamePresenter < GamePresenter
     OpponentView.new(
       name: other_player == player ? "You" : other_player.name,
       turn: other_player == game.state.active_player,
-      you: other_player == player
+      you: other_player == player,
+      card_count: other_player.cards.size
     )
   end
 

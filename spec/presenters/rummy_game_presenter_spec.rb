@@ -21,6 +21,11 @@ RSpec.describe RummyGamePresenter do
     expect(you.you).to be true
   end
 
+  it "exposes each opponent's hand size as card_count" do
+    active_player = game.presenter(waiting_user).players_in_turn_order.first
+    expect(active_player.card_count).to eq game.state.active_player.cards.size
+  end
+
   it "exposes the discard pile's top card" do
     expect(presenter.discard_top).to eq game.state.discard.top
   end

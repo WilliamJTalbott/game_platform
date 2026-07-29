@@ -128,7 +128,7 @@ ascending by `data-rank-value` on first visit with no stored preference.
 
 ---
 
-## 4 · Opponent hand size is visible 🟡
+## 4 · Opponent hand size is visible ✅
 
 **The problem.** `app/views/rummy_games/_opponent.html.slim:11` renders
 `3.times do` — three hardcoded silhouettes, identical for a player holding ten

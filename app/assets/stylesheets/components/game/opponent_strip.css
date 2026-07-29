@@ -33,15 +33,37 @@
   .opponent-card__hand {
     display: flex;
     justify-content: center;
-    gap: var(--gp-space-3x-small);
   }
 
+  /* Overlapped rather than gapped so ten-plus cards still fit the strip;
+     later siblings already paint over earlier ones in source order, so no
+     z-index is needed to keep the stack readable. */
   .opponent-card__mini-card {
     width: var(--gp-space-medium);
     aspect-ratio: var(--gp-card-aspect-ratio);
     border: var(--gp-border-width) solid var(--gp-color-border);
     border-radius: var(--gp-radius-small);
     background-color: var(--gp-surface-card);
+    margin-left: calc(-1 * var(--gp-space-small));
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  /* The topmost card carries the exact count. It's widened to fit the
+     numeral and painted on its own surface — not currentColor — so the
+     digit stays legible in the --turn state too. */
+  .opponent-card__mini-card--count {
+    position: relative;
+    width: var(--gp-space-large);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--gp-surface-card);
+    color: var(--gp-ink-on-card);
+    font-size: var(--gp-font-2x-small);
+    font-weight: var(--gp-weight-semi-bold);
   }
 
   &.opponent-card--turn {
@@ -55,6 +77,14 @@
     .opponent-card__mini-card {
       background-color: currentColor;
       border-color: currentColor;
+    }
+
+    /* The count badge stays off currentColor even here — its own surface,
+       not the ink block used above, is what keeps the digit legible. */
+    .opponent-card__mini-card--count {
+      background-color: var(--gp-surface-card);
+      border-color: var(--gp-color-border);
+      color: var(--gp-ink-on-card);
     }
 
     /* Same problem as the mini-cards: the default border color is too close to the
