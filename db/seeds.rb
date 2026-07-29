@@ -7,8 +7,8 @@ Game.destroy_all
 puts "Seeding database with FactoryBot..."
 
 # Log in as 'me@example.com' / 'password' to view the end-of-game screens.
-me = create(:user, email_address: "me@example.com")
-opponent = create(:user, email_address: "opponent@example.com")
+me = create(:user, email_address: "me@example.com", country: "US")
+opponent = create(:user, email_address: "opponent@example.com", country: "CA")
 
 # A finished Go Fish game you WON -> modal shows "You win".
 create(:finished_game, :go_fish, :user_won, :has_participants,
@@ -40,8 +40,13 @@ now = Time.current
 timestamps = { created_at: now, updated_at: now }
 digest = User.new(password: "password").password_digest
 
+# Weighted so US dominates and the eq filter has one obviously-populous option to
+# demonstrate against. Every id here must exist in config/countries.yml.
+SEED_COUNTRIES = %w[US US US US CA GB MX JP PH ZA AU].freeze
+
 user_rows = Array.new(1_000) do |n|
   { email_address: "player#{n + 1}@example.com", name: "Player #{n + 1}",
+    country: SEED_COUNTRIES.sample(random: random),
     password_digest: digest, **timestamps }
 end
 user_ids = User.insert_all!(user_rows, returning: :id).rows.flatten

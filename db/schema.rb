@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_28_130117) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_28_200315) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -164,6 +164,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_28_130117) do
   create_view "player_stats", sql_definition: <<-SQL
       SELECT users.id AS user_id,
       users.name,
+      users.country,
       count(games.id) AS games_played,
       count(games.id) FILTER (WHERE participants.winner) AS games_won,
       COALESCE(round((((count(games.id) FILTER (WHERE participants.winner))::numeric * 100.0) / (NULLIF(count(games.id), 0))::numeric), 1), 0.0) AS win_percentage,
@@ -171,6 +172,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_28_130117) do
      FROM ((users
        LEFT JOIN participants ON ((participants.user_id = users.id)))
        LEFT JOIN games ON (((games.id = participants.game_id) AND (games.started_at IS NOT NULL) AND (games.finished_at IS NOT NULL))))
-    GROUP BY users.id, users.name;
+    GROUP BY users.id, users.name, users.country;
   SQL
 end
