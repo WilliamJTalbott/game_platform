@@ -10,3 +10,10 @@ updates:
   schedule:
     interval: weekly
   open-pull-requests-limit: 10
+# CI's yarn audit only covers production dependencies, so the webpack build
+# chain in devDependencies has nothing watching it without this.
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+  open-pull-requests-limit: 10
