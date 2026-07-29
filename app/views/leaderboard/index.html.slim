@@ -11,7 +11,7 @@
       .leaderboard__sorts
         - @presenter.sort_buttons.each do |button|
           button type="button" class=class_names("btn", "btn--primary", "btn--medium", "btn--active" => @presenter.sorted_by?(button)) data-action="leaderboard-filters#sort" data-leaderboard-filters-sort-param=button[:sort] data-leaderboard-filters-minimum-games-param=button[:minimum_games]
-            i.ph.ph-settings.icon = button[:icon]
+            i.ph.icon = button[:icon]
             | #{button[:label]}
 
       = f.hidden_field :s, value: @presenter.primary_sort, data: { leaderboard_filters_target: "sort" }

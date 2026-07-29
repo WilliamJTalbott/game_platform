@@ -5,23 +5,23 @@
 
     .sidebar__content.sidebar__content--start
       = link_to root_path, method: :get, class: "btn btn--no-border" do
-        i.ph.ph-settings.icon.icon--weight-semi-bold spade
+        i.ph.icon.icon--weight-semi-bold spade
         | Games
 
       = link_to stats_path, method: :get, class: "btn btn--no-border" do
-        i.ph.ph-settings.icon.icon--weight-semi-bold chart-line
+        i.ph.icon.icon--weight-semi-bold chart-line
         | Stats
 
       = link_to rules_path, method: :get, class: "btn btn--no-border" do
-        i.ph.ph-settings.icon.icon--weight-semi-bold book-bookmark
+        i.ph.icon.icon--weight-semi-bold book-bookmark
         | Rules
 
       = link_to history_index_path, method: :get, class: "btn btn--no-border" do
-        i.ph.ph-settings.icon.icon--weight-semi-bold books
+        i.ph.icon.icon--weight-semi-bold books
         | History
 
       = link_to leaderboard_index_path, method: :get, class: "btn btn--no-border" do
-        i.ph.ph-settings.icon.icon--weight-semi-bold ranking
+        i.ph.icon.icon--weight-semi-bold ranking
         | Leaderboard
 
     .sidebar__content.sidebar__content--end
@@ -29,9 +29,9 @@
       .divider
 
       = link_to user_path(current_user), class: "btn btn--no-border" do
-        i.ph.ph-settings.icon.icon--weight-semi-bold user
+        i.ph.icon.icon--weight-semi-bold user
         | Profile
 
       = link_to session_path, data: { turbo_method: :delete }, class: "btn btn--no-border" do
-        i.ph.ph-settings.icon.icon--weight-semi-bold sign-out
+        i.ph.icon.icon--weight-semi-bold sign-out
         | Logout
