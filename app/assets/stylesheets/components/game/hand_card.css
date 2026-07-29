@@ -91,3 +91,13 @@
   outline: calc(var(--gp-border-width-large) - 1px) solid var(--gp-card-edge-selected);
   outline-offset: calc(-1 * (var(--gp-border-width-large) - 1px));
 }
+
+/* The raised, transparent START state for a newly-arrived card
+   (hand_arrival_controller). Lowering and fading in is the deselect direction
+   of the transform/opacity transition already declared on .playing-card above
+   — no keyframe of its own needed. Select/deselect never touch opacity, so
+   this fade is exclusive to arrival. */
+.hand-card--arriving .card-container .playing-card {
+  transform: translateY(calc(-1 * var(--gp-space-large)));
+  opacity: 0;
+}

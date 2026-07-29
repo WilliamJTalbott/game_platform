@@ -182,7 +182,7 @@ once it's confirmed; the presenter spec stays.
 
 ---
 
-## 5 · An arriving card settles into the hand 🟡
+## 5 · An arriving card settles into the hand 🟢 (built; awaiting your `bin/dev` confirmation)
 
 **The trigger is membership, not drawing.** Any card in your hand that wasn't
 there before the last render settles in. In Rummy that happens to mean "a draw",
@@ -208,12 +208,18 @@ identically to a deselect. One source of truth for both the distance and the
 easing.
 
 ```css
-/* hand_card.css — the raised START state only. The lowering itself is the
-   transform transition already declared on .playing-card. */
+/* hand_card.css — the raised, transparent START state only. The lowering and
+   fade-in are the deselect direction of the transform/opacity transition
+   already declared on .playing-card. */
 .hand-card--arriving .card-container .playing-card {
   transform: translateY(calc(-1 * var(--gp-space-large)));
+  opacity: 0;
 }
 ```
+
+`opacity` was added to `.playing-card`'s transition list alongside `transform`
+so arrival can fade in too. Select/deselect never assign `opacity`, so this
+transition entry never fires for them — the fade is exclusive to arrival.
 
 **Why the rAF is load-bearing, and not removable.** The existing lift works
 because, as `hand_card.css:80` says, `:checked` is a stable pseudo-class on a
@@ -222,6 +228,12 @@ stable node — the input never remounts, so there's a previous value to transit
 first paint. Applying the class, then removing it one frame later, is what
 manufactures the "from" state. Anyone who "simplifies" the `requestAnimationFrame`
 away will get a card that simply appears in place, with no error.
+
+A first pass tried a dedicated `@keyframes` instead, reasoning that a settle
+should read noticeably slower than a selection lift and that sharing a
+transition would couple the two paces. Once the snap-on-arrival problem below
+was fixed, though, the shared 0.2s transition read fine on its own — so this
+reverted to reusing it, one motion definition instead of two.
 
 ### Identifying arrivals
 
@@ -254,11 +266,15 @@ render ever stores without marking, so the hand doesn't cascade on page load.
 
 ### Two ordering subtleties
 
-- `hand_sort_controller#applySort` reorders via `fan.append(...cards)`, and
-  re-appending a node can reset an in-flight transition. Because the arrival
-  class is dropped in a `requestAnimationFrame`, sort's synchronous reorder
-  always completes first. This resolves itself — but only by luck of timing, so
-  it's written down here.
+- A sorted hand re-inserts the arriving card into its sorted slot along with
+  everything after it — an instant, unanimated `fan.append(...cards)` snap
+  that visually fought the arrival's slow settle. So `.hand-dock` lists
+  `hand-sort` before `hand-arrival` in `data-controller` (Stimulus connects
+  controllers on one element in that listed order): sort resorts everything
+  first, then arrival re-appends just the newly-arrived card(s) to the end of
+  the fan before marking them `.hand-card--arriving`. Both moves happen in the
+  same synchronous pass before the browser paints, so the only thing that
+  visibly moves is the arrival settling in at the end — nothing snaps.
 - A `transform` on `.playing-card` is already how selection works, and
   `.playing-card` already carries `position: relative; z-index: 1`
   (`playing_card.css:31-32`). So arrival paints exactly like a selected card

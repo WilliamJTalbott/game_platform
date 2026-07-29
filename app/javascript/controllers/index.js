@@ -16,6 +16,9 @@ application.register("flash", FlashController)
 import GameFormController from "./game_form_controller"
 application.register("game-form", GameFormController)
 
+import HandArrivalController from "./hand_arrival_controller"
+application.register("hand-arrival", HandArrivalController)
+
 import HandController from "./hand_controller"
 application.register("hand", HandController)
 
