@@ -22,6 +22,9 @@ application.register("hand", HandController)
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
+import LeaderboardFiltersController from "./leaderboard_filters_controller"
+application.register("leaderboard-filters", LeaderboardFiltersController)
+
 import LocationSelectionController from "./location_selection_controller"
 application.register("location-selection", LocationSelectionController)
 

@@ -4,18 +4,40 @@
   flex-direction: column;
   gap: var(--gp-space-large);
 
-  .leaderboard__header {
+  .leaderboard__controls {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: var(--gp-space-medium);
+    gap: var(--gp-space-large);
+  }
+
+  .leaderboard__title {
+    text-align: center;
+  }
+
+  .leaderboard__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--gp-space-large);
   }
 
   .leaderboard__sorts {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
     gap: var(--gp-space-medium);
+  }
+
+  .leaderboard__filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--gp-space-medium);
+    margin-left: auto;
+  }
+
+  .leaderboard__flag {
+    margin-right: var(--gp-space-small);
   }
 
   .leaderboard__note {

@@ -67,4 +67,18 @@ RSpec.describe PlayerStat, type: :model do
       expect { user.player_stat.update!(games_won: 99) }.to raise_error ActiveRecord::ReadOnlyRecord
     end
   end
+
+  describe "#country" do
+    it "reports the user's country" do
+      user = create(:user, country: "US")
+
+      expect(PlayerStat.find_by(user_id: user.id).country).to eq "US"
+    end
+  end
+
+  describe ".ransackable_attributes" do
+    it "does not allow filtering by user_id" do
+      expect(PlayerStat.ransackable_attributes).to_not include("user_id")
+    end
+  end
 end

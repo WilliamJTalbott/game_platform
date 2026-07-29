@@ -39,4 +39,22 @@ RSpec.describe LeaderboardEntry, type: :presenter do
       expect(you_entry.you?).to be true
     end
   end
+
+  describe "#flag" do
+    it "returns the flag emoji for a known country" do
+      entry = described_class.new(rank: 1, name: "Ana", games_played: 1, games_won: 1,
+        win_percentage: 0, play_seconds: 0, you: false, country: "US")
+      expect(entry.flag).to eq "🇺🇸"
+    end
+
+    it "returns nil for a blank country" do
+      expect(entry.flag).to be_nil
+    end
+
+    it "returns nil for an unrecognized country id" do
+      entry = described_class.new(rank: 1, name: "Ana", games_played: 1, games_won: 1,
+        win_percentage: 0, play_seconds: 0, you: false, country: "ZZ")
+      expect(entry.flag).to be_nil
+    end
+  end
 end

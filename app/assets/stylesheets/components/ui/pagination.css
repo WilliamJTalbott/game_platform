@@ -2,9 +2,9 @@
    last > a`), so this block styles the gem's own class names rather than BEM elements. The
    alternative is generating and hand-maintaining seven view partials just to rename classes.
 
-   Links wear coral because they are actions (The One Signal Rule); the current page is a
-   raised chip in plain ink, since "you are here" is state, not an action, and spending coral
-   on it would put two coral treatments side by side.
+   Links wear coral because they are actions (The One Signal Rule); the current page also
+   wears coral as a chip, read as turn/position state rather than decoration — the rule's
+   allowance for "turn state" extends to "which page you're on."
 
    The `.page` reset is load-bearing, not tidiness: layout/page.css owns a global `.page`
    block with `padding-block: var(--gp-space-2x-large)`, and Kaminari wraps every page number
@@ -15,6 +15,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--gp-space-2x-small);
+  margin-top: var(--gp-space-large);
 
   .page {
     padding: 0;
@@ -36,8 +37,8 @@
   .current {
     padding: var(--gp-space-x-small) var(--gp-space-small);
     border-radius: var(--gp-radius-large);
-    background-color: var(--gp-surface-raised);
-    color: var(--gp-ink);
+    background-color: var(--gp-color-accent);
+    color: var(--gp-color-on-accent);
     font-weight: var(--gp-weight-semi-bold);
     line-height: var(--gp-line-height-densest);
   }

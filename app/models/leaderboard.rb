@@ -1,31 +1,29 @@
 class Leaderboard
-  MINIMUM_GAMES_FOR_WIN_PERCENTAGE = 5
-
-  SORTS = {
-    "wins" => { games_won: :desc, games_played: :desc, name: :asc },
-    "games" => { games_played: :desc, games_won: :desc, name: :asc },
-    "win_percent" => { win_percentage: :desc, games_played: :desc, name: :asc },
-    "time" => { play_seconds: :desc, games_played: :desc, name: :asc }
-  }.freeze
-
-  DEFAULT_SORT = "wins"
+  WIN_PERCENT_MINIMUM_GAMES = 5
+  DEFAULT_SORT = "games_won desc"
+  TIE_BREAKERS = [ "games_played desc", "name asc" ].freeze
   PER_PAGE = 25
+  # Kaminari turns `page` straight into an OFFSET with no upper bound, so `?page=99999999999`
+  # overflows bigint and PG raises. Nothing in kaminari clamps it for us.
+  MAX_PAGE = 10_000
 
-  attr_reader :sort, :page
+  attr_reader :query, :page
 
-  def initialize(sort: DEFAULT_SORT, page: nil)
-    @sort = SORTS.key?(sort) ? sort : DEFAULT_SORT
+  def initialize(params: nil, page: nil)
+    @query = PlayerStat.where(games_played: 1..).ransack(params)
+    apply_sorts_with_tie_breakers
     @page = page
   end
 
-  def rows = qualifying.page(page).per(PER_PAGE)
+  def rows = query.result.page(bounded_page).per(PER_PAGE)
 
   private
 
-  def qualifying
-    scope = PlayerStat.where(games_played: 1..).order(SORTS.fetch(sort))
-    win_percent_sort? ? scope.where(games_played: MINIMUM_GAMES_FOR_WIN_PERCENTAGE..) : scope
-  end
+  def bounded_page = page.to_s.to_i.clamp(1, MAX_PAGE)
 
-  def win_percent_sort? = sort == "win_percent"
+  def apply_sorts_with_tie_breakers
+    primary = query.sorts.find(&:valid?)&.then { "#{it.name} #{it.dir}" } || DEFAULT_SORT
+    query.sorts.clear
+    query.sorts = [ primary, *TIE_BREAKERS ].uniq { |sort| sort.split.first }
+  end
 end

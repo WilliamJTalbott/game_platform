@@ -1,36 +1,58 @@
 .leaderboard
-  .leaderboard__header
+  = search_form_for @presenter.query, url: leaderboard_index_path, method: :get,
+      html: { class: "leaderboard__controls",
+              data: { controller: "leaderboard-filters",
+                      turbo_frame: "leaderboard_results",
+                      leaderboard_filters_target: "form" } } do |f|
+
     h1.leaderboard__title Leaderboard
 
-    .leaderboard__sorts
-      - @presenter.sort_buttons.each do |button|
-        = link_to leaderboard_index_path(sort: button[:key]), class: class_names("btn", "btn--primary", "btn--medium", "btn--active" => @presenter.sorted_by?(button[:key])) do
-          i.ph.ph-settings.icon = button[:icon]
-          | #{button[:label]}
+    .leaderboard__toolbar
+      .leaderboard__sorts
+        - @presenter.sort_buttons.each do |button|
+          button type="button" class=class_names("btn", "btn--primary", "btn--medium", "btn--active" => @presenter.sorted_by?(button)) data-action="leaderboard-filters#sort" data-leaderboard-filters-sort-param=button[:sort] data-leaderboard-filters-minimum-games-param=button[:minimum_games]
+            i.ph.ph-settings.icon = button[:icon]
+            | #{button[:label]}
+
+      = f.hidden_field :s, value: @presenter.primary_sort, data: { leaderboard_filters_target: "sort" }
+
+      .leaderboard__filters
+        = f.search_field :name_i_cont, placeholder: "Search players",
+            data: { action: "input->leaderboard-filters#debouncedSubmit" }
+        = f.number_field :games_played_gteq, min: 1, placeholder: "Min games",
+            data: { action: "change->leaderboard-filters#submit",
+                    leaderboard_filters_target: "minimumGames" }
+        = f.select :country_eq, Data::Country.all.map { |country| [ country.name, country.id ] },
+            { include_blank: "All countries" },
+            data: { action: "change->leaderboard-filters#submit" }
 
   - if @presenter.win_percent_note
     p.leaderboard__note = @presenter.win_percent_note
 
-  - if @presenter.empty?
-    p.leaderboard__empty = @presenter.empty_message
-  - else
-    table.leaderboard__table
-      thead
-        tr
-          th Rank
-          th Player
-          th Games
-          th Wins
-          th Win %
-          th Time
-      tbody
-        - @presenter.entries.each do |entry|
-          tr class=class_names("leaderboard__row", "leaderboard__row--you" => entry.you?)
-            td = entry.rank
-            td = entry.name
-            td = entry.games_played
-            td = entry.games_won
-            td = entry.win_percentage
-            td = entry.play_time
+  = turbo_frame_tag "leaderboard_results", data: { turbo_action: "advance" } do
+    - if @presenter.empty?
+      p.leaderboard__empty = @presenter.empty_message
+    - else
+      table.leaderboard__table
+        thead
+          tr
+            th Rank
+            th Player
+            th Games
+            th Wins
+            th Win %
+            th Time
+        tbody
+          - @presenter.entries.each do |entry|
+            tr class=class_names("leaderboard__row", "leaderboard__row--you" => entry.you?)
+              td = entry.rank
+              td
+                - if entry.flag
+                  span.leaderboard__flag = entry.flag
+                = entry.name
+              td = entry.games_played
+              td = entry.games_won
+              td = entry.win_percentage
+              td = entry.play_time
 
-    = paginate @presenter.rows
+      = paginate @presenter.rows

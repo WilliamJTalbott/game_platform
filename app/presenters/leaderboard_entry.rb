@@ -1,7 +1,7 @@
 class LeaderboardEntry
   attr_reader :rank, :name, :games_played, :games_won
 
-  def initialize(rank:, name:, games_played:, games_won:, win_percentage:, play_seconds:, you:)
+  def initialize(rank:, name:, games_played:, games_won:, win_percentage:, play_seconds:, you:, country: nil)
     @rank = rank
     @name = name
     @games_played = games_played
@@ -9,9 +9,12 @@ class LeaderboardEntry
     @win_percentage = win_percentage
     @play_seconds = play_seconds.to_i
     @you = you
+    @country = Data::Country.find(country) if country.present?
   end
 
   def you? = @you
+
+  def flag = @country&.flag
 
   def win_percentage = format("%.1f%%", @win_percentage)
 

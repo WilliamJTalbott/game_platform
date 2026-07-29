@@ -91,10 +91,10 @@ gem "good_job"
 
 gem "data_for"
 
-gem 'bullet', group: %w[development test]
+gem "bullet", group: %w[development test]
 
 gem "scenic"
 
-gem 'kaminari'
+gem "kaminari"
 
-gem 'ransack'
+gem "ransack"

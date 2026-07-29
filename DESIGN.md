@@ -410,10 +410,10 @@ single surface — is that page's own call and is deliberately not systematized.
 color shows up in shared chrome or on a second page, it has leaked; remove it rather than
 spreading it further.
 
-**The One Signal Rule.** Coral means "act." Turn state, primary actions, links, focus, and
-brand identity — nothing else, on every page. A page accent never takes over an action, and
-coral never becomes a page's decoration. A screen where coral also decorates a heading, a
-border, and a divider has spent the signal.
+**The One Signal Rule.** Coral means "act." Turn state, primary actions, links, focus, current
+pagination position, and brand identity — nothing else, on every page. A page accent never
+takes over an action, and coral never becomes a page's decoration. A screen where coral also
+decorates a heading, a border, and a divider has spent the signal.
 
 *One documented exception: the lobby's game bars.* There, a coral **tint surface** means "this
 game is yours," and turn state is carried by lift, badge, and sort order instead. Coral is

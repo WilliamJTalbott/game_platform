@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Leaderboard, type: :model do
-  def row_for(user, sort: Leaderboard::DEFAULT_SORT)
-    Leaderboard.new(sort: sort).rows.find { |row| row.id == user.id }
+  def row_for(user, params: {})
+    Leaderboard.new(params: params).rows.find { |row| row.id == user.id }
   end
 
   describe "#rows" do
@@ -80,34 +80,87 @@ RSpec.describe Leaderboard, type: :model do
         end
       end
 
-      it "sort=wins orders by wins descending" do
-        names = Leaderboard.new(sort: "wins").rows.map(&:name)
+      it "games_won desc orders by wins descending" do
+        names = Leaderboard.new(params: { s: "games_won desc" }).rows.map(&:name)
         expect(names.index("Big Winner")).to be < names.index("Big Loser")
       end
 
-      it "sort=games orders by games played descending" do
-        names = Leaderboard.new(sort: "games").rows.map(&:name)
+      it "games_played desc orders by games played descending" do
+        create(:finished_game, :go_fish, :user_won, :with_duration, user: big_winner, duration: 10.minutes)
+
+        names = Leaderboard.new(params: { s: "games_played desc" }).rows.map(&:name)
         expect(names.index("Big Winner")).to be < names.index("Big Loser")
       end
 
-      it "sort=time orders by summed duration descending" do
-        names = Leaderboard.new(sort: "time").rows.map(&:name)
+      it "play_seconds desc orders by summed duration descending" do
+        names = Leaderboard.new(params: { s: "play_seconds desc" }).rows.map(&:name)
         expect(names.index("Big Loser")).to be < names.index("Big Winner")
       end
 
-      it "sort=win_percent orders by percentage descending" do
-        names = Leaderboard.new(sort: "win_percent").rows.map(&:name)
+      it "win_percentage desc orders by percentage descending" do
+        names = Leaderboard.new(params: { s: "win_percentage desc" }).rows.map(&:name)
         expect(names.index("Big Winner")).to be < names.index("Big Loser")
       end
 
-      it "an unrecognized sort value falls back to the default without raising" do
-        expect { Leaderboard.new(sort: "nonsense").rows.to_a }.to_not raise_error
+      it "an unrecognized sort attribute falls back to the default" do
+        names = Leaderboard.new(params: { s: "user_id desc" }).rows.map(&:name)
+        expect(names.first).to eq "Big Winner"
       end
 
       it "breaks ties deterministically by games played then name across two calls" do
-        first_call = Leaderboard.new(sort: "wins").rows.map(&:id)
-        second_call = Leaderboard.new(sort: "wins").rows.map(&:id)
+        first_call = Leaderboard.new(params: { s: "games_won desc" }).rows.map(&:id)
+        second_call = Leaderboard.new(params: { s: "games_won desc" }).rows.map(&:id)
         expect(first_call).to eq second_call
+      end
+    end
+
+    context "given a country filter" do
+      let(:us_player) { create(:user, name: "US Player", country: "US") }
+      let(:ca_player) { create(:user, name: "CA Player", country: "CA") }
+
+      before do
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ us_player ])
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ ca_player ])
+      end
+
+      it "returns only that country's players" do
+        names = Leaderboard.new(params: { country_eq: "US" }).rows.map(&:name)
+        expect(names).to contain_exactly("US Player")
+      end
+    end
+
+    context "given a minimum-games filter" do
+      let(:veteran) { create(:user, name: "Veteran") }
+      let(:newcomer) { create(:user, name: "Newcomer") }
+
+      before do
+        2.times { create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ veteran ]) }
+        create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ newcomer ])
+      end
+
+      it "excludes a player below the threshold" do
+        names = Leaderboard.new(params: { games_played_gteq: 2 }).rows.map(&:name)
+        expect(names).to contain_exactly("Veteran")
+      end
+    end
+
+    context "given a partial name in a different case" do
+      let(:player) { create(:user, name: "Alexandria") }
+
+      before { create(:finished_game, :go_fish, :has_participants, :with_duration, users: [ player ]) }
+
+      it "matches the player" do
+        names = Leaderboard.new(params: { name_i_cont: "EXAND" }).rows.map(&:name)
+        expect(names).to include("Alexandria")
+      end
+    end
+
+    context "given a filter that would surface a never-played user" do
+      let(:never_played) { create(:user, name: "Never Played") }
+
+      it "still excludes them" do
+        names = Leaderboard.new(params: { games_played_gteq: 0 }).rows.map(&:name)
+        expect(names).to_not include("Never Played")
       end
     end
 
@@ -132,28 +185,6 @@ RSpec.describe Leaderboard, type: :model do
 
       it "returns nothing past the last page" do
         expect(Leaderboard.new(page: 99).rows).to be_empty
-      end
-    end
-
-    context "the win percentage floor" do
-      let(:seasoned) { create(:user, name: "Seasoned") }
-      let(:rookie) { create(:user, name: "Rookie") }
-
-      before do
-        5.times { create(:finished_game, :go_fish, :user_won, :with_duration, user: seasoned) }
-        4.times { create(:finished_game, :go_fish, :user_won, :with_duration, user: rookie) }
-      end
-
-      it "includes a user with exactly 5 finished games under sort=win_percent" do
-        expect(row_for(seasoned, sort: "win_percent")).to_not be_nil
-      end
-
-      it "excludes a user with fewer than 5 finished games under sort=win_percent" do
-        expect(row_for(rookie, sort: "win_percent")).to be_nil
-      end
-
-      it "still includes the under-floor user under sort=wins" do
-        expect(row_for(rookie, sort: "wins")).to_not be_nil
       end
     end
   end
