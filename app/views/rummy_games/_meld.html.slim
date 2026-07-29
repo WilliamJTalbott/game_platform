@@ -1,12 +1,13 @@
 / Always renders disabled: laying off needs cards selected, and a fresh render
 / never has a selection (a turbo re-render resets the checkboxes). rummy-turn
-/ enables it as soon as something is picked. Failing closed also means a broken
-/ JS bundle leaves melds unclickable rather than clickable-but-useless.
-button.meld type="button" disabled=true data-action="click->rummy-turn#layOff" data-rummy-turn-target="meld" data-rummy-turn-meld-index-param=index
+/ enables it once the selection legally extends this meld. The target is only
+/ present when can_lay_off — a player with no meld of their own structurally
+/ cannot enable any meld, failing closed even if the JS bundle is broken.
+button.meld type="button" disabled=true data-action="click->rummy-turn#layOff" data-rummy-turn-target=("meld" if can_lay_off) data-rummy-turn-meld-index-param=index
   .meld__header
     span.meld__label = meld.label
     span.meld__owner = meld.owner
 
   .meld__cards
-    - meld.cards.each do |card|
-      span.meld__card class=("meld__card--red" if card.red?) = card.to_s
+    - meld.cards.each do |meld_card|
+      span.meld__card class=("meld__card--red" if meld_card.card.red?) data-rank-value=meld_card.rank_value data-suit-index=meld_card.suit_index = meld_card.card.to_s

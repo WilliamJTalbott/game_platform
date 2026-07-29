@@ -2,6 +2,7 @@ class RummyGamePresenter < GamePresenter
   OpponentView = Struct.new(:name, :turn, :you, keyword_init: true)
   HandCardView = Struct.new(:card, :locked, :rank_value, :rank_index, :suit_index, keyword_init: true)
   MeldView = Struct.new(:label, :owner, :cards, keyword_init: true)
+  MeldCardView = Struct.new(:card, :rank_value, :suit_index, keyword_init: true)
 
   def players_in_turn_order
     game.state.players.map { |other_player| opponent_view(other_player) }
@@ -25,6 +26,10 @@ class RummyGamePresenter < GamePresenter
 
   def can_select?
     user_turn? && phase == "meld"
+  end
+
+  def can_lay_off?
+    user_turn? && game.state.melds.any? { |meld| meld.owner == user.id }
   end
 
   def hand_cards
@@ -58,7 +63,15 @@ class RummyGamePresenter < GamePresenter
   end
 
   def meld_view(meld)
-    MeldView.new(label: meld_label(meld), owner: owner_name(meld.owner), cards: meld.cards)
+    MeldView.new(label: meld_label(meld), owner: owner_name(meld.owner), cards: meld.cards.map { |card| meld_card_view(card) })
+  end
+
+  def meld_card_view(card)
+    MeldCardView.new(
+      card: card,
+      rank_value: Rummy::Meld::RANK_VALUES.fetch(card.rank),
+      suit_index: CardGame::Card::SUITS.index(card.suit)
+    )
   end
 
   # A set is defined by its shared rank, a run by its shared suit — surface that

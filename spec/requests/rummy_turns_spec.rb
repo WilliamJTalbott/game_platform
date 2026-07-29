@@ -70,6 +70,14 @@ RSpec.describe "Rummy turns", type: :request do
 
       expect(response.body).to include("Select 3 or more cards that form a run or set")
     end
+
+    it "does not re-render the game, keeping the player's selection" do
+      post game_turns_path(game), params: { turn: { action: "draw_stock" } }
+      post game_turns_path(game), params: { turn: { action: "meld", cards: %w[9-Hearts 2-Spades 7-Clubs] } }
+
+      expect(response.body).to include(%(target="flash"))
+      expect(response.body).not_to include(%(target="#{ActionView::RecordIdentifier.dom_id(game)}"))
+    end
   end
 
   context "when the active player lays a card off onto an opponent's meld" do

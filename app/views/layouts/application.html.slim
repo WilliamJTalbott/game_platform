@@ -8,10 +8,9 @@ html
     data-service-worker-url-value=pwa_service_worker_path(format: :js)
   )
     / The stable target a turbo_stream can replace to raise a .popup notice. It
-    / lives in the layout rather than inside any page region because a rejected
-    / turn re-renders only the game partial (GameTurboUpdate.stream replaces
-    / dom_id(game)) — a target inside that region would be destroyed by the very
-    / response trying to write to it.
+    / lives in the layout, outside any page region a turbo_stream response might
+    / itself replace — a target inside such a region would be destroyed by the
+    / very response trying to write to it.
     = render "shared/flash", message: nil
 
     .sidebar

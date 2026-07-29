@@ -11,7 +11,7 @@ export default class extends Controller {
 
   connect() {
     const savedMode = localStorage.getItem(this.storageKey)
-    if (savedMode) this.applySort(savedMode)
+    this.applySort(savedMode || "rank")
   }
 
   sort(event) {

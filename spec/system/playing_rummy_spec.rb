@@ -103,6 +103,25 @@ RSpec.describe "Playing Rummy", type: :system do
     end
   end
 
+  context "with three cards in hand that don't form a meld" do
+    let(:mismatched) do
+      [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("2", "Spades"), CardGame::Card.new("7", "Clubs") ]
+    end
+
+    before do
+      remove_cards_from_play(*mismatched)
+      game.state.active_player.cards = mismatched
+      game.save!
+    end
+
+    it "keeps the meld placeholder hidden, since the selection is illegal", :js do
+      draw_from_stock!
+      mismatched.each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
+
+      expect(page).to have_no_css(".meld--new")
+    end
+  end
+
   context "with a card that extends an opponent's meld" do
     let(:opponent) { game.state.players.find { |player| player.user_id != user.id } }
     let(:existing_meld) do
@@ -141,6 +160,17 @@ RSpec.describe "Playing Rummy", type: :system do
 
       click_hand_card("7-Hearts")
       expect(page).to have_no_css(".meld[disabled]", text: "Run")
+    end
+
+    it "keeps a meld disabled when the selection doesn't legally extend it", :js do
+      remove_cards_from_play(CardGame::Card.new("2", "Diamonds"))
+      game.state.active_player.cards << CardGame::Card.new("2", "Diamonds")
+      game.save!
+
+      draw_from_stock!
+      click_hand_card("2-Diamonds")
+
+      expect(page).to have_css(".meld[disabled]", text: "Run")
     end
   end
 
@@ -187,31 +217,6 @@ RSpec.describe "Playing Rummy", type: :system do
     end
   end
 
-  context "when the selected cards don't form a run or a set" do
-    let(:mismatched) do
-      [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("2", "Spades"), CardGame::Card.new("7", "Clubs") ]
-    end
-
-    before do
-      remove_cards_from_play(*mismatched)
-      game.state.active_player.cards = mismatched + game.state.active_player.cards
-      game.save!
-    end
-
-    it "drops a flash naming the reason instead of failing silently", :js do
-      page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }
-      draw_from_stock!
-      mismatched.each { |card| click_hand_card("#{card.rank}-#{card.suit}") }
-      find(".meld--new").click
-
-      expect(page).to have_css(".popup.show", text: "Select 3 or more cards that form a run or set")
-      screenshot("rummy-invalid-meld-flash", fullPage: true)
-
-      # Slides back out on its own — `visible: true` so this asserts the notice
-      # really is hidden, not merely that the selector stopped matching.
-      expect(page).to have_no_css(".popup", visible: true, wait: 6)
-    end
-  end
 
   it "keeps meld-phase state after reloading the page mid-turn", :js do
     draw_from_stock!
@@ -236,6 +241,12 @@ RSpec.describe "Playing Rummy", type: :system do
 
     def hand_card_keys
       page.all(".hand-card__input", visible: :all).map { |input| input[:value] }
+    end
+
+    it "sorts the hand by rank on first visit with no stored preference", :js do
+      visit game_path(game)
+
+      expect(hand_card_keys).to eq %w[A-Spades 2-Clubs K-Hearts]
     end
 
     it "sorts the hand ace-low by rank", :js do

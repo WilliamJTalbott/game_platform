@@ -17,7 +17,8 @@
         = render "rummy_games/felt",
                 discard_top: game_info.discard_top,
                 melds: game_info.melds,
-                can_draw: game_info.can_draw?
+                can_draw: game_info.can_draw?,
+                can_lay_off: game_info.can_lay_off?
 
     / Feed — floating message bubbles, pinned over the top-right of the board
     = render "rummy_games/bubble_stack",

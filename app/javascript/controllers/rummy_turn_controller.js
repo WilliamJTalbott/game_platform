@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { isMeld, canAdd } from "../rummy_melds"
 
 // Connects to data-controller="rummy-turn"
 export default class extends Controller {
@@ -28,13 +29,15 @@ export default class extends Controller {
 
   refresh() {
     const checked = this.checkedInputs
+    const selection = checked.map((input) => this.cardFor(input))
 
-    this.meldPlaceholderTarget.hidden = checked.length < 3
-    // Laying off is meaningless without a selection, so the existing melds stay
-    // disabled until you have picked at least one card. Whether the selection is
-    // a LEGAL extension of a given meld is still the server's call — the flash
-    // reports it — so this gates on "is there anything to lay off" only.
-    this.meldTargets.forEach((meld) => { meld.disabled = checked.length === 0 })
+    this.meldPlaceholderTarget.hidden = !isMeld(selection)
+    // A meld target only exists on melds the player is allowed to lay off onto
+    // (RummyGamePresenter#can_lay_off?) — the server-authoritative rule is
+    // mirrored here only to decide whether the selection legally extends it.
+    this.meldTargets.forEach((meld) => {
+      meld.disabled = checked.length === 0 || !canAdd(this.meldCardsFor(meld), selection)
+    })
     // A locked card (just drawn from the discard) can still join a meld, but
     // can't be discarded — so keep the discard pile disabled when it's the lone
     // selection. The server enforces the same rule.
@@ -50,5 +53,17 @@ export default class extends Controller {
 
   get checkedInputs() {
     return this.cardInputTargets.filter((input) => input.checked)
+  }
+
+  cardFor(input) {
+    const { rankValue, suitIndex } = input.closest(".hand-card").dataset
+    return { rankValue: Number(rankValue), suitIndex: Number(suitIndex) }
+  }
+
+  meldCardsFor(meld) {
+    return Array.from(meld.querySelectorAll(".meld__card")).map((card) => ({
+      rankValue: Number(card.dataset.rankValue),
+      suitIndex: Number(card.dataset.suitIndex)
+    }))
   }
 }

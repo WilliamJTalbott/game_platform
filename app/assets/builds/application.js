@@ -9532,7 +9532,7 @@ const SORTS = {
 class hand_sort_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
   connect() {
     const savedMode = localStorage.getItem(this.storageKey);
-    if (savedMode) this.applySort(savedMode);
+    this.applySort(savedMode || "rank");
   }
   sort(event) {
     const { mode } = event.params;
@@ -9755,9 +9755,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* binding */ rummy_turn_controller_default)
 /* harmony export */ });
 /* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+/* harmony import */ var _rummy_melds__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../rummy_melds */ "./app/javascript/rummy_melds.js");
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
 
 class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
   draw({ params: { action } }) {
@@ -9777,9 +9779,10 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
   }
   refresh() {
     const checked = this.checkedInputs;
-    this.meldPlaceholderTarget.hidden = checked.length < 3;
+    const selection = checked.map((input) => this.cardFor(input));
+    this.meldPlaceholderTarget.hidden = !(0,_rummy_melds__WEBPACK_IMPORTED_MODULE_1__.isMeld)(selection);
     this.meldTargets.forEach((meld) => {
-      meld.disabled = checked.length === 0;
+      meld.disabled = checked.length === 0 || !(0,_rummy_melds__WEBPACK_IMPORTED_MODULE_1__.canAdd)(this.meldCardsFor(meld), selection);
     });
     if (this.phaseValue === "meld") {
       const lockedAlone = checked.length === 1 && checked[0].dataset.locked === "true";
@@ -9790,6 +9793,16 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
   }
   get checkedInputs() {
     return this.cardInputTargets.filter((input) => input.checked);
+  }
+  cardFor(input) {
+    const { rankValue, suitIndex } = input.closest(".hand-card").dataset;
+    return { rankValue: Number(rankValue), suitIndex: Number(suitIndex) };
+  }
+  meldCardsFor(meld) {
+    return Array.from(meld.querySelectorAll(".meld__card")).map((card) => ({
+      rankValue: Number(card.dataset.rankValue),
+      suitIndex: Number(card.dataset.suitIndex)
+    }));
   }
 }
 __publicField(rummy_turn_controller_default, "targets", [
@@ -9883,6 +9896,49 @@ class turn_timer_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
 }
 __publicField(turn_timer_controller_default, "targets", ["display"]);
 __publicField(turn_timer_controller_default, "values", { duration: Number });
+
+
+/***/ },
+
+/***/ "./app/javascript/rummy_melds.js"
+/*!***************************************!*\
+  !*** ./app/javascript/rummy_melds.js ***!
+  \***************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   canAdd: () => (/* binding */ canAdd),
+/* harmony export */   isMeld: () => (/* binding */ isMeld),
+/* harmony export */   isRun: () => (/* binding */ isRun),
+/* harmony export */   isSet: () => (/* binding */ isSet),
+/* harmony export */   kindOf: () => (/* binding */ kindOf)
+/* harmony export */ });
+function isSet(cards) {
+  return cards.length >= 3 && uniqueBy(cards, "rankValue").length === 1 && uniqueBy(cards, "suitIndex").length === cards.length;
+}
+function isRun(cards) {
+  return cards.length >= 3 && uniqueBy(cards, "suitIndex").length === 1 && consecutiveRanks(cards);
+}
+function kindOf(cards) {
+  if (isSet(cards)) return "set";
+  if (isRun(cards)) return "run";
+  return null;
+}
+function isMeld(cards) {
+  return kindOf(cards) !== null;
+}
+function canAdd(meldCards, newCards) {
+  if (newCards.length === 0) return false;
+  return kindOf(meldCards.concat(newCards)) === kindOf(meldCards);
+}
+function uniqueBy(cards, key) {
+  return [...new Set(cards.map((card) => card[key]))];
+}
+function consecutiveRanks(cards) {
+  const values = uniqueBy(cards, "rankValue").sort((a, b) => a - b);
+  return values.length === cards.length && values[values.length - 1] - values[0] === values.length - 1;
+}
 
 
 /***/ }

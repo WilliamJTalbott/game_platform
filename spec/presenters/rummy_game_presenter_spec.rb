@@ -65,6 +65,32 @@ RSpec.describe RummyGamePresenter do
     end
   end
 
+  describe "#can_lay_off?" do
+    it "is false when the active player owns no meld" do
+      expect(presenter.can_lay_off?).to be false
+    end
+
+    it "is true once the active player owns a meld" do
+      own_meld = Rummy::Meld.build(
+        cards: [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ],
+        owner: active_user.id
+      )
+      game.state.melds = [ own_meld ]
+
+      expect(presenter.can_lay_off?).to be true
+    end
+
+    it "is false for the waiting player even if they own a meld" do
+      own_meld = Rummy::Meld.build(
+        cards: [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ],
+        owner: waiting_user.id
+      )
+      game.state.melds = [ own_meld ]
+
+      expect(game.presenter(waiting_user).can_lay_off?).to be false
+    end
+  end
+
   describe "#can_draw?" do
     it "is true for the active player during the draw phase" do
       expect(presenter.can_draw?).to be true
@@ -84,7 +110,18 @@ RSpec.describe RummyGamePresenter do
       game.state.melds = [ opponent_meld ]
       meld_view = presenter.melds.first
 
-      expect(meld_view).to have_attributes(label: "Set · 9", owner: game.state.players.last.name, cards: opponent_meld.cards)
+      expect(meld_view).to have_attributes(label: "Set · 9", owner: game.state.players.last.name)
+      expect(meld_view.cards.map(&:card)).to eq opponent_meld.cards
+    end
+
+    it "exposes each card's rank value and suit index for client-side meld evaluation" do
+      nine_hearts = CardGame::Card.new("9", "Hearts")
+      game.state.melds = [
+        Rummy::Meld.build(cards: [ nine_hearts, CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ], owner: active_user.id)
+      ]
+
+      meld_card = presenter.melds.first.cards.first
+      expect(meld_card).to have_attributes(rank_value: 9, suit_index: CardGame::Card::SUITS.index("Hearts"))
     end
 
     it "labels a run with its shared suit glyph" do
