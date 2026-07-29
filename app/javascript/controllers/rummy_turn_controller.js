@@ -3,7 +3,8 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="rummy-turn"
 export default class extends Controller {
   static targets = [
-    "action", "meldIndex", "cardInput", "discardPile", "meldPlaceholder", "meld"
+    "action", "meldIndex", "cardInput", "discardPile", "meldPlaceholder", "meld",
+    "meldStep", "discardStep"
   ]
   static values = { phase: String }
 
@@ -39,7 +40,11 @@ export default class extends Controller {
     // selection. The server enforces the same rule.
     if (this.phaseValue === "meld") {
       const lockedAlone = checked.length === 1 && checked[0].dataset.locked === "true"
-      this.discardPileTarget.disabled = checked.length !== 1 || lockedAlone
+      const readyToDiscard = checked.length === 1 && !lockedAlone
+      this.discardPileTarget.disabled = !readyToDiscard
+      // A single card can go either way — laid off onto a meld or discarded —
+      // so both steps light up together rather than one replacing the other.
+      this.discardStepTarget.classList.toggle("phase-stepper__step--active", readyToDiscard)
     }
   }
 

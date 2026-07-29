@@ -9510,6 +9510,51 @@ __publicField(hand_controller_default, "targets", ["card"]);
 
 /***/ },
 
+/***/ "./app/javascript/controllers/hand_sort_controller.js"
+/*!************************************************************!*\
+  !*** ./app/javascript/controllers/hand_sort_controller.js ***!
+  \************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ hand_sort_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+const SORTS = {
+  rank: (a, b) => a.rankValue - b.rankValue,
+  suit: (a, b) => a.suitIndex - b.suitIndex || a.rankIndex - b.rankIndex
+};
+class hand_sort_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  connect() {
+    const savedMode = localStorage.getItem(this.storageKey);
+    if (savedMode) this.applySort(savedMode);
+  }
+  sort(event) {
+    const { mode } = event.params;
+    this.applySort(mode);
+    localStorage.setItem(this.storageKey, mode);
+  }
+  applySort(mode) {
+    const fan = this.element.querySelector(".hand-fan");
+    if (!fan || !SORTS[mode]) return;
+    const cards = Array.from(fan.querySelectorAll(".hand-card"));
+    cards.sort((a, b) => SORTS[mode](a.dataset, b.dataset));
+    fan.append(...cards);
+  }
+  get storageKey() {
+    return `rummy-hand-sort:${this.gameIdValue}:${this.userIdValue}`;
+  }
+}
+__publicField(hand_sort_controller_default, "values", { gameId: String, userId: String });
+
+
+/***/ },
+
 /***/ "./app/javascript/controllers/hello_controller.js"
 /*!********************************************************!*\
   !*** ./app/javascript/controllers/hello_controller.js ***!
@@ -9545,12 +9590,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _flash_controller__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./flash_controller */ "./app/javascript/controllers/flash_controller.js");
 /* harmony import */ var _game_form_controller__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./game_form_controller */ "./app/javascript/controllers/game_form_controller.js");
 /* harmony import */ var _hand_controller__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./hand_controller */ "./app/javascript/controllers/hand_controller.js");
-/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
-/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
-/* harmony import */ var _offline_alert_controller__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./offline_alert_controller */ "./app/javascript/controllers/offline_alert_controller.js");
-/* harmony import */ var _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./rummy_turn_controller */ "./app/javascript/controllers/rummy_turn_controller.js");
-/* harmony import */ var _service_worker_controller__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./service_worker_controller */ "./app/javascript/controllers/service_worker_controller.js");
-/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
+/* harmony import */ var _hand_sort_controller__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./hand_sort_controller */ "./app/javascript/controllers/hand_sort_controller.js");
+/* harmony import */ var _hello_controller__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./hello_controller */ "./app/javascript/controllers/hello_controller.js");
+/* harmony import */ var _leaderboard_filters_controller__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./leaderboard_filters_controller */ "./app/javascript/controllers/leaderboard_filters_controller.js");
+/* harmony import */ var _location_selection_controller__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./location_selection_controller */ "./app/javascript/controllers/location_selection_controller.js");
+/* harmony import */ var _offline_alert_controller__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./offline_alert_controller */ "./app/javascript/controllers/offline_alert_controller.js");
+/* harmony import */ var _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./rummy_turn_controller */ "./app/javascript/controllers/rummy_turn_controller.js");
+/* harmony import */ var _service_worker_controller__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./service_worker_controller */ "./app/javascript/controllers/service_worker_controller.js");
+/* harmony import */ var _turn_timer_controller__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./turn_timer_controller */ "./app/javascript/controllers/turn_timer_controller.js");
 
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("clipboard", _clipboard_controller__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -9563,17 +9610,69 @@ _application__WEBPACK_IMPORTED_MODULE_0__.application.register("game-form", _gam
 
 _application__WEBPACK_IMPORTED_MODULE_0__.application.register("hand", _hand_controller__WEBPACK_IMPORTED_MODULE_5__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_6__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hand-sort", _hand_sort_controller__WEBPACK_IMPORTED_MODULE_6__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_7__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("hello", _hello_controller__WEBPACK_IMPORTED_MODULE_7__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("offline-alert", _offline_alert_controller__WEBPACK_IMPORTED_MODULE_8__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("leaderboard-filters", _leaderboard_filters_controller__WEBPACK_IMPORTED_MODULE_8__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("rummy-turn", _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_9__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("location-selection", _location_selection_controller__WEBPACK_IMPORTED_MODULE_9__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("service-worker", _service_worker_controller__WEBPACK_IMPORTED_MODULE_10__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("offline-alert", _offline_alert_controller__WEBPACK_IMPORTED_MODULE_10__["default"]);
 
-_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_11__["default"]);
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("rummy-turn", _rummy_turn_controller__WEBPACK_IMPORTED_MODULE_11__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("service-worker", _service_worker_controller__WEBPACK_IMPORTED_MODULE_12__["default"]);
+
+_application__WEBPACK_IMPORTED_MODULE_0__.application.register("turn-timer", _turn_timer_controller__WEBPACK_IMPORTED_MODULE_13__["default"]);
+
+
+/***/ },
+
+/***/ "./app/javascript/controllers/leaderboard_filters_controller.js"
+/*!**********************************************************************!*\
+  !*** ./app/javascript/controllers/leaderboard_filters_controller.js ***!
+  \**********************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ leaderboard_filters_controller_default)
+/* harmony export */ });
+/* harmony import */ var _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @hotwired/stimulus */ "./node_modules/@hotwired/stimulus/dist/stimulus.js");
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+
+class leaderboard_filters_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
+  connect() {
+    this.debounceTimer = null;
+  }
+  disconnect() {
+    clearTimeout(this.debounceTimer);
+  }
+  submit() {
+    this.formTarget.requestSubmit();
+  }
+  debouncedSubmit() {
+    clearTimeout(this.debounceTimer);
+    this.debounceTimer = setTimeout(() => this.submit(), 300);
+  }
+  sort(event) {
+    const { sort, minimumGames } = event.params;
+    this.sortTarget.value = sort;
+    this.activateButton(event.currentTarget);
+    if (minimumGames && Number(this.minimumGamesTarget.value) < Number(minimumGames)) {
+      this.minimumGamesTarget.value = minimumGames;
+    }
+    this.submit();
+  }
+  activateButton(button) {
+    this.element.querySelectorAll(".btn--active").forEach((active) => active.classList.remove("btn--active"));
+    button.classList.add("btn--active");
+  }
+}
+__publicField(leaderboard_filters_controller_default, "targets", ["form", "sort", "minimumGames"]);
 
 
 /***/ },
@@ -9684,7 +9783,9 @@ class rummy_turn_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED
     });
     if (this.phaseValue === "meld") {
       const lockedAlone = checked.length === 1 && checked[0].dataset.locked === "true";
-      this.discardPileTarget.disabled = checked.length !== 1 || lockedAlone;
+      const readyToDiscard = checked.length === 1 && !lockedAlone;
+      this.discardPileTarget.disabled = !readyToDiscard;
+      this.discardStepTarget.classList.toggle("phase-stepper__step--active", readyToDiscard);
     }
   }
   get checkedInputs() {
@@ -9697,7 +9798,9 @@ __publicField(rummy_turn_controller_default, "targets", [
   "cardInput",
   "discardPile",
   "meldPlaceholder",
-  "meld"
+  "meld",
+  "meldStep",
+  "discardStep"
 ]);
 __publicField(rummy_turn_controller_default, "values", { phase: String });
 

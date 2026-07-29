@@ -1,4 +1,4 @@
 .phase-stepper
   span.phase-stepper__step class=("phase-stepper__step--active" if phase == "draw") 1 · Draw
-  span.phase-stepper__step class=("phase-stepper__step--active" if phase == "meld") 2 · Meld / Lay off
-  span.phase-stepper__step 3 · Discard
+  span.phase-stepper__step class=("phase-stepper__step--active" if phase == "meld") data-rummy-turn-target="meldStep" 2 · Meld / Lay off
+  span.phase-stepper__step data-rummy-turn-target="discardStep" 3 · Discard

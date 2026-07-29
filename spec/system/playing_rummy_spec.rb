@@ -61,6 +61,16 @@ RSpec.describe "Playing Rummy", type: :system do
     expect(page).to have_no_css(".pile[disabled]", text: "Discard")
   end
 
+  it "highlights both Meld and Discard once exactly one card is selected, since either is legal", :js do
+    draw_from_stock!
+    expect(page).to have_css(".phase-stepper__step--active", text: "Meld")
+    expect(page).to have_no_css(".phase-stepper__step--active", text: "Discard")
+
+    click_hand_card(drawn_card_key)
+    expect(page).to have_css(".phase-stepper__step--active", text: "Meld")
+    expect(page).to have_css(".phase-stepper__step--active", text: "Discard")
+  end
+
   context "with a meldable set in hand" do
     let(:nines) { [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ] }
 
