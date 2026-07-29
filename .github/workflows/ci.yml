@@ -65,3 +65,67 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/game_platform_test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: yarn
+
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile
+
+      # The :js system specs drive Capybara through capybara-playwright-driver, so
+      # the chromium Playwright itself downloads has to be present. The :chrome-tagged
+      # specs use Selenium against the Chrome preinstalled on the runner instead.
+      - name: Install Playwright browsers
+        run: yarn playwright install --with-deps chromium
+
+      # db:test:prepare, not bin/setup — it loads the schema without seeding.
+      # Seeded rows survive transactional rollback and break exact-match scopes.
+      - name: Prepare test database
+        run: bin/rails db:test:prepare
+
+      - name: Run the test suite
+        run: bundle exec rspec
+
+      - name: Keep screenshots from failed system specs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rspec-screenshots
+          path: tmp/screenshots
+          if-no-files-found: ignore
+
