@@ -1,3 +1,5 @@
+return unless Rails.env.development?
+
 include FactoryBot::Syntax::Methods
 
 puts "Cleaning the database..."

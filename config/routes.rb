@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   end
 
   mount GoodJob::Engine => "good_job"
+  mount ActionCable.server => "/cable"
 
   root "games#index"
 
