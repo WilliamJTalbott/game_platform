@@ -2,7 +2,7 @@
 
 ## What we were working on
 
-Milestone 1 of Rummy (`docs/rummy-playable-plan.md`): a draw/discard turn
+Milestone 1 of Rummy (from the since-completed Rummy playable plan): a draw/discard turn
 loop with live wiring. Needed a system spec proving a player draws,
 discards, and the turn passes live. First attempt modeled it after the
 plan's literal wording ("assert...the opponent's view updated") with two
