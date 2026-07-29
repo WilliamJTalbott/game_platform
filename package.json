@@ -14,7 +14,7 @@
     "postcss-preset-env": "^11.3.2",
     "postcss-scss": "^4.0.9",
     "webpack": "^5.108.4",
-    "webpack-cli": "^7.2.1"
+    "webpack-cli": "^7.2.2"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
