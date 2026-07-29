@@ -25,15 +25,10 @@
     gap: var(--gp-space-medium);
   }
 
-  .hand-dock__meta {
+  .hand-dock__sort-buttons {
     display: flex;
     align-items: center;
-    gap: var(--gp-space-medium);
-  }
-
-  .hand-dock__count {
-    font-size: var(--gp-font-x-small);
-    color: var(--gp-color-muted);
+    gap: var(--gp-space-small);
   }
 
   .hand-dock__timer {

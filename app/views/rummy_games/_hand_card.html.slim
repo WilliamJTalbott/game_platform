@@ -1,4 +1,4 @@
-label.hand-card class=("hand-card--locked" if hand_card.locked)
+label.hand-card class=("hand-card--locked" if hand_card.locked) data-rank-value=hand_card.rank_value data-rank-index=hand_card.rank_index data-suit-index=hand_card.suit_index
   input.hand-card__input type="checkbox" name="turn[cards][]" value="#{hand_card.card.rank}-#{hand_card.card.suit}" disabled=(!can_select) data-rummy-turn-target="cardInput" data-action="change->rummy-turn#refresh" data-locked=hand_card.locked.to_s
   .card-container.card-container--large
     .playing-card

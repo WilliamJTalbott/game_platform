@@ -29,6 +29,22 @@ RSpec.describe RummyGamePresenter do
     expect(presenter.hand_cards.map(&:card)).to match_array(game.state.active_player.cards)
   end
 
+  describe "#hand_cards sort keys" do
+    before { game.state.active_player.cards = [ CardGame::Card.new("A", "Spades") ] }
+
+    it "exposes an ace-low rank_value matching Rummy::Meld's run validation scale" do
+      expect(presenter.hand_cards.first.rank_value).to eq 1
+    end
+
+    it "exposes an ace-high rank_index matching the deck's own gameplay order" do
+      expect(presenter.hand_cards.first.rank_index).to eq 12
+    end
+
+    it "exposes a suit_index matching CardGame::Card::SUITS order" do
+      expect(presenter.hand_cards.first.suit_index).to eq 1
+    end
+  end
+
   it "exposes the current phase" do
     expect(presenter.phase).to eq "draw"
   end

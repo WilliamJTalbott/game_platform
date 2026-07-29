@@ -1,9 +1,10 @@
-.panel__body.hand-dock
+.panel__body.hand-dock data-controller="hand-sort" data-hand-sort-game-id-value=game_id data-hand-sort-user-id-value=user_id
   .hand-dock__top
     = render "rummy_games/phase_stepper", phase: phase
 
-    .hand-dock__meta
-      span.hand-dock__count Your hand · #{hand_cards.size} cards
+    .hand-dock__sort-buttons
+      button type="button" class="btn btn--medium" data-action="hand-sort#sort" data-hand-sort-mode-param="rank" By rank
+      button type="button" class="btn btn--medium" data-action="hand-sort#sort" data-hand-sort-mode-param="suit" By suit
 
   .hand-wrap
     .hand-fan

@@ -19,6 +19,9 @@ application.register("game-form", GameFormController)
 import HandController from "./hand_controller"
 application.register("hand", HandController)
 
+import HandSortController from "./hand_sort_controller"
+application.register("hand-sort", HandSortController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 

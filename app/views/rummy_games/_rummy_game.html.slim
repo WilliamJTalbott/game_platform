@@ -30,4 +30,6 @@
       = render "rummy_games/hand_dock",
               hand_cards: game_info.hand_cards,
               phase: game_info.phase,
-              can_select: game_info.can_select?
+              can_select: game_info.can_select?,
+              game_id: game_info.game.id,
+              user_id: game_info.user.id

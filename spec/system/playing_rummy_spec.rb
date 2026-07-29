@@ -213,6 +213,46 @@ RSpec.describe "Playing Rummy", type: :system do
     expect(page).to have_css(".pile[disabled]", match: :first)
   end
 
+  context "with an unsorted hand" do
+    let(:unsorted) do
+      [ CardGame::Card.new("K", "Hearts"), CardGame::Card.new("2", "Clubs"), CardGame::Card.new("A", "Spades") ]
+    end
+
+    before do
+      remove_cards_from_play(*unsorted)
+      game.state.active_player.cards = unsorted
+      game.save!
+    end
+
+    def hand_card_keys
+      page.all(".hand-card__input", visible: :all).map { |input| input[:value] }
+    end
+
+    it "sorts the hand ace-low by rank", :js do
+      page.driver.with_playwright_page { |p| p.emulate_media(colorScheme: "dark") }
+      visit game_path(game)
+      click_button "By rank"
+
+      expect(hand_card_keys).to eq %w[A-Spades 2-Clubs K-Hearts]
+      screenshot("rummy-hand-sorted-by-rank", fullPage: true)
+    end
+
+    it "sorts the hand by suit, ace-high within suit", :js do
+      visit game_path(game)
+      click_button "By suit"
+
+      expect(hand_card_keys).to eq %w[K-Hearts A-Spades 2-Clubs]
+    end
+
+    it "keeps the chosen sort across a fresh page load", :js do
+      visit game_path(game)
+      click_button "By rank"
+
+      visit game_path(game)
+      expect(hand_card_keys).to eq %w[A-Spades 2-Clubs K-Hearts]
+    end
+  end
+
   context "when it is not the user's turn" do
     before do
       game.state.turn_index = 1

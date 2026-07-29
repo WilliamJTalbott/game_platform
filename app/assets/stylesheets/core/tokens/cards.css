@@ -29,10 +29,10 @@
 
 :root {
   /* ---- The card's own material ------------------------------------------
-     Face and edge are what makes something read as card stock. The edge is one
-     ramp step up from the face so a card sitting on a card still has a visible
-     seam. */
-  --gp-card-face: var(--gp-n-minus-3);
+     Face and edge are what makes something read as card stock. The edge sits
+     two ramp steps below the face so a card sitting on a card still has a
+     visible seam. */
+  --gp-card-face: var(--gp-n-minus-2);
   --gp-card-edge: var(--gp-n-minus-4);
 
   /* Ink on a card face. Only the meld chips use it today — a real card's
