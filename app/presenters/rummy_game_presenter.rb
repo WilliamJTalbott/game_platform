@@ -29,7 +29,7 @@ class RummyGamePresenter < GamePresenter
   end
 
   def can_lay_off?
-    user_turn? && game.state.melds.any? { |meld| meld.owner == user.id }
+    can_select? && game.state.melds.any? { |meld| meld.owner == user.id }
   end
 
   def hand_cards

@@ -9476,12 +9476,27 @@ var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
+const KEY_PREFIX = "rummy-hand:";
+const RETENTION_MS = 7 * 24 * 60 * 60 * 1e3;
 class hand_arrival_controller_default extends _hotwired_stimulus__WEBPACK_IMPORTED_MODULE_0__.Controller {
   connect() {
     const keys = this.currentKeys();
-    const storedKeys = localStorage.getItem(this.storageKey);
-    if (storedKeys) this.markArriving(keys.filter((key) => !JSON.parse(storedKeys).includes(key)));
-    localStorage.setItem(this.storageKey, JSON.stringify(keys));
+    const previousKeys = this.previousKeys();
+    if (previousKeys) this.markArriving(keys.filter((key) => !previousKeys.includes(key)));
+    localStorage.setItem(this.storageKey, JSON.stringify({ keys, at: Date.now() }));
+    this.pruneStaleHands();
+  }
+  previousKeys() {
+    const stored = JSON.parse(localStorage.getItem(this.storageKey) || "null");
+    return Array.isArray(stored?.keys) ? stored.keys : null;
+  }
+  // One entry is written per game per user, and nothing else ever removes them,
+  // so every finished game would leave its last hand behind forever. A game
+  // still being played rewrites its own entry on every render, so only hands
+  // untouched for RETENTION_MS — finished or abandoned games — age out here.
+  pruneStaleHands() {
+    const cutoff = Date.now() - RETENTION_MS;
+    Object.keys(localStorage).filter((key) => key.startsWith(KEY_PREFIX)).filter((key) => !(JSON.parse(localStorage.getItem(key))?.at > cutoff)).forEach((key) => localStorage.removeItem(key));
   }
   currentKeys() {
     return Array.from(this.element.querySelectorAll(".hand-card__input")).map((input) => input.value);

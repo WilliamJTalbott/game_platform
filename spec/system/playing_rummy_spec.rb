@@ -285,4 +285,29 @@ RSpec.describe "Playing Rummy", type: :system do
       expect(page).to have_css(".pile[disabled]", match: :first)
     end
   end
+
+  describe "remembered hands", :js do
+    def stored_hand_keys
+      page.evaluate_script("Object.keys(localStorage).filter((key) => key.startsWith('rummy-hand:'))")
+    end
+
+    it "remembers this game's hand so the next render can tell what just arrived" do
+      visit game_path(game)
+      expect(stored_hand_keys).to eq [ "rummy-hand:#{game.id}:#{user.id}" ]
+    end
+
+    context "when a hand from an abandoned game has aged past the retention window" do
+      before do
+        visit game_path(game)
+        page.execute_script(<<~JS)
+          localStorage.setItem("rummy-hand:999:#{user.id}", JSON.stringify({ keys: [], at: 0 }))
+        JS
+      end
+
+      it "drops it, but keeps the hand of the game being played" do
+        visit game_path(game)
+        expect(stored_hand_keys).to eq [ "rummy-hand:#{game.id}:#{user.id}" ]
+      end
+    end
+  end
 end

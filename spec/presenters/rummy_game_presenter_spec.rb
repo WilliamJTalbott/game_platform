@@ -7,6 +7,11 @@ RSpec.describe RummyGamePresenter do
 
   subject(:presenter) { game.presenter(active_user) }
 
+  def meld_owned_by(user)
+    cards = %w[Hearts Spades Clubs].map { |suit| CardGame::Card.new("9", suit) }
+    Rummy::Meld.build(cards: cards, owner: user.id)
+  end
+
   it "labels the score column as Cards left" do
     expect(presenter.score_label).to eq "Cards left"
   end
@@ -71,28 +76,30 @@ RSpec.describe RummyGamePresenter do
   end
 
   describe "#can_lay_off?" do
+    before { game.state.phase = "meld" }
+
     it "is false when the active player owns no meld" do
       expect(presenter.can_lay_off?).to be false
     end
 
-    it "is true once the active player owns a meld" do
-      own_meld = Rummy::Meld.build(
-        cards: [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ],
-        owner: active_user.id
-      )
-      game.state.melds = [ own_meld ]
-
-      expect(presenter.can_lay_off?).to be true
-    end
-
     it "is false for the waiting player even if they own a meld" do
-      own_meld = Rummy::Meld.build(
-        cards: [ CardGame::Card.new("9", "Hearts"), CardGame::Card.new("9", "Spades"), CardGame::Card.new("9", "Clubs") ],
-        owner: waiting_user.id
-      )
-      game.state.melds = [ own_meld ]
+      game.state.melds = [ meld_owned_by(waiting_user) ]
 
       expect(game.presenter(waiting_user).can_lay_off?).to be false
+    end
+
+    context "when the active player owns a meld" do
+      before { game.state.melds = [ meld_owned_by(active_user) ] }
+
+      it "is true during the meld phase" do
+        expect(presenter.can_lay_off?).to be true
+      end
+
+      it "is false during the draw phase" do
+        game.state.phase = "draw"
+
+        expect(presenter.can_lay_off?).to be false
+      end
     end
   end
 
