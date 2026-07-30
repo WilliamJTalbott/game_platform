@@ -13,6 +13,11 @@
 }
 
 .feed-bubble {
+  /* Bubbles are still shrink-to-fit, but only across the top fifth of the
+     column. Left ragged, a one-word message and a wrapped one differed by
+     more than half the stack's width and the trail read as arbitrary; floored
+     here they land close enough together to scan as a single column. */
+  min-width: 80%;
   max-width: 100%;
   border-radius: var(--gp-radius-x-large) var(--gp-radius-x-large) var(--gp-radius-medium) var(--gp-radius-x-large);
   padding: var(--gp-space-small) var(--gp-space-medium);
@@ -21,12 +26,19 @@
   border: var(--gp-border-width) solid var(--gp-color-border);
   box-shadow: var(--gp-shadow-small);
 
-  &.feed-bubble--ghost {
-    opacity: 0.3;
-  }
+  /* Every past message reads the same — the stack's only hierarchy is
+     history vs. the live directive, so grading the two entries against each
+     other just added a distinction with nothing behind it.
 
-  &.feed-bubble--fade {
-    opacity: 0.6;
+     They recede by ink and size rather than opacity. Translucency let the board
+     read through the bubble, so the text sat on whatever it happened to overlap
+     instead of on its own surface. Scaling is right-origin because the stack is
+     right-aligned — a centered origin would ragged the edge. */
+  &.feed-bubble--ghost {
+    color: var(--gp-ink-muted);
+    border-color: var(--gp-surface-recessed);
+    transform: scale(0.92);
+    transform-origin: right center;
   }
 
   &.feed-bubble--directive {

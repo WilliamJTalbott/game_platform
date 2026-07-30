@@ -1,6 +1,6 @@
 .bubble-stack
-  - messages.to_a.first(2).reverse.each_with_index do |message, index|
-    .feed-bubble class=(index.zero? ? "feed-bubble--ghost" : "feed-bubble--fade")
+  - messages.to_a.first(2).reverse.each do |message|
+    .feed-bubble.feed-bubble--ghost
       = message.text
   .feed-bubble.feed-bubble--directive
     - if !user_turn

@@ -6,9 +6,13 @@
   border-bottom: var(--gp-border-width) solid var(--gp-color-border);
 }
 
+/* Both lines on this card spend --gp-color-border-on-raised, not the plain
+   --gp-color-border a card sitting on the floor would normally take: the card's
+   own --gp-surface-raised fill IS --gp-color-border's tone, so that role paints
+   a line the same color as the thing it's supposed to bound. */
 .opponent-card {
   min-width: calc(11 * var(--gp-space-scale-unit));
-  border: var(--gp-border-width) solid var(--gp-color-border);
+  border: var(--gp-border-width) solid var(--gp-color-border-on-raised);
   border-radius: var(--gp-radius-medium);
   padding: var(--gp-space-x-small) var(--gp-space-small);
   background-color: var(--gp-surface-raised);
@@ -26,7 +30,7 @@
   }
 
   .opponent-card__divider {
-    border-top: var(--gp-border-width) solid var(--gp-color-border);
+    border-top: var(--gp-border-width) solid var(--gp-color-border-on-raised);
     margin-block: var(--gp-space-2x-small);
   }
 
@@ -37,11 +41,13 @@
 
   /* Overlapped rather than gapped so ten-plus cards still fit the strip;
      later siblings already paint over earlier ones in source order, so no
-     z-index is needed to keep the stack readable. */
+     z-index is needed to keep the stack readable. The outline is painted in
+     the panel's own background tone, so it reads as the gap between two
+     cards rather than as a drawn border. */
   .opponent-card__mini-card {
     width: var(--gp-space-medium);
     aspect-ratio: var(--gp-card-aspect-ratio);
-    border: var(--gp-border-width) solid var(--gp-color-border);
+    border: var(--gp-border-width) solid var(--gp-surface-raised);
     border-radius: var(--gp-radius-small);
     background-color: var(--gp-surface-card);
     margin-left: calc(-1 * var(--gp-space-small));
@@ -71,20 +77,24 @@
     background-color: var(--gp-color-accent-secondary);
 
     /* The default mini-card fill (--gp-surface-card) is close enough in
-       lightness to the accent-secondary tint that it nearly vanishes — currentColor
-       picks up the same ink color as the name text, which reliably contrasts against
-       the tint in both themes (rather than fighting the tint with more coral). */
+       lightness to the accent-secondary tint that it nearly vanishes, so the
+       whole hand flips to --gp-ink-muted — the tone the player's name above it
+       is already inked in, so the card block and its label read as one pair.
+       Outlines follow the same rule as the default state — the panel's own
+       background, here the accent tint — so the stack still reads as gapped. */
     .opponent-card__mini-card {
-      background-color: currentColor;
-      border-color: currentColor;
+      background-color: var(--gp-ink-muted);
+      border-color: var(--gp-color-accent-secondary);
     }
 
-    /* The count badge stays off currentColor even here — its own surface,
-       not the ink block used above, is what keeps the digit legible. */
+    /* The count badge is a lit card like its siblings, so the digit inverts:
+       it's inked in the panel tint the cards are sitting on. Coral was tried
+       here and lost — it sits at the same lightness as the --gp-ink-muted fill,
+       so the numeral read on hue alone and nearly vanished. */
     .opponent-card__mini-card--count {
-      background-color: var(--gp-surface-card);
-      border-color: var(--gp-color-border);
-      color: var(--gp-ink-on-card);
+      background-color: var(--gp-ink-muted);
+      border-color: var(--gp-color-accent-secondary);
+      color: var(--gp-color-accent-secondary);
     }
 
     /* Same problem as the mini-cards: the default border color is too close to the
