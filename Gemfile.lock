@@ -334,7 +334,7 @@ GEM
     reline (0.6.3)
       io-console (~> 0.5)
     rexml (3.4.4)
-    rolemodel-rails (2.1.0)
+    rolemodel-rails (2.3.2)
       benchmark
       rails (> 7.1)
     rspec (3.13.2)
