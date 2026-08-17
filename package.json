@@ -5,7 +5,7 @@
     "@honeybadger-io/webpack": "^6.3.2",
     "css-loader": "^7.1.4",
     "css-minimizer-webpack-plugin": "^8.0.0",
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "esbuild-loader": "^4.5.0",
     "mini-css-extract-plugin": "^2.10.2",
     "playwright": "^1.61.1",
