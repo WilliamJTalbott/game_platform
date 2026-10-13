@@ -17,8 +17,12 @@ CI.run do
   end
 
   step "Security: Gem audit", "bin/bundler-audit"
-  step "Security: Importmap vulnerability audit", "bin/importmap audit"
+  # Production deps only — devDependencies is the webpack build chain, whose
+  # transitive advisories we don't ship. Mirrors the scan_js job in ci.yml.
+  step "Security: JS dependency audit", "yarn audit --level high --groups dependencies"
   step "Security: Brakeman code analysis", "bin/brakeman --quiet --no-pager --exit-on-warn --exit-on-error"
+
+  step "Tests", "bundle exec rspec"
 
 
   # Optional: set a green GitHub commit status to unblock PR merge.
